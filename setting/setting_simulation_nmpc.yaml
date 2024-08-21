@@ -1,0 +1,43 @@
+# Nonlinear DCM MPC
+w_nmpc : [1000,     # time 
+
+          1,        # w_xi_err_x
+          1,        # w_p_c_x
+          1,        # w_dU_x
+          100000,   # w_db_x
+          
+          1,        # w_xi_err_y
+          1,        # w_p_c_y
+          1,        # w_dU_y
+          100000]   # w_db_y
+
+# DLR Stepping Controller
+w_xi_err_x_dlr  : 5.0
+w_xi_err_y_dlr  : 5.0
+w_gain_time_dlr : 5.0
+w_p_end_x_dlr   : 50.0
+w_p_end_y_dlr   : 50.0
+w_p_init_x_dlr  : 50.0
+w_p_init_y_dlr  : 50.0
+
+safety_factor_x : 0.7
+safety_factor_y : 0.7
+
+dU_x_max : 0.3
+dU_y_max : 0.3
+dU_x_min : -0.3
+dU_y_min : -0.05
+
+dT_max   : 0.0
+
+dT_SSP_min : -0.1    
+dT_DSP_min : -0.1
+
+iter_num : 10
+
+dv_norm_threshold : 0.000001
+
+is_simul : 0
+# 0: DYROS  iter 5
+# 1: KAIST  iter 5
+# 2: DLR

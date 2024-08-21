@@ -1,0 +1,52 @@
+# ZMP Control
+kp_torque_zmp_ctrl : [ 
+                      # DSP
+                      0.2,   # Kp_r_roll
+                      0.2,   # Kp_r_pitch
+                      0.2,   # Kp_l_roll
+                      0.2,   # Kp_l_pitch
+
+                      # SSP
+                      0.2,   # Kp_r_roll
+                      0.2,   # Kp_r_pitch
+                      0.2,   # Kp_l_roll
+                      0.2]   # Kp_l_pitch
+
+kv_torque_zmp_ctrl : [ 
+                      # DSP
+                      50.0,   # Kd_r_roll
+                      50.0,   # Kd_r_pitch
+                      50.0,   # Kd_l_roll
+                      50.0,   # Kd_l_pitch
+
+                      # SSP
+                      50.0,   # Kd_r_roll
+                      50.0,   # Kd_r_pitch
+                      50.0,   # Kd_l_roll
+                      50.0]   # Kd_l_pitch
+
+ankle_angle_const_zmp_ctrl : 5.0
+
+kp_force_zmp_ctrl : 0.0005
+
+kv_force_zmp_ctrl : 3.0
+
+foot_height_diff_const_zmp_ctrl : 0.02
+
+# Pelv control
+kp_x_pelv_com : 0.7
+kd_x_pelv_com : 0.1
+
+kp_y_pelv_com : 0.7
+kd_y_pelv_com : 0.1
+
+kp_z_pelv_com : 1.0
+kd_z_pelv_com : 0.1
+
+kp_x_pelv_ori : 1.5
+kp_y_pelv_ori : 2.0
+
+kp_z_foot_pos : 1.0
+
+kp_x_foot_ori : 5.0
+kp_y_foot_ori : 5.0
