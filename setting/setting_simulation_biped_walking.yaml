@@ -25,7 +25,7 @@ zmp_modif_time_margin : 0.0
 impact_timing      : 0.7
 impact_duration    : 0.2
 
-impact_force       : 400    #  x : 90
+impact_force       : 0    #  x : 90
 impact_theta       :  90 
 # impact_force       : 400    #  y : 0
 # impact_theta       : 180

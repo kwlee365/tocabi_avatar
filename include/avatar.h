@@ -12,7 +12,7 @@
 #include <std_msgs/String.h>
 #include <sstream>
 #include <fstream>
-//#include "tocabi_msgs/FTsensor.h" // real robot experiment
+#include "tocabi_msgs/FTsensor.h" // real robot experiment
 
 //lexls
 // #include <lexls/lexlsi.h>
@@ -28,7 +28,7 @@
 #include <std_msgs/Float32.h>
 
 // KW add
-#include <filesystem>
+// #include <filesystem>
 
 const int FILE_CNT = 14;
 
@@ -294,7 +294,7 @@ public:
 
     void AzureKinectCallback(const visualization_msgs::MarkerArray &msg);
 
-    //void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real robot experiment
+    void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real robot experiment
     ///////////////////////////////
 
     ////////////////dg custom controller variables/////////////
@@ -2351,10 +2351,7 @@ public:
         // Robot (TOCABI) //
         double Foot_length_front = 0.17;
         double Foot_length_back  = 0.13;
-        double Foot_width  = 0.14;
-
-        double V_x_max = 1.0; double V_x_min = -1.0;
-        double V_y_max = 1.0; double V_y_min = -1.0;
+        double Foot_width  = 0.20;
 
         double safety_factor_x = 0.7;
         double safety_factor_y = 0.7;
@@ -2364,7 +2361,7 @@ public:
         double p_c_y_min = safety_factor_y *(-0.5*Foot_width);
 
         double dU_x_max = 0.3;
-        double dU_y_max = 0.25;
+        double dU_y_max = 0.0;
         double dU_x_min =-0.3;
         double dU_y_min =-0.0;
 
@@ -2372,11 +2369,11 @@ public:
         double dT_SSP_min =-0.1;    
         double dT_DSP_min =-0.2;    // (***) dT_min must not be less than T_dsp.
         
-        std::string current_path = std::filesystem::current_path().parent_path().string();
-        std::string prefix_code  = current_path + "/catkin_ws/src/tocabi_avatar/function/";   // The user should modify this variable your own directory.
-        std::string prefix_lib   = current_path + "/catkin_ws/src/tocabi_avatar/lib/";
-        std::string func_name    = "nmpc_func.c";
-        std::string lib_name     = "lib_nmpc_func.so";
+        // std::string current_path = std::filesystem::current_path().parent_path().string();
+        // std::string prefix_code  = current_path + "/catkin_ws/src/tocabi_avatar/function/";   // The user should modify this variable your own directory.
+        // std::string prefix_lib   = current_path + "/catkin_ws/src/tocabi_avatar/lib/";
+        // std::string func_name    = "nmpc_func.c";
+        // std::string lib_name     = "lib_nmpc_func.so";
     };
 
     CQuadraticProgram SQP_NMPC_DCM_;
