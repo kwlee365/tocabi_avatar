@@ -1,15 +1,15 @@
 # Nonlinear DCM MPC
-w_nmpc : [3000,     # time 
+w_nmpc : [10000,     # time 
 
           1,        # w_xi_err_x
-          10,        # w_p_c_x
+          1,        # w_p_c_x
           0.1,        # w_dU_x
           100000,   # w_db_x
           
           1,        # w_xi_err_y
           1,        # w_p_c_y
-          10,        # w_dU_y
-          1000]        # w_db_y
+          0.1,        # w_dU_y
+          100000]        # w_db_y
 
 # DLR Stepping Controller
 w_xi_err_x_dlr  : 5.0
@@ -24,9 +24,9 @@ safety_factor_x : 0.7
 safety_factor_y : 0.7
 
 dU_x_max :  0.20
-dU_y_max :  0.00
+dU_y_max :  0.20
 dU_x_min : -0.20
-dU_y_min : -0.00
+dU_y_min : -0.01
 
 dT_max   : 0.0
 

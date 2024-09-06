@@ -34,9 +34,9 @@ kv_force_zmp_ctrl : 3.0
 foot_height_diff_const_zmp_ctrl : 0.02
 
 # Pelv control
-kp_x_pelv_com : 0.6
-kd_x_pelv_com : 0.0
-
+kp_x_pelv_com : 0.4 # x push : 0.4 / y push : 1.0
+kd_x_pelv_com : 0.0 # x push : 0.0 / y push : 0.1
+ 
 kp_y_pelv_com : 1.0
 kd_y_pelv_com : 0.1
 
