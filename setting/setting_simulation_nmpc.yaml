@@ -26,12 +26,12 @@ safety_factor_y : 0.7
 dU_x_max :  0.20
 dU_y_max :  0.20
 dU_x_min : -0.20
-dU_y_min : -0.01
+dU_y_min : -0.00
 
 dT_max   : 0.0
 
 dT_SSP_min : -0.1    
-dT_DSP_min : -0.1
+dT_DSP_min : -0.2
 
 iter_num : 10
 

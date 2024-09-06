@@ -13,7 +13,12 @@ ofstream KW_journal_data2_thread1    (     "/home/kwan/catkin_ws/src/tocabi_avat
 ofstream KW_journal_data_time_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time_thread1.txt");
 ofstream KW_journal_data_analysis_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
 ofstream KW_journal_data_analysis_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
-
+ofstream KW_journal_data_analysis_zmp_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_x.txt");
+ofstream KW_journal_data_analysis_zmp_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_y.txt");
+ofstream KW_journal_data_analysis_com_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_x.txt");
+ofstream KW_journal_data_analysis_com_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_y.txt");
+ofstream KW_journal_data_analysis_dcm_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_x.txt");
+ofstream KW_journal_data_analysis_dcm_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_y.txt");
 /* REAL ROBOT */
 // ofstream KW_journal_data1(                 "/home/dyros/data/kwan/KW_journal_data1.txt");
 // ofstream KW_journal_data2(                 "/home/dyros/data/kwan/KW_journal_data2.txt");
@@ -17112,10 +17117,10 @@ void AvatarController::getPelvTrajectory()
     R_angle_input = R_angle_input + R_angle_input_dot * del_t;
     P_angle_input = P_angle_input + P_angle_input_dot * del_t;
 
-    R_angle_input = DyrosMath::minmax_cut(R_angle_input, -3.0 * DEG2RAD, 3.0 *DEG2RAD);
+    R_angle_input = DyrosMath::minmax_cut(R_angle_input, -5.0 * DEG2RAD, 5.0 *DEG2RAD);
     P_angle_input = DyrosMath::minmax_cut(P_angle_input, -5.0 * DEG2RAD, 5.0 *DEG2RAD);
 
-    // Trunk_trajectory_euler(0) = R_angle_input;
+    Trunk_trajectory_euler(0) = R_angle_input;
     Trunk_trajectory_euler(1) = P_angle_input;  
 
     pelv_trajectory_support_.linear() = DyrosMath::rotateWithZ(Trunk_trajectory_euler(2)) * 
@@ -18018,6 +18023,15 @@ void AvatarController::comGenerator_MPC_wieber(double MPC_freq, double T, double
 
     KW_journal_data_analysis_x <<  zx_ref(0) << " " << x_com_pos_recur_(0) << " " << x_com_pos_recur_(0) + x_com_vel_recur_(0) / wn << " " << cp_measured_(0) << std::endl;
     KW_journal_data_analysis_y <<  zy_ref(0) << " " << y_com_pos_recur_(0) << " " << y_com_pos_recur_(0) + y_com_vel_recur_(0) / wn << " " << cp_measured_(1) << std::endl;
+    
+    KW_journal_data_analysis_zmp_x <<  zx_ref.transpose() << std::endl;
+    KW_journal_data_analysis_zmp_y <<  zy_ref.transpose() << std::endl;
+
+    KW_journal_data_analysis_com_x <<  x_com_pos_recur_.transpose() << std::endl;
+    KW_journal_data_analysis_com_y <<  y_com_pos_recur_.transpose() << std::endl;
+
+    KW_journal_data_analysis_dcm_x <<  (x_com_pos_recur_ + x_com_vel_recur_ / wn).transpose() << std::endl;
+    KW_journal_data_analysis_dcm_y <<  (y_com_pos_recur_ + y_com_vel_recur_ / wn).transpose() << std::endl;
 
     std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 }

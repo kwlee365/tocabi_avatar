@@ -296,37 +296,20 @@ legend("zmp y", "com y", "dcm y", "dcm mea y")
 %% PRED X
 
 clc
-% clear all
-% close all
-
-mpc_tick = 281
+clear all
+close all
 
 data = readmatrix('KW_journal_data_analysis_zmp_x.txt');
-zmp_x_pred = data(mpc_tick,:);
+zmp_x_pred = [1:1:length(data(:,1))];
 data = readmatrix('KW_journal_data_analysis_com_x.txt');
-com_x_pred = data(mpc_tick,:);
+com_x_pred = [1:1:length(data(:,1))];
 data = readmatrix('KW_journal_data_analysis_dcm_x.txt');
-dcm_x_pred = data(mpc_tick,:);
-
-
-figure()
-hold on
-plot(zmp_x_pred);
-plot(com_x_pred);
-plot(dcm_x_pred);
-legend("zmp x", "com x", "dcm x")
-
-
-data = readmatrix('KW_journal_data_analysis_zmp_y.txt');
-zmp_y_pred = data(mpc_tick,:);
-data = readmatrix('KW_journal_data_analysis_com_y.txt');
-com_y_pred = data(mpc_tick,:);
-data = readmatrix('KW_journal_data_analysis_dcm_y.txt');
-dcm_y_pred = data(mpc_tick,:);
+dcm_x_pred = [1:1:length(data(:,1))];
 
 figure()
 hold on
-plot(zmp_y_pred);
-plot(com_y_pred);
-plot(dcm_y_pred);
-legend("zmp y", "com y", "dcm y")
+plot(time, zmp_x);
+plot(time, com_x);
+plot(time, dcm_x);
+plot(time, dcm_mea_x);
+legend("zmp x", "com x", "dcm x", "dcm mea x")
