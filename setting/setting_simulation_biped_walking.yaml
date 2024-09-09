@@ -33,6 +33,7 @@ impact_theta       :  90
 impact_step_number : 4
 impact_target : 1
 
-zmp_offset_y  : 0.00
+lfoot_zmp_offset_y  : 0.01
+rfoot_zmp_offset_y  : 0.01
 
-foot_offset_x : 0.005
+foot_offset_x : 0.012

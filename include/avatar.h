@@ -12,7 +12,8 @@
 #include <std_msgs/String.h>
 #include <sstream>
 #include <fstream>
-// #include "tocabi_msgs/FTsensor.h" // real robot experiment
+/* REAL ROBOT */
+#include "tocabi_msgs/FTsensor.h" // real robot experiment
 
 //lexls
 // #include <lexls/lexlsi.h>
@@ -295,7 +296,7 @@ public:
     void AzureKinectCallback(const visualization_msgs::MarkerArray &msg);
 
     /* REAL ROBOT */
-    // void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real robot experiment
+    void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real robot experiment
     ///////////////////////////////
 
     ////////////////dg custom controller variables/////////////
@@ -2474,7 +2475,8 @@ public:
 
     unsigned int is_real_robot;
 
-    double zmp_offset_y = 0.0;
+    double lfoot_zmp_offset_y = 0.0;
+    double rfoot_zmp_offset_y = 0.0;
     double foot_offset_x = 0.0;
 
 private:    

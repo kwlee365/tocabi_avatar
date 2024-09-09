@@ -2,38 +2,47 @@
 using namespace TOCABI;
 
 /* SIMULATION */
-ofstream KW_journal_data1(                 "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1.txt");
-ofstream KW_journal_data2(                 "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2.txt");
-ofstream KW_journal_foot_data1(            "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data1.txt");
-ofstream KW_journal_foot_data2(            "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data2.txt");
-ofstream KW_journal_data_time(             "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time.txt");
-ofstream KW_journal_data_calc_time(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_calc_time.txt");
-ofstream KW_journal_data1_thread1    (     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1_thread1.txt");
-ofstream KW_journal_data2_thread1    (     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2_thread1.txt");
-ofstream KW_journal_data_time_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time_thread1.txt");
-ofstream KW_journal_data_analysis_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
-ofstream KW_journal_data_analysis_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
-ofstream KW_journal_data_analysis_zmp_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_x.txt");
-ofstream KW_journal_data_analysis_zmp_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_y.txt");
-ofstream KW_journal_data_analysis_com_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_x.txt");
-ofstream KW_journal_data_analysis_com_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_y.txt");
-ofstream KW_journal_data_analysis_dcm_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_x.txt");
-ofstream KW_journal_data_analysis_dcm_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_y.txt");
-/* REAL ROBOT */
-// ofstream KW_journal_data1(                 "/home/dyros/data/kwan/KW_journal_data1.txt");
-// ofstream KW_journal_data2(                 "/home/dyros/data/kwan/KW_journal_data2.txt");
-// ofstream KW_journal_foot_data1(            "/home/dyros/data/kwan/KW_journal_foot_data1.txt");
-// ofstream KW_journal_foot_data2(            "/home/dyros/data/kwan/KW_journal_foot_data2.txt");
-// ofstream KW_journal_data_time(             "/home/dyros/data/kwan/KW_journal_data_time.txt");
-// ofstream KW_journal_data_calc_time(        "/home/dyros/data/kwan/KW_journal_data_calc_time.txt");
-// ofstream KW_journal_data1_thread1    (     "/home/dyros/data/kwan/KW_journal_data1_thread1.txt");
-// ofstream KW_journal_data2_thread1    (     "/home/dyros/data/kwan/KW_journal_data1_thread1.txt");
-// ofstream KW_journal_data_time_thread1(     "/home/dyros/data/kwan/KW_journal_data_time_thread1.txt");
+// ofstream KW_journal_data1(                 "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1.txt");
+// ofstream KW_journal_data2(                 "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2.txt");
+// ofstream KW_journal_foot_data1(            "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data1.txt");
+// ofstream KW_journal_foot_data2(            "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data2.txt");
+// ofstream KW_journal_data_time(             "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time.txt");
+// ofstream KW_journal_data_calc_time(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_calc_time.txt");
+// ofstream KW_journal_data1_thread1    (     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1_thread1.txt");
+// ofstream KW_journal_data2_thread1    (     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2_thread1.txt");
+// ofstream KW_journal_data_time_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time_thread1.txt");
+// ofstream KW_journal_data_analysis_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
+// ofstream KW_journal_data_analysis_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
+// ofstream KW_journal_data_analysis_zmp_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_x.txt");
+// ofstream KW_journal_data_analysis_zmp_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_y.txt");
+// ofstream KW_journal_data_analysis_com_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_x.txt");
+// ofstream KW_journal_data_analysis_com_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_y.txt");
+// ofstream KW_journal_data_analysis_dcm_x(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_x.txt");
+// ofstream KW_journal_data_analysis_dcm_y(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_y.txt");
 
-// ofstream KW_journal_data_opto(             "/home/dyros/data/kwan/KW_journal_data_opto.txt");
-// ofstream KW_journal_data_opto_thread1(     "/home/dyros/data/kwan/KW_journal_data_opto_thread1.txt");
-// ofstream KW_temp_data_x(                   "/home/dyros/data/kwan/KW_temp_data_x.txt");
-// ofstream KW_temp_data_y(                   "/home/dyros/data/kwan/KW_temp_data_y.txt");
+/* REAL ROBOT */
+ofstream KW_journal_data1(                 "/home/dyros/data/kwan/KW_journal_data1.txt");
+ofstream KW_journal_data2(                 "/home/dyros/data/kwan/KW_journal_data2.txt");
+ofstream KW_journal_foot_data1(            "/home/dyros/data/kwan/KW_journal_foot_data1.txt");
+ofstream KW_journal_foot_data2(            "/home/dyros/data/kwan/KW_journal_foot_data2.txt");
+ofstream KW_journal_foot_data3(            "/home/dyros/data/kwan/KW_journal_foot_data3.txt");
+ofstream KW_journal_data_time(             "/home/dyros/data/kwan/KW_journal_data_time.txt");
+ofstream KW_journal_data_calc_time(        "/home/dyros/data/kwan/KW_journal_data_calc_time.txt");
+ofstream KW_journal_data1_thread1    (     "/home/dyros/data/kwan/KW_journal_data1_thread1.txt");
+ofstream KW_journal_data2_thread1    (     "/home/dyros/data/kwan/KW_journal_data2_thread1.txt");
+ofstream KW_journal_data_time_thread1(     "/home/dyros/data/kwan/KW_journal_data_time_thread1.txt");
+ofstream KW_journal_data_analysis_x(       "/home/dyros/data/kwan/KW_journal_data_analysis_x.txt");
+ofstream KW_journal_data_analysis_y(       "/home/dyros/data/kwan/KW_journal_data_analysis_y.txt");
+ofstream KW_journal_data_analysis_zmp_x(   "/home/dyros/data/kwan/KW_journal_data_analysis_zmp_x.txt");
+ofstream KW_journal_data_analysis_zmp_y(   "/home/dyros/data/kwan/KW_journal_data_analysis_zmp_y.txt");
+ofstream KW_journal_data_analysis_com_x(   "/home/dyros/data/kwan/KW_journal_data_analysis_com_x.txt");
+ofstream KW_journal_data_analysis_com_y(   "/home/dyros/data/kwan/KW_journal_data_analysis_com_y.txt");
+ofstream KW_journal_data_analysis_dcm_x(   "/home/dyros/data/kwan/KW_journal_data_analysis_dcm_x.txt");
+ofstream KW_journal_data_analysis_dcm_y(   "/home/dyros/data/kwan/KW_journal_data_analysis_dcm_y.txt");
+
+ofstream KW_journal_data_opto(             "/home/dyros/data/kwan/KW_journal_data_opto.txt");
+ofstream KW_journal_data_opto_thread1(     "/home/dyros/data/kwan/KW_journal_data_opto_thread1.txt");
+
 
 
 AvatarController::AvatarController(RobotData &rd) : rd_(rd)
@@ -80,7 +89,7 @@ AvatarController::AvatarController(RobotData &rd) : rd_(rd)
     pedal_command = nh_avatar_.subscribe("/tocabi/pedalcommand", 100, &AvatarController::PedalCommandCallback, this); // MJ
 
     /* REAL ROBOT */
-    // opto_ftsensor_sub = nh_avatar_.subscribe("/optoforce/ftsensor", 100, &AvatarController::OptoforceFTCallback, this); // real robot experiment
+    opto_ftsensor_sub = nh_avatar_.subscribe("/optoforce/ftsensor", 100, &AvatarController::OptoforceFTCallback, this); // real robot experiment
     
     bool urdfmode = false;
     std::string urdf_path, desc_package_path;
@@ -11554,15 +11563,15 @@ void AvatarController::TrackerStatusCallback(const std_msgs::Bool &msg)
 }
 
 /* REAL ROBOT */
-// void AvatarController::OptoforceFTCallback(const tocabi_msgs::FTsensor &msg)
-// {
-//     opto_ft_raw_(0) = msg.Fx;
-//     opto_ft_raw_(1) = msg.Fy;
-//     opto_ft_raw_(2) = msg.Fz;
-//     opto_ft_raw_(3) = msg.Tx;
-//     opto_ft_raw_(4) = msg.Ty;
-//     opto_ft_raw_(5) = msg.Tz;
-// }
+void AvatarController::OptoforceFTCallback(const tocabi_msgs::FTsensor &msg)
+{
+    opto_ft_raw_(0) = msg.Fx;
+    opto_ft_raw_(1) = msg.Fy;
+    opto_ft_raw_(2) = msg.Fz;
+    opto_ft_raw_(3) = msg.Tx;
+    opto_ft_raw_(4) = msg.Ty;
+    opto_ft_raw_(5) = msg.Tz;
+}
 
 Eigen::MatrixXd AvatarController::discreteRiccatiEquationPrev(Eigen::MatrixXd a, Eigen::MatrixXd b, Eigen::MatrixXd r, Eigen::MatrixXd q)
 {
@@ -13081,8 +13090,8 @@ void AvatarController::addZmpOffset()
 {
     double lfoot_zmp_offset_, rfoot_zmp_offset_;
 
-    lfoot_zmp_offset_ =-zmp_offset_y; // simul 1.1 s
-    rfoot_zmp_offset_ = zmp_offset_y;
+    lfoot_zmp_offset_ =-lfoot_zmp_offset_y; // simul 1.1 s
+    rfoot_zmp_offset_ = rfoot_zmp_offset_y;
 
     foot_step_support_frame_offset_ = foot_step_support_frame_;
     supportfoot_support_init_offset_ = supportfoot_support_init_;
@@ -17087,7 +17096,7 @@ void AvatarController::getPelvTrajectory()
     // Position
     pelv_trajectory_support_.translation()(0) = pelv_support_current_.translation()(0) + kp_x_pelv_com * (com_desired_(0) - com_support_current_(0)) + kd_x_pelv_com * (com_desired_dot_(0) - com_float_current_dot_LPF(0));
     pelv_trajectory_support_.translation()(1) = pelv_support_current_.translation()(1) + kp_y_pelv_com * (com_desired_(1) - com_support_current_(1)) + kd_y_pelv_com * (com_desired_dot_(1) - com_float_current_dot_LPF(1));
-    pelv_trajectory_support_.translation()(2) = pelv_support_current_.translation()(2) + kp_z_pelv_com * (com_desired_(2) - com_support_current_(2)) + kd_y_pelv_com * (com_desired_dot_(2) - com_float_current_dot_LPF(2));
+    pelv_trajectory_support_.translation()(2) = pelv_support_current_.translation()(2) + kp_z_pelv_com * (com_desired_(2) - com_support_current_(2)) + kd_z_pelv_com * (com_desired_dot_(2) - com_float_current_dot_LPF(2));
     // pelv_trajectory_support_.translation()(2) = com_desired_(2);
 
     // Orientation
@@ -17110,7 +17119,6 @@ void AvatarController::getPelvTrajectory()
         P_angle_input = 0;
         R_angle_input = 0;
     }
-
     R_angle_input_dot = kp_x_pelv_ori * (0.0 - R_angle) ;
     P_angle_input_dot = kp_y_pelv_ori * (0.0 - P_angle) ;
 
@@ -19433,7 +19441,7 @@ void AvatarController::getFootTrajectory_stepping()
             rfoot_trajectory_support_.translation()(0) = foot_x_desired(0); rfoot_trajectory_support_.translation()(1) = foot_y_desired(0); rfoot_trajectory_support_.translation()(2) = foot_z_desired(0);
             rfoot_vel_trajectory_support_(0) = foot_x_desired(1);           rfoot_vel_trajectory_support_(1) = foot_y_desired(1);           rfoot_vel_trajectory_support_(2) = foot_z_desired(1);
 
-            rfoot_trajectory_support_.translation()(2) = foot_z_desired(0) + kp_z_foot_pos * (foot_z_desired(0) - rfoot_support_current_.translation()(2));
+            // rfoot_trajectory_support_.translation()(2) = foot_z_desired(0) + kp_z_foot_pos * (foot_z_desired(0) - rfoot_support_current_.translation()(2));
 
             // Orientation
             rfoot_trajectory_euler_support_.setZero();
@@ -19504,7 +19512,7 @@ void AvatarController::getFootTrajectory_stepping()
             lfoot_trajectory_support_.translation()(0) = foot_x_desired(0); lfoot_trajectory_support_.translation()(1) = foot_y_desired(0); lfoot_trajectory_support_.translation()(2) = foot_z_desired(0);
             lfoot_vel_trajectory_support_(0) = foot_x_desired(1);           lfoot_vel_trajectory_support_(1) = foot_y_desired(1);           lfoot_vel_trajectory_support_(2) = foot_z_desired(1);
             
-            lfoot_trajectory_support_.translation()(2) = foot_z_desired(0) + kp_z_foot_pos * (foot_z_desired(0) - lfoot_support_current_.translation()(2));
+            // lfoot_trajectory_support_.translation()(2) = foot_z_desired(0) + kp_z_foot_pos * (foot_z_desired(0) - lfoot_support_current_.translation()(2));
 
             // Orientation
             lfoot_trajectory_euler_support_.setZero();
@@ -20200,9 +20208,11 @@ void AvatarController::getParameterYAML()
     ros::param::get("/tocabi_controller/w_p_init_y_dlr",  w_p_init_y_dlr );
 
     // HEURISTIC
-    ros::param::get("/tocabi_controller/zmp_offset_y",  zmp_offset_y);
+    ros::param::get("/tocabi_controller/lfoot_zmp_offset_y",  lfoot_zmp_offset_y);
+    ros::param::get("/tocabi_controller/rfoot_zmp_offset_y",  rfoot_zmp_offset_y);
     ros::param::get("/tocabi_controller/foot_offset_x", foot_offset_x);
-    std::cout << "zmp_offset_y: "  << zmp_offset_y << std::endl;
+    std::cout << "lfoot_zmp_offset_y: "  << lfoot_zmp_offset_y << std::endl;
+    std::cout << "rfoot_zmp_offset_y: "  << rfoot_zmp_offset_y << std::endl;
     std::cout << "foot_offset_x: " << foot_offset_x << std::endl;
 }
 
@@ -20528,13 +20538,15 @@ void AvatarController::dcmController_NMPC_DYROS()
         
         KW_journal_foot_data1 << del_F_(0) << " " << lfoot_trajectory_support_.translation()(0) << " " << rfoot_trajectory_support_.translation()(0) << std::endl;
         KW_journal_foot_data2 << del_F_(1) << " " << lfoot_trajectory_support_.translation()(1) << " " << rfoot_trajectory_support_.translation()(1) << std::endl; 
+        KW_journal_foot_data3 << lfoot_trajectory_support_.translation()(2) << " " << rfoot_trajectory_support_.translation()(2) << std::endl; 
+
 
         KW_journal_data_time << T_ref << " " << T_new << " " << transition_phase_current_time << std::endl; 
 
         KW_journal_data_calc_time << iter << " ";
 
         /* REAL ROBOT */
-        // KW_journal_data_opto <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << std::endl;
+        KW_journal_data_opto <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << std::endl;
        
         // KW_graph7_8 << v_nmpc_.transpose() << std::endl;
         // KW_graph7_9 << zmp_ctrl_x << " " << zmp_ctrl_y << " " << del_zmp.transpose() << std::endl;
@@ -20597,7 +20609,7 @@ void AvatarController::dcmController_NMPC_DYROS(double del_zmp_x, double del_zmp
 
     KW_journal_data1_thread1 << del_zmp_x_dcm_nmpc_interpol << " " << del_footstep_x_dcm_nmpc_interpol << " " << cp_desired_(0) << " " << cp_measured_(0) << std::endl;
     KW_journal_data2_thread1 << del_zmp_y_dcm_nmpc_interpol << " " << del_footstep_y_dcm_nmpc_interpol << " " << cp_desired_(1) << " " << cp_measured_(1) << std::endl;
-    // KW_journal_data_opto_thread1 <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl;
+    KW_journal_data_opto_thread1 <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl;
 
     ///////////////
     // Step time //
