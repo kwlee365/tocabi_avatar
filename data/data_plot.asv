@@ -1,0 +1,94 @@
+%% CP-MPC
+
+clc
+clear all
+close all
+
+data = readmatrix('MJ_graph1.txt')
+
+figure(1)
+plot(data(:,1)) % ZMP Ref
+hold on
+grid on
+plot(data(:,2)) % ZMP des
+plot(data(:,5)) % del F
+plot(data(:,6)) % DCM des
+plot(data(:,7)) % DCM mea
+legend()
+
+figure(2)
+plot(data(:,3)) % centroidal moment
+ylim([-5 5])
+
+%% Joint 
+
+clc
+clear all
+close all
+
+data1 = readmatrix('MJ_com.txt')
+data2 = readmatrix('MJ_qdot.txt')
+
+figure(3)
+subplot(2,1,1)
+plot(data1(:, 1))    % com_trajectory_float_slow_
+hold on
+grid on
+plot(data1(:, 2))    % com_transform_pre_desired_from_
+plot(data1(:, 3))    % com_float_current_
+legend()
+subplot(2,1,2)
+joint_num = 2;
+plot(data2(:, joint_num))    % mea
+hold on
+grid on
+plot(data2(:, joint_num+6))  % des
+legend('mea', 'des')
+
+%% WBIK
+
+clc
+clear all
+close all
+
+data1 = readmatrix('MJ_wbik.txt')
+data2 = readmatrix('MJ_qdot_fast.txt')
+data3 = readmatrix('MJ_traj_fast.txt')
+
+
+figure(4)
+subplot(2,1,1)
+plot(data1(:,1)) % des
+hold on
+grid on
+plot(data1(:,3)) % virtual
+plot(data1(:,5)) % leg
+plot(data1(:,7)) % upper
+plot(data1(:,9)) % total
+legend()
+subplot(2,1,2)
+plot(data1(:,2)) % des
+hold on
+grid on
+plot(data1(:,4)) % virtual
+plot(data1(:,6)) % leg
+plot(data1(:,8)) % upper
+plot(data1(:,10)) % total
+legend()
+
+figure(5)
+joint_num = 2;
+plot(data2(:, joint_num))    % mea
+hold on
+grid on
+plot(data2(:, joint_num+6))  % des
+legend('mea', 'des')
+
+figure(6)
+plot(data3(:,1))
+hold on
+grid on
+plot(data3(:,1))
+plot(data3(:,1))
+
+

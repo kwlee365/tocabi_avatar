@@ -12,7 +12,7 @@
 #include <std_msgs/String.h>
 #include <sstream>
 #include <fstream>
-#include "tocabi_msgs/FTsensor.h" // real robot experiment
+// #include "tocabi_msgs/FTsensor.h" // real_robot experiment (is_real_robot == 1)
 
 //lexls
 // #include <lexls/lexlsi.h>
@@ -296,7 +296,7 @@ public:
 
     void AzureKinectCallback(const visualization_msgs::MarkerArray &msg);
 
-    void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real robot experiment
+    // void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real_robot experiment (is_real_robot == 1)
     ///////////////////////////////
 
     ////////////////dg custom controller variables/////////////
@@ -435,6 +435,8 @@ public:
     Eigen::VectorQd current_q_ddot_;
     Eigen::VectorQd desired_q_;
     Eigen::VectorQd desired_q_dot_;
+    Eigen::VectorQd desired_q_dot_LPF;
+    Eigen::VectorQd desired_q_dot_prev;
     Eigen::VectorQd desired_q_ddot_;
     Eigen::VectorQd pre_q_;
     Eigen::VectorQd pre_desired_q_;
@@ -1463,6 +1465,7 @@ public:
 
     void CP_compen_MJ();
     void CP_compen_MJ_FT();
+    void CP_compen_MJ_FT_REAL_ROBOT();
     void CLIPM_ZMP_compen_MJ(double XZMP_ref, double YZMP_ref);
     double U_ZMP_y_ssp = 0;
     double U_ZMP_y_ssp_LPF = 0;
@@ -1537,6 +1540,8 @@ public:
     Eigen::Vector2d cp_measured_LPF;
     Eigen::Vector2d cp_measured_thread_;
     Eigen::Vector2d cp_measured_mpc_;
+    Eigen::Vector3d cp_float_current_;
+
     Eigen::Vector3d com_support_init_;
     Eigen::Vector3d com_float_init_;
     Eigen::Vector3d com_float_current_;
@@ -1765,6 +1770,7 @@ public:
     std::vector<double> w_hqp_wbik2;
     std::vector<double> w_hqp_cam;
     std::vector<double> kp_wbik;
+    std::vector<double> kd_wbik;
     std::vector<double> kp_return;
 
     double eps_;
@@ -1775,8 +1781,8 @@ public:
 
     Eigen::MatrixXd H_hqp[2], A_hqp[2];
     Eigen::VectorXd g_hqp[2], ubA_hqp[2], lbA_hqp[2], ub_hqp[2], lb_hqp[2];
-    Eigen::MatrixXd J_hqp[6];
-    Eigen::VectorXd u_dot_hqp[6];
+    Eigen::MatrixXd J_hqp[5];
+    Eigen::VectorXd u_dot_hqp[5];
 
     Eigen::VectorXd q_dot_hqp[2];
     Eigen::VectorXd q_dot_hqp_temp;
@@ -1794,6 +1800,7 @@ public:
     Eigen::Vector3d com_dot_trajectory_float_slow_;
 
     Eigen::Vector3d com_transform_pre_desired_from_;
+    Eigen::Vector3d com_dot_transform_pre_desired_from_;
 
     Eigen::Vector6d rfoot_vel_trajectory_support_;
     Eigen::Vector6d rfoot_vel_trajectory_float_;
@@ -1839,6 +1846,10 @@ public:
     double damp1 = 0.0;
     double damp2 = 0.0;
 
+    double vjoint_vel_regul = 0.0;
+
+    bool is_lpf_init_ = true;
+
 private:    
     //////////////////////////////// Myeong-Ju
     unsigned int walking_tick_mj = 0;
@@ -1847,5 +1858,5 @@ private:
     unsigned int initial_tick_mj = 0;
     unsigned int initial_flag = 0;
     const double hz_ = 2000.0;  
-    unsigned int is_real_robot = 1; // 1 : real, 0 : sim
+    unsigned int is_real_robot = 0; // 1 : real, 0 : sim
 };

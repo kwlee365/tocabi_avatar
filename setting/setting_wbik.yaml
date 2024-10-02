@@ -1,23 +1,23 @@
 w_hqp_wbik1 : [100.0,     # Foot
-               100.0,      # COM
+               10.0,      # COM
                1.0,       # CAM (control Joint)
                0.00001,   # Joint vel
                0.0000001] # Joint acc
 
-w_hqp_wbik2 : [0.08,       # Hand
+w_hqp_wbik2 : [0.1,       # Hand
                1.0,       # Upperbody
                1.0,       # Pelvis
                0.00001,     # Joint vel    
                0.0000001]  # Joint acc    
 
 kp_wbik : [
-           40.0,       # v lfoot (walking in place)
-           40.0,       # w lfoot (walking in place)
-           40.0,       # v rfoot (walking in place)
-           40.0,       # w rfoot (walking in place)
-           40.0,       # vx com (walking in place)
-           40.0,       # vy com (walking in place)
-           40.0,       # vz com (walking in place)
+           30.0,       # v lfoot (walking in place)
+           30.0,       # w lfoot (walking in place)
+           30.0,       # v rfoot (walking in place)
+           30.0,       # w rfoot (walking in place)
+           30.0,       # vx com (walking in place)
+           50.0,       # vy com (walking in place)
+           30.0,       # vz com (walking in place)
 
           # 30.0,       # v lfoot (obstacle)
           # 30.0,       # w lfoot (obstacle)     
@@ -31,13 +31,17 @@ kp_wbik : [
           10.0,       # w lhand     
           10.0,       # v rhand
           10.0,       # w rhand
-
           10.0,       # w upper
           10.0]       # w pelvis
+
+kd_wbik : [0.0,
+           0.0,
+           0.0]  # Derivative term makes WBIK unstable.
 
 eps_         : 5.0
 eps_terminal : 0.0
 
-damp1 : 1.0 #  if you want to use upperbody more, please lower it.
-
+damp1 : 0.95 #  if you want to use upperbody more, please lower it.
 damp2 : 1.0
+
+vjoint_vel_regul : 100000
