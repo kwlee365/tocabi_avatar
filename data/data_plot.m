@@ -26,105 +26,140 @@ clc
 clear all
 close all
 
-data1 = readmatrix('MJ_wbik.txt')
-data2 = readmatrix('MJ_qdot_fast.txt')
-data3 = readmatrix('MJ_traj_fast.txt')
-data4 = readmatrix('MJ_q_fast.txt')
+data = readmatrix('MJ_wbik.txt');
 
 figure(4)
 subplot(2,1,1)
-plot(data1(:,1)) % des
+plot(data(:,1)) % des
 hold on
 grid on
-plot(data1(:,3)) % virtual
-plot(data1(:,5)) % leg
-plot(data1(:,7)) % upper
-plot(data1(:,9)) % total
+% plot(data(:,3)) % virtual
+% plot(data(:,5)) % leg
+% plot(data(:,7)) % upper
+plot(data(:,9)) % total
 legend()
 subplot(2,1,2)
-plot(data1(:,2)) % des
+plot(data(:,2)) % des
 hold on
 grid on
-plot(data1(:,4)) % virtual
-plot(data1(:,6)) % leg
-plot(data1(:,8)) % upper
-plot(data1(:,10)) % total
+% plot(data(:,4)) % virtual
+% plot(data(:,6)) % leg
+% plot(data(:,8)) % upperr
+plot(data(:,10)) % total
 legend()
 
-figure(5)
+data1 = readmatrix('MJ_qpoases1.txt');
+data2 = readmatrix('MJ_qpoases2.txt');
+
+figure()
+plot(data1(:,1))
+legend()
+legend('h1')
+title('qp status')
+figure()
+plot(data2(:,1))
+legend('h2')
+title('qp status')
+
+figure()
+plot(data1(:,2))
+legend()
+legend('h1')
+title('iter num')
+figure()
+plot(data2(:,2))
+legend('h2')
+title('iter num')
+
+%% Joint
+clc
+clear all
+close all
+
+figure()
+data = readmatrix('MJ_qdot_fast.txt');
 joint_num = 2;
-plot(data4(:, joint_num))    % mea
+plot(data(:, joint_num))    % mea
 hold on
 grid on
-plot(data4(:, joint_num+6))  % des
-plot(data2(:, joint_num))    % mea
-plot(data2(:, joint_num+6))  % des
-legend('pos mea', 'pos des', 'vel mea', 'vel des')
+% plot(data(:, joint_num+6))  % des
+plot(data(:, joint_num+12))  % des
 
+legend('vel mea', 'vel des LPF')
+title('qdot')
+
+figure()
+plot(data(:,19))
+title('calc time')
+
+
+%% traj test
+
+data = readmatrix('MJ_traj_fast.txt');
 
 figure(6)
-plot(data3(:,1))
+plot(data(:,1))
 hold on
 grid on
-plot(data3(:,2))
-plot(data3(:,3))
-plot(data3(:,4))
-plot(data3(:,5))
-plot(data3(:,6))
+plot(data(:,2))
+plot(data(:,3))
+plot(data(:,4))
+plot(data(:,5))
+plot(data(:,6))
 legend()
 title('lfoot')
 
 figure(7)
-plot(data3(:,7))
+plot(data(:,7))
 hold on
 grid on
-plot(data3(:,8))
-plot(data3(:,9))
-plot(data3(:,10))
-plot(data3(:,11))
-plot(data3(:,12))
+plot(data(:,8))
+plot(data(:,9))
+plot(data(:,10))
+plot(data(:,11))
+plot(data(:,12))
 legend()
 title('rfoot')
 
 figure(8)
-plot(data3(:,13))
+plot(data(:,13))
 hold on
 grid on
-plot(data3(:,14))
-plot(data3(:,15))
+plot(data(:,14))
+plot(data(:,15))
 legend()
 title('com')
 
 figure(9)
-plot(data3(:,16))
+plot(data(:,16))
 hold on
 grid on
-plot(data3(:,17))
-plot(data3(:,18))
-plot(data3(:,19))
-plot(data3(:,20))
-plot(data3(:,21))
+plot(data(:,17))
+plot(data(:,18))
+plot(data(:,19))
+plot(data(:,20))
+plot(data(:,21))
 legend()
 title('lhand')
 
 figure(10)
-plot(data3(:,22))
+plot(data(:,22))
 hold on
 grid on
-plot(data3(:,23))
-plot(data3(:,24))
-plot(data3(:,25))
-plot(data3(:,26))
-plot(data3(:,27))
+plot(data(:,23))
+plot(data(:,24))
+plot(data(:,25))
+plot(data(:,26))
+plot(data(:,27))
 legend()
 title('rhand')
 
 
 figure(11)
-plot(data3(:,28))
+plot(data(:,28))
 hold on
 grid on
-plot(data3(:,29))
-plot(data3(:,30))
+plot(data(:,29))
+plot(data(:,30))
 legend()
 title('upperbody')

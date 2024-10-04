@@ -1496,9 +1496,14 @@ public:
     Eigen::Vector12d q_des_;
     
     Eigen::Isometry3d pelv_trajectory_support_; //local frame
+    Eigen::Isometry3d pelv_trajectory_support_fast_; //local frame
+    Eigen::Isometry3d pelv_trajectory_support_slow_; //local frame
     
     Eigen::Isometry3d rfoot_trajectory_support_;  //local frame
     Eigen::Isometry3d lfoot_trajectory_support_;
+    Eigen::Isometry3d lfoot_trajectory_support_fast_;
+    Eigen::Isometry3d lfoot_trajectory_support_slow_;
+
     Eigen::Vector3d rfoot_trajectory_euler_support_;
     Eigen::Vector3d lfoot_trajectory_euler_support_;
 
@@ -1781,8 +1786,8 @@ public:
 
     Eigen::MatrixXd H_hqp[2], A_hqp[2];
     Eigen::VectorXd g_hqp[2], ubA_hqp[2], lbA_hqp[2], ub_hqp[2], lb_hqp[2];
-    Eigen::MatrixXd J_hqp[5];
-    Eigen::VectorXd u_dot_hqp[5];
+    Eigen::MatrixXd J_hqp[6];
+    Eigen::VectorXd u_dot_hqp[6];
 
     Eigen::VectorXd q_dot_hqp[2];
     Eigen::VectorXd q_dot_hqp_temp;
