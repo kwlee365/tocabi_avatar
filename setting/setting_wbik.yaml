@@ -1,4 +1,4 @@
-w_hqp_wbik1 : [100.0,     # Foot
+w_hqp_wbik1 : [90.0,     # Foot
                10.0,      # COM
                1.0,       # CAM (control Joint)
                0.0001,    # Joint vel
@@ -13,19 +13,22 @@ w_hqp_wbik2 : [0.1,       # Hand
 
 kp_wbik : [
            30.0,       # v_x lfoot (walking in place)
-           30.0,       # v_y lfoot (walking in place)
-           30.0,       # v_z lfoot (walking in place)
+           40.0,       # v_y lfoot (walking in place)
+           25.0,       # v_z lfoot (walking in place)
+
            30.0,       # w_x lfoot (walking in place)
            30.0,       # w_y lfoot (walking in place)
            30.0,       # w_z lfoot (walking in place)
+           
            30.0,       # v_x rfoot (walking in place)
-           30.0,       # v_y rfoot (walking in place)
-           30.0,       # v_z rfoot (walking in place)
+           40.0,       # v_y rfoot (walking in place)
+           25.0,       # v_z rfoot (walking in place)
+           
            30.0,       # w_x rfoot (walking in place)
            30.0,       # w_y rfoot (walking in place)
            30.0,       # w_z rfoot (walking in place)
 
-           30.0,       # vx com (walking in place)
+           20.0,       # vx com (walking in place)
            30.0,       # vy com (walking in place)
            30.0,       # vz com (walking in place)
 

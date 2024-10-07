@@ -3,30 +3,30 @@
 using namespace TOCABI;
 
 // is_real_robot == 0
-ofstream MJ_graph(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph.txt");
-ofstream MJ_graph1(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph1.txt");
-ofstream MJ_graph_foottra_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_x.txt");
-ofstream MJ_graph_foottra_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_y.txt");
-ofstream MJ_graph_foottra_z("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_z.txt");
-ofstream MJ_opto(           "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_opto.txt");
+// ofstream MJ_graph(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph.txt");
+// ofstream MJ_graph1(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph1.txt");
+// ofstream MJ_graph_foottra_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_x.txt");
+// ofstream MJ_graph_foottra_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_y.txt");
+// ofstream MJ_graph_foottra_z("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_z.txt");
+// ofstream MJ_opto(           "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_opto.txt");
 
-ofstream MJ_traj_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_traj_fast.txt");
-ofstream MJ_qdot_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_qdot_fast.txt");
-ofstream MJ_wbik(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_wbik.txt");
-ofstream MJ_qpoases1(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_qpoases1.txt");
-ofstream MJ_qpoases2(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_qpoases2.txt");
+// ofstream MJ_traj_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_traj_fast.txt");
+// ofstream MJ_qdot_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_qdot_fast.txt");
+// ofstream MJ_wbik(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_wbik.txt");
 
 // is_real_robot == 1
-// ofstream MJ_graph(          "/home/dyros/data/kwan/MJ_graph.txt");
-// ofstream MJ_graph1(         "/home/dyros/data/kwan/MJ_graph1.txt");
-// ofstream MJ_graph_foottra_x("/home/dyros/data/kwan/MJ_graph_foottra_x.txt");
-// ofstream MJ_graph_foottra_y("/home/dyros/data/kwan/MJ_graph_foottra_y.txt");
-// ofstream MJ_opto(           "/home/dyros/data/kwan/MJ_opto.txt");
+ofstream MJ_graph(          "/home/dyros/data/kwan/MJ_graph.txt");
+ofstream MJ_graph1(         "/home/dyros/data/kwan/MJ_graph1.txt");
+ofstream MJ_graph_foottra_x("/home/dyros/data/kwan/MJ_graph_foottra_x.txt");
+ofstream MJ_graph_foottra_y("/home/dyros/data/kwan/MJ_graph_foottra_y.txt");
+ofstream MJ_graph_foottra_z("/home/dyros/data/kwan/MJ_graph_foottra_z.txt");
+ofstream MJ_opto(           "/home/dyros/data/kwan/MJ_opto.txt");
+ofstream MJ_opto_thread3(   "/home/dyros/data/kwan/MJ_opto_thread3.txt");
 
-// ofstream MJ_traj_fast(      "/home/dyros/data/kwan/MJ_traj_fast.txt");
-// ofstream MJ_q_fast(         "/home/dyros/data/kwan/MJ_q_fast.txt");
-// ofstream MJ_qdot_fast(      "/home/dyros/data/kwan/MJ_qdot_fast.txt");
-// ofstream MJ_wbik(           "/home/dyros/data/kwan/MJ_wbik.txt");
+ofstream MJ_traj_fast(      "/home/dyros/data/kwan/MJ_traj_fast.txt");
+ofstream MJ_qdot_fast(      "/home/dyros/data/kwan/MJ_qdot_fast.txt");
+ofstream MJ_wbik(           "/home/dyros/data/kwan/MJ_wbik.txt");
+ofstream MJ_com(           "/home/dyros/data/kwan/MJ_com.txt");
 
 AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 {
@@ -73,7 +73,7 @@ AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 
     if(is_real_robot == 1)
     {
-        // opto_ftsensor_sub = nh_avatar_.subscribe("/optoforce/ftsensor", 100, &AvatarController::OptoforceFTCallback, this); // real robot experiment
+        opto_ftsensor_sub = nh_avatar_.subscribe("/optoforce/ftsensor", 100, &AvatarController::OptoforceFTCallback, this); // real robot experiment
     }
 
     bool urdfmode = false;
@@ -9605,6 +9605,7 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
         
     double l_p = 0.0;
     l_p = foot_step_support_frame_(current_step_num_, 1);
+    // double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
     double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
 
     //double w1_step = 1.0, w2_step = 0.02, w3_step = 3.0; // real robot experiment
@@ -9730,16 +9731,16 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     lb_step(2) = u0_x + L_min;
     lb_step(3) = u0_y + W_min;
     lb_step(4) = exp(wn*T_min);
-    lb_step(5) = b_nom_x_cpmpc - 0.15; 
-    lb_step(6) = b_nom_y_cpmpc - 0.15;
+    lb_step(5) = b_nom_x_cpmpc - 0.25; 
+    lb_step(6) = b_nom_y_cpmpc - 0.25;
     
     ub_step(0) = u0_x;
     ub_step(1) = u0_y;
     ub_step(2) = u0_x + L_max;
     ub_step(3) = u0_y + W_max;
     ub_step(4) = exp(wn*T_max);
-    ub_step(5) = b_nom_x_cpmpc + 0.15; 
-    ub_step(6) = b_nom_y_cpmpc + 0.15;    
+    ub_step(5) = b_nom_x_cpmpc + 0.25; 
+    ub_step(6) = b_nom_y_cpmpc + 0.25;    
     
     if(walking_tick_mj == 0)
     {
@@ -9835,7 +9836,7 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
             }
             else
             {
-                // cout << "bolt is not solved." << endl;
+                cout << "WTF, Bolt is not solved." << endl;
             }
         }
 
@@ -10116,6 +10117,11 @@ void AvatarController::computeThread3()
     // new_cpcontroller_MPC_ankle(50.0, 1.5);
     // new_cpcontroller_MPC_ankle_hip(50.0, 1.5);
     new_cpcontroller_MPC_MJDG(50.0, 1.5);
+
+    if(is_real_robot == 1)
+    {
+        MJ_opto_thread3 <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl; 
+    }
 }
 
 void AvatarController::comGenerator_MPC_wieber(double MPC_freq, double T, double preview_window, int MPC_synchro_hz_)
@@ -11450,7 +11456,7 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
             {                
                 weighting_cp_new_x_(i,i) = 10.0; // X dir   
                 //weighting_cp_new_y_(i,i) = 10.0; // Y dir
-                weighting_cp_new_y_(i,i) = 1.0; // Y dir
+                weighting_cp_new_y_(i,i) = 10.0; // Y dir
             }
             else if (i < 50)
             {                
@@ -11461,7 +11467,7 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
             {                
                 weighting_cp_new_x_(i,i) = 100.0; 
                 //weighting_cp_new_y_(i,i) = 100.0; // Y dir
-                weighting_cp_new_y_(i,i) = 10.0; // Y dir
+                weighting_cp_new_y_(i,i) = 100.0; // Y dir
             }            
         }
         for(int i = 0; i < 2*N_cp; i++) // for smoothing control input  
@@ -11524,8 +11530,9 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
     {   
         if(is_real_robot == 1)
         {
-            weighting_tau_damping_x_(i, i) = DyrosMath::cubic(abs(cpmpc_output_x_new_(2*i) - Z_x_ref_wo_offset_new(2*i)), 0.00 , 0.05, 0.00001, 0.0,  0.0, 0.0);
-            weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.015, 0.03, 1.0,     0.1,  0.0, 0.0); 
+            weighting_tau_damping_x_(i, i) = DyrosMath::cubic(abs(cpmpc_output_x_new_(2*i) - Z_x_ref_wo_offset_new(2*i)), 0.00, 0.05, 0.001, 0.000001, 0.0, 0.0);
+            //weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.00, 0.03, 0.001, 0.0, 0.0, 0.0); 
+            weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.00, 0.03, 0.001, 0.000001, 0.0, 0.0);
         }
         else if (is_real_robot == 0)
         {
@@ -12414,15 +12421,15 @@ void AvatarController::TrackerStatusCallback(const std_msgs::Bool &msg)
 }
  
 // real robot experiment (is_real_robot == 1)
-// void AvatarController::OptoforceFTCallback(const tocabi_msgs::FTsensor &msg)
-// {
-//     opto_ft_raw_(0) = msg.Fx;
-//     opto_ft_raw_(1) = msg.Fy;
-//     opto_ft_raw_(2) = msg.Fz;
-//     opto_ft_raw_(3) = msg.Tx;
-//     opto_ft_raw_(4) = msg.Ty;
-//     opto_ft_raw_(5) = msg.Tz;
-// }
+void AvatarController::OptoforceFTCallback(const tocabi_msgs::FTsensor &msg)
+{
+    opto_ft_raw_(0) = msg.Fx;
+    opto_ft_raw_(1) = msg.Fy;
+    opto_ft_raw_(2) = msg.Fz;
+    opto_ft_raw_(3) = msg.Tx;
+    opto_ft_raw_(4) = msg.Ty;
+    opto_ft_raw_(5) = msg.Tz;
+}
 
 Eigen::MatrixXd AvatarController::discreteRiccatiEquationPrev(Eigen::MatrixXd a, Eigen::MatrixXd b, Eigen::MatrixXd r, Eigen::MatrixXd q)
 {
@@ -13064,8 +13071,8 @@ void AvatarController::getRobotState()
     // real robot experiment
     if(is_real_robot == 1)
     {
-        // opto_ft_ = opto_ft_raw_; 
-        // MJ_opto <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl; 
+        opto_ft_ = opto_ft_raw_; 
+        MJ_opto <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl; 
     }
 
     if (walking_tick_mj == 0)
@@ -13844,7 +13851,7 @@ void AvatarController::floatToSupportFootstep()
 
 void AvatarController::Joint_gain_set_MJ()
 {
-    if(is_real_robot == 0)
+    if(is_real_robot == 1)
     {
         //simulation gains
         Kp(0) = 1800.0;
@@ -13919,7 +13926,7 @@ void AvatarController::Joint_gain_set_MJ()
         Kp(32) = 50.0;
         Kd(32) = 2.0; // Right Wrist
     }
-    else if(is_real_robot == 1)
+    else if(is_real_robot == 0)
     {
         // real robot experiment
         Kp(0) = 2000.0;
@@ -14006,8 +14013,8 @@ void AvatarController::addZmpOffset()
     // lfoot_zmp_offset_ = -0.02; // 1.1 초
     // rfoot_zmp_offset_ = 0.02;
 
-    lfoot_zmp_offset_ = -0.01; // simul 1.1 s
-    rfoot_zmp_offset_ = 0.012;
+    lfoot_zmp_offset_ = -0.017; // simul 1.1 s
+    rfoot_zmp_offset_ =  0.017;
 
     foot_step_support_frame_offset_ = foot_step_support_frame_;
 
@@ -14685,7 +14692,8 @@ void AvatarController::getFootTrajectory_stepping()
     {
         target_swing_foot(i) = foot_step_support_frame_(current_step_num_, i);        
     }
-    zmp_modif_time_margin_ = 0.1*hz_;
+    // zmp_modif_time_margin_ = 0.1*hz_;    // MJ
+    zmp_modif_time_margin_ = 0.12*hz_;
 
     if(walking_tick_mj == t_start_ + t_total_ - t_double2_ - t_rest_last_ - zmp_modif_time_margin_) // 조현민 처럼 Step으로 zmp를 변경하는게 아니라 부드럽게 바꿔줘도 좋을듯 / SSP 끝나기 0.1초 전 스윙 발 X,Y 고정
     {
@@ -16262,7 +16270,7 @@ void AvatarController::CP_compen_MJ_FT_REAL_ROBOT()
     double zmp_offset = 0;
     double alpha_new = 0;
 
-    zmp_offset = 0.015; // 0.9초
+    zmp_offset = 0.020; // 0.9초
     //   zmp_offset = 0.02; // 1.1초
     // zmp_offset = 0.015; // 1.3초
 
@@ -17758,7 +17766,7 @@ void AvatarController::HqpCamComJacobianWBIK()
     u_dot_hqp[4] = kp_upper * error_w_upper;
 
     J_hqp[5] = J_pelv_;
-    double kp_pelv  =  DyrosMath::cubic(walking_tick_mj, 0, t_temp_, 1.0, kp_wbik[20], 0.0, 0.0);
+    double kp_pelv  =  DyrosMath::cubic(walking_tick_mj,  0, t_temp_, 1.0, kp_wbik[20], 0.0, 0.0);
     u_dot_hqp[5] = kp_pelv * error_w_pelvis;
 
     J_hqp[6] = J_cam_;
@@ -17767,13 +17775,20 @@ void AvatarController::HqpCamComJacobianWBIK()
     q_pre_joint.segment(6, MODEL_DOF) = motion_q_dot_pre_;  
     u_dot_hqp[6] = J_cam_ * q_pre_joint;
 
+    Eigen::Matrix3d w_hqp_com; w_hqp_com.setIdentity();
+    w_hqp_com(0, 0) =       w_hqp_wbik1[1];
+    w_hqp_com(1, 1) =       w_hqp_wbik1[1];
+    w_hqp_com(2, 2) = 6.0 * w_hqp_wbik1[1];
+
     H_hqp[0] = w_hqp_wbik1[0] * (J_hqp[0].transpose() * J_hqp[0])
-             + w_hqp_wbik1[1] * (J_hqp[1].transpose() * J_hqp[1])
+            //  + w_hqp_wbik1[1] * (J_hqp[1].transpose() * J_hqp[1])
+             +(J_hqp[1].transpose() * w_hqp_com * J_hqp[1])
              + w_hqp_wbik1[2] * (J_hqp[2].transpose() * J_hqp[2])
              + w_hqp_wbik1[3] * (Eigen::MatrixXd::Identity(variable_size, variable_size))
              + w_hqp_wbik1[4] * (Eigen::MatrixXd::Identity(variable_size, variable_size));
 
     g_hqp[0] =-w_hqp_wbik1[0] * (J_hqp[0].transpose() * u_dot_hqp[0])
+            -((w_hqp_com * J_hqp[1]).transpose() * u_dot_hqp[1])
               -w_hqp_wbik1[1] * (J_hqp[1].transpose() * u_dot_hqp[1])
               -w_hqp_wbik1[2] * (J_hqp[2].transpose() * u_dot_hqp[2]);
     g_hqp[0].segment(6, MODEL_DOF) -= w_hqp_wbik1[4] * motion_q_dot_pre_;
@@ -17927,7 +17942,7 @@ void AvatarController::HqpCamComJacobianWBIK()
         pd_control_mask_(control_joint_idx[i]) = 1;
     }
 
-    if(is_real_robot == 0)
+    if(is_real_robot == 1)
     {
         MJ_traj_fast << error_v_lfoot.transpose() << " " 
                      << error_w_lfoot.transpose() << " " 
@@ -17947,6 +17962,10 @@ void AvatarController::HqpCamComJacobianWBIK()
                 << (J_cam_ * q_dot_hqp[last_solved_hierarchy_num_camhqp_]).transpose() << std::endl; 
 
         MJ_qdot_fast  << rd_.q_dot_.segment(0, 6).transpose() << " " << motion_q_dot_.segment(0, 6).transpose()  << " "  << desired_q_dot_LPF.segment(0,6).transpose() << " " << dt_ << std::endl;
+
+        MJ_com << com_trajectory_float_slow_.transpose() << " " 
+               << com_transform_pre_desired_from_.transpose() << std::endl;
+
     }
 }
 

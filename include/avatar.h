@@ -12,7 +12,7 @@
 #include <std_msgs/String.h>
 #include <sstream>
 #include <fstream>
-// #include "tocabi_msgs/FTsensor.h" // real_robot experiment (is_real_robot == 1)
+#include "tocabi_msgs/FTsensor.h" // real_robot experiment (is_real_robot == 1)
 
 //lexls
 // #include <lexls/lexlsi.h>
@@ -296,7 +296,7 @@ public:
 
     void AzureKinectCallback(const visualization_msgs::MarkerArray &msg);
 
-    // void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real_robot experiment (is_real_robot == 1)
+    void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real_robot experiment (is_real_robot == 1)
     ///////////////////////////////
 
     ////////////////dg custom controller variables/////////////
@@ -1865,5 +1865,5 @@ private:
     unsigned int initial_tick_mj = 0;
     unsigned int initial_flag = 0;
     const double hz_ = 2000.0;  
-    unsigned int is_real_robot = 0; // 1 : real, 0 : sim
+    unsigned int is_real_robot = 1; // 1 : real, 0 : sim
 };
