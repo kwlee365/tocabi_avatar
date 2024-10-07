@@ -1,54 +1,45 @@
-w_hqp_wbik1 : [50.0,     # Foot
+w_hqp_wbik1 : [100.0,     # Foot
                10.0,      # COM
                1.0,       # CAM (control Joint)
                0.0001,    # Joint vel
-               2.0]       # Joint acc
+               1.5]  # Joint acc
 
 w_hqp_wbik2 : [0.1,       # Hand
                1.0,       # Upperbody
-               0.05,      # cam smoothing
+               1.0,      # pelvis
+               0.1,       # cam smoothing    
                0.0001,    # Joint vel    
-               2.0]       # Joint acc    
+               1.5]  # Joint acc    
 
 kp_wbik : [
-           30.0,       # v lfoot (walking in place)
-           30.0,       # w lfoot (walking in place)
-           30.0,       # v rfoot (walking in place)
-           30.0,       # w rfoot (walking in place)
-           35.0,       # vx com (walking in place)
-           35.0,       # vy com (walking in place)
-           35.0,       # vz com (walking in place)
+           30.0,       # v_x lfoot (walking in place)
+           30.0,       # v_y lfoot (walking in place)
+           30.0,       # v_z lfoot (walking in place)
+           30.0,       # w_x lfoot (walking in place)
+           30.0,       # w_y lfoot (walking in place)
+           30.0,       # w_z lfoot (walking in place)
+           30.0,       # v_x rfoot (walking in place)
+           30.0,       # v_y rfoot (walking in place)
+           30.0,       # v_z rfoot (walking in place)
+           30.0,       # w_x rfoot (walking in place)
+           30.0,       # w_y rfoot (walking in place)
+           30.0,       # w_z rfoot (walking in place)
 
-          # 30.0,       # v lfoot (obstacle)
-          # 30.0,       # w lfoot (obstacle)     
-          # 30.0,       # v rfoot (obstacle)
-          # 30.0,       # w rfoot (obstacle)
-          # 30.0,       # vx com (obstacle)
-          # 30.0,       # vy com (obstacle)
-          # 50.0,       # vz com (obstacle)
+           30.0,       # vx com (walking in place)
+           30.0,       # vy com (walking in place)
+           30.0,       # vz com (walking in place)
 
-          10.0,       # v lhand
-          10.0,       # w lhand     
-          10.0,       # v rhand
-          10.0,       # w rhand
-          10.0,       # w upper
-          10.0]       # w pelvis
-
-kd_wbik : [0.0,
-           0.0,
-           0.0]  # Derivative term makes WBIK unstable.
-
-kp_wbik_foot : [30.0,   # lfoot_x
-                30.0,   # lfoot_y
-                30.0,   # lfoot_z
-                30.0,   # rfoot_x
-                30.0,   # rfoot_y
-                30.0]   # rfoot_z
+           10.0,       # v lhand
+           10.0,       # w lhand     
+           10.0,       # v rhand
+           10.0,       # w rhand
+           10.0,       # w upper
+           10.0]       # w pelvis 
 
 eps_         : 5.0
 eps_terminal : 0.0
 
-damp1 : 0.93 #  if you want to use upperbody more, please lower it.
+damp1 : 1.0 #  if you want to use upperbody more, please lower it.
 damp2 : 1.0
 
 vjoint_vel_regul : 1

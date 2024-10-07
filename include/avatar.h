@@ -12,7 +12,7 @@
 #include <std_msgs/String.h>
 #include <sstream>
 #include <fstream>
-#include "tocabi_msgs/FTsensor.h" // real_robot experiment (is_real_robot == 1)
+// #include "tocabi_msgs/FTsensor.h" // real_robot experiment (is_real_robot == 1)
 
 //lexls
 // #include <lexls/lexlsi.h>
@@ -296,7 +296,7 @@ public:
 
     void AzureKinectCallback(const visualization_msgs::MarkerArray &msg);
 
-    void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real_robot experiment (is_real_robot == 1)
+    // void OptoforceFTCallback(const tocabi_msgs::FTsensor &msg); // real_robot experiment (is_real_robot == 1)
     ///////////////////////////////
 
     ////////////////dg custom controller variables/////////////
@@ -1778,9 +1778,6 @@ public:
     std::vector<double> kd_wbik;
     std::vector<double> kp_return;
 
-    std::vector<double> kp_wbik_foot;
-
-
     double eps_;
     double eps_terminal;
 
@@ -1789,8 +1786,8 @@ public:
 
     Eigen::MatrixXd H_hqp[2], A_hqp[2];
     Eigen::VectorXd g_hqp[2], ubA_hqp[2], lbA_hqp[2], ub_hqp[2], lb_hqp[2];
-    Eigen::MatrixXd J_hqp[6];
-    Eigen::VectorXd u_dot_hqp[6];
+    Eigen::MatrixXd J_hqp[7];
+    Eigen::VectorXd u_dot_hqp[7];
 
     Eigen::VectorXd q_dot_hqp[2];
     Eigen::VectorXd q_dot_hqp_temp;
@@ -1860,7 +1857,6 @@ public:
 
     double Foot_x_from_cp_mpc = 0.0;
     double Foot_y_from_cp_mpc = 0.0;
-
 private:    
     //////////////////////////////// Myeong-Ju
     unsigned int walking_tick_mj = 0;
@@ -1869,5 +1865,5 @@ private:
     unsigned int initial_tick_mj = 0;
     unsigned int initial_flag = 0;
     const double hz_ = 2000.0;  
-    unsigned int is_real_robot = 1; // 1 : real, 0 : sim
+    unsigned int is_real_robot = 0; // 1 : real, 0 : sim
 };

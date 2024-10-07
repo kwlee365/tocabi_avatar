@@ -5,7 +5,6 @@ clear all
 close all
 
 data = readmatrix('MJ_graph1.txt')
-
 figure(1)
 plot(data(:,1)) % ZMP Ref
 hold on
@@ -18,7 +17,29 @@ legend()
 
 figure(2)
 plot(data(:,3)) % centroidal moment
-ylim([-5 5])
+
+data = readmatrix('MJ_graph_foottra_y.txt')
+figure(3)
+plot(data(:,1)) % del F (from BOLT)
+hold on
+grid on
+plot(data(:,2)) % lfoot traj
+plot(data(:,3)) % rfoot traj
+plot(data(:,5)) % foot traj from CP MPC
+legend()
+
+data = readmatrix('MJ_graph_foottra_z.txt')
+plot(data(:,1)) % lfoot traj
+hold on
+grid on
+plot(data(:,2)) % rfoot traj
+legend()
+
+data = readmatrix('MJ_graph_foottra_x.txt')
+figure(4)
+plot(data(:,6)) % del F (from BOLT)
+hold on
+grid on
 
 %% WBIK
 
@@ -33,43 +54,15 @@ subplot(2,1,1)
 plot(data(:,1)) % des
 hold on
 grid on
-% plot(data(:,3)) % virtual
-% plot(data(:,5)) % leg
-% plot(data(:,7)) % upper
+
 plot(data(:,9)) % total
 legend()
 subplot(2,1,2)
 plot(data(:,2)) % des
 hold on
 grid on
-% plot(data(:,4)) % virtual
-% plot(data(:,6)) % leg
-% plot(data(:,8)) % upperr
 plot(data(:,10)) % total
 legend()
-
-data1 = readmatrix('MJ_qpoases1.txt');
-data2 = readmatrix('MJ_qpoases2.txt');
-
-figure()
-plot(data1(:,1))
-legend()
-legend('h1')
-title('qp status')
-figure()
-plot(data2(:,1))
-legend('h2')
-title('qp status')
-
-figure()
-plot(data1(:,2))
-legend()
-legend('h1')
-title('iter num')
-figure()
-plot(data2(:,2))
-legend('h2')
-title('iter num')
 
 %% Joint
 clc
@@ -103,9 +96,9 @@ hold on
 grid on
 plot(data(:,2))
 plot(data(:,3))
-plot(data(:,4))
-plot(data(:,5))
-plot(data(:,6))
+% plot(data(:,4))
+% plot(data(:,5))
+% plot(data(:,6))
 legend()
 title('lfoot')
 
@@ -115,9 +108,9 @@ hold on
 grid on
 plot(data(:,8))
 plot(data(:,9))
-plot(data(:,10))
-plot(data(:,11))
-plot(data(:,12))
+% plot(data(:,10))
+% plot(data(:,11))
+% plot(data(:,12))
 legend()
 title('rfoot')
 
