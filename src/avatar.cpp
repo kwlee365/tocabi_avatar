@@ -24,9 +24,10 @@ ofstream MJ_opto(           "/home/dyros/data/kwan/MJ_opto.txt");
 ofstream MJ_opto_thread3(   "/home/dyros/data/kwan/MJ_opto_thread3.txt");
 
 ofstream MJ_traj_fast(      "/home/dyros/data/kwan/MJ_traj_fast.txt");
+ofstream MJ_q_fast(         "/home/dyros/data/kwan/MJ_q_fast.txt");
 ofstream MJ_qdot_fast(      "/home/dyros/data/kwan/MJ_qdot_fast.txt");
 ofstream MJ_wbik(           "/home/dyros/data/kwan/MJ_wbik.txt");
-ofstream MJ_com(           "/home/dyros/data/kwan/MJ_com.txt");
+ofstream MJ_com(            "/home/dyros/data/kwan/MJ_com.txt");
 
 AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 {
@@ -9906,9 +9907,11 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
         stepping_input_(1) = del_F_(1);
     }
     
-    // MJ_graph2 << t_total_ << "," << t_rest_init_ << "," << t_rest_last_ << "," << dsp_scaler_(0) << "," << dsp_scaler_(1) << "," << dsp_time_reducer_ << "," << dsp_time_reducer_fixed_ << endl;
-    del_F_(0) = stepping_input_(0);
+    del_F_(0) = stepping_input_(0);  // BOLT ACTIVATED
     del_F_(1) = stepping_input_(1);
+
+    // del_F_(0) = L_nom;  // BOLT DEACTIVATED
+    // del_F_(1) = W_nom;
 
     // if(walking_tick_mj > t_start_ + t_rest_init_ + t_double1_ && walking_tick_mj < t_start_ + t_total_ - (t_rest_last_ + t_double2_) )
     // {   
@@ -11532,7 +11535,7 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
         {
             weighting_tau_damping_x_(i, i) = DyrosMath::cubic(abs(cpmpc_output_x_new_(2*i) - Z_x_ref_wo_offset_new(2*i)), 0.00, 0.05, 0.001, 0.000001, 0.0, 0.0);
             //weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.00, 0.03, 0.001, 0.0, 0.0, 0.0); 
-            weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.00, 0.03, 0.001, 0.000001, 0.0, 0.0);
+            weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.02, 0.03, 0.001, 0.000001, 0.0, 0.0);
         }
         else if (is_real_robot == 0)
         {
@@ -13036,11 +13039,11 @@ void AvatarController::getRobotState()
 
     SC_err_compen(com_support_current_(0), com_support_current_(1));
     
-    // cp_measured_(0) = com_support_cp_(0) + com_float_current_dot_LPF(0) / wn;
-    // cp_measured_(1) = com_support_current_(1) + com_float_current_dot_LPF(1) / wn;
+    cp_measured_(0) = com_support_cp_(0) + com_float_current_dot_LPF(0) / wn;
+    cp_measured_(1) = com_support_current_(1) + com_float_current_dot_LPF(1) / wn;
 
     // KW modif
-    cp_measured_ = DyrosMath::multiplyIsometry3dVector3d(DyrosMath::inverseIsometry3d(supportfoot_float_current_yaw_only), cp_float_current_).segment(0,2);
+    // cp_measured_ = DyrosMath::multiplyIsometry3dVector3d(DyrosMath::inverseIsometry3d(supportfoot_float_current_yaw_only), cp_float_current_).segment(0,2);
  
     // l_ft : generated force by robot
     l_ft_ = rd_.LF_FT;
@@ -14013,8 +14016,8 @@ void AvatarController::addZmpOffset()
     // lfoot_zmp_offset_ = -0.02; // 1.1 초
     // rfoot_zmp_offset_ = 0.02;
 
-    lfoot_zmp_offset_ = -0.017; // simul 1.1 s
-    rfoot_zmp_offset_ =  0.017;
+    lfoot_zmp_offset_ = -0.012; // simul 1.1 s
+    rfoot_zmp_offset_ =  0.012;
 
     foot_step_support_frame_offset_ = foot_step_support_frame_;
 
@@ -16270,9 +16273,9 @@ void AvatarController::CP_compen_MJ_FT_REAL_ROBOT()
     double zmp_offset = 0;
     double alpha_new = 0;
 
-    zmp_offset = 0.020; // 0.9초
+    // zmp_offset = 0.020; // 0.9초
     //   zmp_offset = 0.02; // 1.1초
-    // zmp_offset = 0.015; // 1.3초
+    zmp_offset = 0.012; // 1.3초
 
     // Preview를 이용한 COM 생성시 ZMP offset을 2cm 안쪽으로 넣었지만, alpha 계산은 2cm 넣으면 안되기 때문에 조정해주는 코드
     // 어떻게 보면 COM, CP 궤적은 ZMP offset이 반영되었고, CP 제어기는 반영안시킨게 안맞는거 같기도함
@@ -17776,9 +17779,9 @@ void AvatarController::HqpCamComJacobianWBIK()
     u_dot_hqp[6] = J_cam_ * q_pre_joint;
 
     Eigen::Matrix3d w_hqp_com; w_hqp_com.setIdentity();
-    w_hqp_com(0, 0) =       w_hqp_wbik1[1];
-    w_hqp_com(1, 1) =       w_hqp_wbik1[1];
-    w_hqp_com(2, 2) = 6.0 * w_hqp_wbik1[1];
+    w_hqp_com(0, 0) =                    w_hqp_wbik1[1];
+    w_hqp_com(1, 1) = w_hqp_wbik_com_y * w_hqp_wbik1[1];
+    w_hqp_com(2, 2) = w_hqp_wbik_com_z * w_hqp_wbik1[1];
 
     H_hqp[0] = w_hqp_wbik1[0] * (J_hqp[0].transpose() * J_hqp[0])
             //  + w_hqp_wbik1[1] * (J_hqp[1].transpose() * J_hqp[1])
@@ -17788,8 +17791,8 @@ void AvatarController::HqpCamComJacobianWBIK()
              + w_hqp_wbik1[4] * (Eigen::MatrixXd::Identity(variable_size, variable_size));
 
     g_hqp[0] =-w_hqp_wbik1[0] * (J_hqp[0].transpose() * u_dot_hqp[0])
+            //   -w_hqp_wbik1[1] * (J_hqp[1].transpose() * u_dot_hqp[1])
             -((w_hqp_com * J_hqp[1]).transpose() * u_dot_hqp[1])
-              -w_hqp_wbik1[1] * (J_hqp[1].transpose() * u_dot_hqp[1])
               -w_hqp_wbik1[2] * (J_hqp[2].transpose() * u_dot_hqp[2]);
     g_hqp[0].segment(6, MODEL_DOF) -= w_hqp_wbik1[4] * motion_q_dot_pre_;
 
@@ -17961,6 +17964,7 @@ void AvatarController::HqpCamComJacobianWBIK()
                 << (J_cam_ * q_dot_upper).transpose() << " " 
                 << (J_cam_ * q_dot_hqp[last_solved_hierarchy_num_camhqp_]).transpose() << std::endl; 
 
+        MJ_q_fast     << rd_.q_.segment(0, 6).transpose()     << " " << motion_q_.segment(0, 6).transpose() << std::endl;
         MJ_qdot_fast  << rd_.q_dot_.segment(0, 6).transpose() << " " << motion_q_dot_.segment(0, 6).transpose()  << " "  << desired_q_dot_LPF.segment(0,6).transpose() << " " << dt_ << std::endl;
 
         MJ_com << com_trajectory_float_slow_.transpose() << " " 
@@ -18182,5 +18186,12 @@ void AvatarController::getParameterYAML()
 
     ros::param::get("/tocabi_controller/vjoint_vel_regul", vjoint_vel_regul);
     std::cout << "vjoint_vel_regul: " << vjoint_vel_regul << std::endl;
+
+    ros::param::get("/tocabi_controller/w_hqp_wbik_com_y", w_hqp_wbik_com_y);
+    std::cout << "w_hqp_wbik_com_y: " << w_hqp_wbik_com_y << std::endl;
+
+    ros::param::get("/tocabi_controller/w_hqp_wbik_com_z", w_hqp_wbik_com_z);
+    std::cout << "w_hqp_wbik_com_z: " << w_hqp_wbik_com_z << std::endl;
+
 
 }

@@ -1857,6 +1857,9 @@ public:
 
     double Foot_x_from_cp_mpc = 0.0;
     double Foot_y_from_cp_mpc = 0.0;
+
+    double w_hqp_wbik_com_y = 0.0;
+    double w_hqp_wbik_com_z = 0.0;
 private:    
     //////////////////////////////// Myeong-Ju
     unsigned int walking_tick_mj = 0;

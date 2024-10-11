@@ -1,19 +1,19 @@
-w_hqp_wbik1 : [90.0,     # Foot
+w_hqp_wbik1 : [120.0,     # Foot
                10.0,      # COM
                1.0,       # CAM (control Joint)
                0.0001,    # Joint vel
-               1.5]  # Joint acc
+               1.5]       # Joint acc
 
 w_hqp_wbik2 : [0.1,       # Hand
-               1.0,       # Upperbody
-               1.0,      # pelvis
+               5.0,       # Upperbody
+               1.0,       # pelvis
                0.1,       # cam smoothing    
                0.0001,    # Joint vel    
-               1.5]  # Joint acc    
+               1.5]       # Joint acc    
 
 kp_wbik : [
            30.0,       # v_x lfoot (walking in place)
-           40.0,       # v_y lfoot (walking in place)
+           30.0,       # v_y lfoot (walking in place)
            25.0,       # v_z lfoot (walking in place)
 
            30.0,       # w_x lfoot (walking in place)
@@ -21,7 +21,7 @@ kp_wbik : [
            30.0,       # w_z lfoot (walking in place)
            
            30.0,       # v_x rfoot (walking in place)
-           40.0,       # v_y rfoot (walking in place)
+           30.0,       # v_y rfoot (walking in place)
            25.0,       # v_z rfoot (walking in place)
            
            30.0,       # w_x rfoot (walking in place)
@@ -29,7 +29,7 @@ kp_wbik : [
            30.0,       # w_z rfoot (walking in place)
 
            20.0,       # vx com (walking in place)
-           30.0,       # vy com (walking in place)
+           25.0,       # vy com (walking in place)
            30.0,       # vz com (walking in place)
 
            10.0,       # v lhand
@@ -46,3 +46,6 @@ damp1 : 1.0 #  if you want to use upperbody more, please lower it.
 damp2 : 1.0
 
 vjoint_vel_regul : 1
+
+w_hqp_wbik_com_y : 2.0
+w_hqp_wbik_com_z : 7.0
