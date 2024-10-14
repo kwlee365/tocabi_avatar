@@ -3,34 +3,34 @@
 using namespace TOCABI;
 
 // is_real_robot == 0
-ofstream MJ_graph(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph.txt");
-ofstream MJ_graph1(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph1.txt");
-ofstream MJ_graph_foottra_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_x.txt");
-ofstream MJ_graph_foottra_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_y.txt");
-ofstream MJ_graph_foottra_z("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_z.txt");
-ofstream MJ_opto(           "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_opto.txt");
-ofstream MJ_opto_thread3(   "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_opto_thread3.txt");
+// ofstream MJ_graph(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph.txt");
+// ofstream MJ_graph1(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph1.txt");
+// ofstream MJ_graph_foottra_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_x.txt");
+// ofstream MJ_graph_foottra_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_y.txt");
+// ofstream MJ_graph_foottra_z("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_z.txt");
+// ofstream MJ_opto(           "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_opto.txt");
+// ofstream MJ_opto_thread3(   "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_opto_thread3.txt");
 
-ofstream MJ_traj_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_traj_fast.txt");
-ofstream MJ_qdot_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_qdot_fast.txt");
-ofstream MJ_wbik(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_wbik.txt");
-ofstream MJ_q_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_q_fast.txt");
-ofstream MJ_com(            "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_com.txt");
+// ofstream MJ_traj_fast(      "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_traj_fast.txt");
+// ofstream MJ_qdot_fast(      "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_qdot_fast.txt");
+// ofstream MJ_wbik(           "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_wbik.txt");
+// ofstream MJ_q_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_q_fast.txt");
+// ofstream MJ_com(            "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_com.txt");
 
 // is_real_robot == 1
-// ofstream MJ_graph(          "/home/dyros/data/kwan/MJ_graph.txt");
-// ofstream MJ_graph1(         "/home/dyros/data/kwan/MJ_graph1.txt");
-// ofstream MJ_graph_foottra_x("/home/dyros/data/kwan/MJ_graph_foottra_x.txt");
-// ofstream MJ_graph_foottra_y("/home/dyros/data/kwan/MJ_graph_foottra_y.txt");
-// ofstream MJ_graph_foottra_z("/home/dyros/data/kwan/MJ_graph_foottra_z.txt");
-// ofstream MJ_opto(           "/home/dyros/data/kwan/MJ_opto.txt");
-// ofstream MJ_opto_thread3(   "/home/dyros/data/kwan/MJ_opto_thread3.txt");
+ofstream MJ_graph(          "/home/dyros/data/kwan/MJ_graph.txt");
+ofstream MJ_graph1(         "/home/dyros/data/kwan/MJ_graph1.txt");
+ofstream MJ_graph_foottra_x("/home/dyros/data/kwan/MJ_graph_foottra_x.txt");
+ofstream MJ_graph_foottra_y("/home/dyros/data/kwan/MJ_graph_foottra_y.txt");
+ofstream MJ_graph_foottra_z("/home/dyros/data/kwan/MJ_graph_foottra_z.txt");
+ofstream MJ_opto(           "/home/dyros/data/kwan/MJ_opto.txt");
+ofstream MJ_opto_thread3(   "/home/dyros/data/kwan/MJ_opto_thread3.txt");
 
-// ofstream MJ_traj_fast(      "/home/dyros/data/kwan/MJ_traj_fast.txt");
-// ofstream MJ_q_fast(         "/home/dyros/data/kwan/MJ_q_fast.txt");
-// ofstream MJ_qdot_fast(      "/home/dyros/data/kwan/MJ_qdot_fast.txt");
-// ofstream MJ_wbik(           "/home/dyros/data/kwan/MJ_wbik.txt");
-// ofstream MJ_com(            "/home/dyros/data/kwan/MJ_com.txt");
+ofstream MJ_traj_fast(      "/home/dyros/data/kwan/MJ_traj_fast.txt");
+ofstream MJ_q_fast(         "/home/dyros/data/kwan/MJ_q_fast.txt");
+ofstream MJ_qdot_fast(      "/home/dyros/data/kwan/MJ_qdot_fast.txt");
+ofstream MJ_wbik(           "/home/dyros/data/kwan/MJ_wbik.txt");
+ofstream MJ_com(            "/home/dyros/data/kwan/MJ_com.txt");
 
 AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 {
@@ -77,7 +77,7 @@ AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 
     if(is_real_robot == 1)
     {
-        // opto_ftsensor_sub = nh_avatar_.subscribe("/optoforce/ftsensor", 100, &AvatarController::OptoforceFTCallback, this); // real robot experiment
+        opto_ftsensor_sub = nh_avatar_.subscribe("/optoforce/ftsensor", 100, &AvatarController::OptoforceFTCallback, this); // real robot experiment
     }
 
     bool urdfmode = false;
@@ -825,26 +825,6 @@ void AvatarController::computeSlow()
                     rfoot_vel_trajectory_float_fast_ = rfoot_vel_trajectory_float_;
 
                     atb_walking_traj_update_ = false;
-                }
-
-                if(is_real_robot == 0)
-                {
-                    // KW_graph1_1 << ZMP_X_REF_ << " " << ZMP_Y_REF_ << " " 
-                    //     << com_desired_.transpose() << " " << com_support_current_.transpose() << " "
-                    //     << cp_desired_.transpose() << " " << cp_measured_.transpose() << " " 
-                    //     << lfoot_trajectory_support_.translation().transpose() << " " 
-                    //     << rfoot_trajectory_support_.translation().transpose() << " " 
-                    //     << lfoot_support_current_.translation().transpose() << " " 
-                    //     << rfoot_support_current_.translation().transpose() << " " 
-                    //     << com_desired_dot_.transpose() << " " 
-                    //     << com_float_current_dot_LPF.transpose() << " "
-                    //     << del_F_.transpose() << " " 
-                    //     << pelv_trajectory_support_.translation().transpose() << " "
-                    //     << pelv_support_current_.translation().transpose() << " "
-                    //     << lfoot_vel_trajectory_float_.transpose() << " "
-                    //     << rfoot_vel_trajectory_float_.transpose() << " "
-                    //     << walking_tick_mj - t_start_ << " " 
-                    //     << t_total_ << std::endl;
                 }
 
                 // computeIkControl_MJ(pelv_trajectory_float_, lfoot_trajectory_float_, rfoot_trajectory_float_, q_des_);
@@ -9821,7 +9801,7 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
             }
             else
             {
-                cout << "bolt is not solved." << endl;
+                // cout << "bolt is not solved." << endl;
             }
         }
 
@@ -11261,8 +11241,8 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
         zmp_bound_y_new(2*i) = 0.07;  
         if(is_real_robot == 1)
         {
-            Tau_x_limit(2*i + 1) = 15.0;//20.0;
-            Tau_y_limit(2*i + 1) = 15.0;//20.0;
+            Tau_x_limit(2*i + 1) = 10.0;//20.0;
+            Tau_y_limit(2*i + 1) = 10.0;//20.0;
         }
         else if(is_real_robot == 0)
         {
@@ -11687,7 +11667,8 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
     }
     else
     {
-        std::cout << "X-AXIS CP-MPC CANNOT SOLVE!!, WTF!" << std::endl;
+        std::cout << "X-AXIS CP-MPC CANNOT SOLVE!!, WTF!" << " " << std::endl;
+        std::cout << "Unsolved MPC TICK: " << int(walking_tick_mj_mpc_ / hz_) << std::endl;
     }
     
     QP_cpmpc_y_new_.EnableEqualityCondition(equality_condition_eps_);
@@ -11712,6 +11693,7 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
     else
     {
         std::cout << "Y-AXIS CP-MPC CANNOT SOLVE!!, WTF!" << std::endl;
+        std::cout << "Unsolved MPC TICK: " << int(walking_tick_mj_mpc_ / hz_) << std::endl;
     }
 
     Eigen::VectorXd cp_predicted_x(N_cp);        
@@ -12370,15 +12352,15 @@ void AvatarController::TrackerStatusCallback(const std_msgs::Bool &msg)
 }
  
 // real robot experiment (is_real_robot == 1)
-// void AvatarController::OptoforceFTCallback(const tocabi_msgs::FTsensor &msg)
-// {
-//     opto_ft_raw_(0) = msg.Fx;
-//     opto_ft_raw_(1) = msg.Fy;
-//     opto_ft_raw_(2) = msg.Fz;
-//     opto_ft_raw_(3) = msg.Tx;
-//     opto_ft_raw_(4) = msg.Ty;
-//     opto_ft_raw_(5) = msg.Tz;
-// }
+void AvatarController::OptoforceFTCallback(const tocabi_msgs::FTsensor &msg)
+{
+    opto_ft_raw_(0) = msg.Fx;
+    opto_ft_raw_(1) = msg.Fy;
+    opto_ft_raw_(2) = msg.Fz;
+    opto_ft_raw_(3) = msg.Tx;
+    opto_ft_raw_(4) = msg.Ty;
+    opto_ft_raw_(5) = msg.Tz;
+}
 
 Eigen::MatrixXd AvatarController::discreteRiccatiEquationPrev(Eigen::MatrixXd a, Eigen::MatrixXd b, Eigen::MatrixXd r, Eigen::MatrixXd q)
 {
@@ -13020,8 +13002,8 @@ void AvatarController::getRobotState()
     // real robot experiment
     if(is_real_robot == 1)
     {
-        // opto_ft_ = opto_ft_raw_; 
-        // MJ_opto <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl; 
+        opto_ft_ = opto_ft_raw_; 
+        MJ_opto <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl; 
     }
 
     if (walking_tick_mj == 0)
@@ -13962,7 +13944,7 @@ void AvatarController::addZmpOffset()
     // lfoot_zmp_offset_ = -0.02; // 1.1 초
     // rfoot_zmp_offset_ = 0.02;
 
-    lfoot_zmp_offset_ = -0.015; // simul 1.1 s
+    lfoot_zmp_offset_ = -0.015; // MJ FINAL CP MPC
     rfoot_zmp_offset_ =  0.015;
 
     foot_step_support_frame_offset_ = foot_step_support_frame_;
@@ -16217,7 +16199,8 @@ void AvatarController::CP_compen_MJ_FT_REAL_ROBOT()
     double zmp_offset = 0;
     double alpha_new = 0;
 
-    zmp_offset = 0.015; // 0.9초
+    zmp_offset = 0.015; // MJ FINAL CP MPC
+    // zmp_offset = 0.020; // 
 
     if (walking_tick_mj > t_temp_)
     {
