@@ -42,11 +42,6 @@ kp_wbik : [
 eps_         : 5.0
 eps_terminal : 0.0
 
-damp1 : 1.0 #  if you want to use upperbody more, please lower it.
-damp2 : 1.0
-
-vjoint_vel_regul : 1
-
 w_hqp_wbik_upper_x : 5.0
 w_hqp_wbik_upper_y : 1.0 
 

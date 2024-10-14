@@ -1644,6 +1644,26 @@ public:
     Eigen::Vector2d zmp_err_;
     Eigen::Vector2d zmp_measured_LPF_;
 
+    double Tau_L_x_error_ = 0;
+    double Tau_L_x_error_pre_ = 0;
+    double Tau_L_x_error_dot_ = 0;    
+
+    double Tau_L_y_error_ = 0;
+    double Tau_L_y_error_pre_ = 0;
+    double Tau_L_y_error_dot_ = 0;    
+
+    double Tau_R_x_error_ = 0;
+    double Tau_R_x_error_pre_ = 0;
+    double Tau_R_x_error_dot_ = 0;    
+
+    double Tau_R_y_error_ = 0;
+    double Tau_R_y_error_pre_ = 0;
+    double Tau_R_y_error_dot_ = 0;    
+
+    double F_F_error_ = 0;
+    double F_F_error_pre_ = 0;
+    double F_F_error_dot_ = 0; 
+
     double P_angle_i = 0;
     double P_angle = 0;
     double P_angle_input_dot = 0;
@@ -1850,11 +1870,6 @@ public:
     Eigen::Isometry3d rhand_trajectory_float_slow_;
 
     bool is_hand_position_save_init_ = true;
-
-    double damp1 = 0.0;
-    double damp2 = 0.0;
-
-    double vjoint_vel_regul = 0.0;
 
     bool is_lpf_init_ = true;
 
