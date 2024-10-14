@@ -3,31 +3,34 @@
 using namespace TOCABI;
 
 // is_real_robot == 0
-// ofstream MJ_graph(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph.txt");
-// ofstream MJ_graph1(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph1.txt");
-// ofstream MJ_graph_foottra_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_x.txt");
-// ofstream MJ_graph_foottra_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_y.txt");
-// ofstream MJ_graph_foottra_z("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_z.txt");
-// ofstream MJ_opto(           "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_opto.txt");
+ofstream MJ_graph(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph.txt");
+ofstream MJ_graph1(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph1.txt");
+ofstream MJ_graph_foottra_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_x.txt");
+ofstream MJ_graph_foottra_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_y.txt");
+ofstream MJ_graph_foottra_z("/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_graph_foottra_z.txt");
+ofstream MJ_opto(           "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_opto.txt");
+ofstream MJ_opto_thread3(   "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_opto_thread3.txt");
 
-// ofstream MJ_traj_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_traj_fast.txt");
-// ofstream MJ_qdot_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_qdot_fast.txt");
-// ofstream MJ_wbik(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_wbik.txt");
+ofstream MJ_traj_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_traj_fast.txt");
+ofstream MJ_qdot_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_qdot_fast.txt");
+ofstream MJ_wbik(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_wbik.txt");
+ofstream MJ_q_fast(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_q_fast.txt");
+ofstream MJ_com(            "/home/kwan/catkin_ws/src/tocabi_avatar/data/MJ_com.txt");
 
 // is_real_robot == 1
-ofstream MJ_graph(          "/home/dyros/data/kwan/MJ_graph.txt");
-ofstream MJ_graph1(         "/home/dyros/data/kwan/MJ_graph1.txt");
-ofstream MJ_graph_foottra_x("/home/dyros/data/kwan/MJ_graph_foottra_x.txt");
-ofstream MJ_graph_foottra_y("/home/dyros/data/kwan/MJ_graph_foottra_y.txt");
-ofstream MJ_graph_foottra_z("/home/dyros/data/kwan/MJ_graph_foottra_z.txt");
-ofstream MJ_opto(           "/home/dyros/data/kwan/MJ_opto.txt");
-ofstream MJ_opto_thread3(   "/home/dyros/data/kwan/MJ_opto_thread3.txt");
+// ofstream MJ_graph(          "/home/dyros/data/kwan/MJ_graph.txt");
+// ofstream MJ_graph1(         "/home/dyros/data/kwan/MJ_graph1.txt");
+// ofstream MJ_graph_foottra_x("/home/dyros/data/kwan/MJ_graph_foottra_x.txt");
+// ofstream MJ_graph_foottra_y("/home/dyros/data/kwan/MJ_graph_foottra_y.txt");
+// ofstream MJ_graph_foottra_z("/home/dyros/data/kwan/MJ_graph_foottra_z.txt");
+// ofstream MJ_opto(           "/home/dyros/data/kwan/MJ_opto.txt");
+// ofstream MJ_opto_thread3(   "/home/dyros/data/kwan/MJ_opto_thread3.txt");
 
-ofstream MJ_traj_fast(      "/home/dyros/data/kwan/MJ_traj_fast.txt");
-ofstream MJ_q_fast(         "/home/dyros/data/kwan/MJ_q_fast.txt");
-ofstream MJ_qdot_fast(      "/home/dyros/data/kwan/MJ_qdot_fast.txt");
-ofstream MJ_wbik(           "/home/dyros/data/kwan/MJ_wbik.txt");
-ofstream MJ_com(            "/home/dyros/data/kwan/MJ_com.txt");
+// ofstream MJ_traj_fast(      "/home/dyros/data/kwan/MJ_traj_fast.txt");
+// ofstream MJ_q_fast(         "/home/dyros/data/kwan/MJ_q_fast.txt");
+// ofstream MJ_qdot_fast(      "/home/dyros/data/kwan/MJ_qdot_fast.txt");
+// ofstream MJ_wbik(           "/home/dyros/data/kwan/MJ_wbik.txt");
+// ofstream MJ_com(            "/home/dyros/data/kwan/MJ_com.txt");
 
 AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 {
@@ -74,7 +77,7 @@ AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 
     if(is_real_robot == 1)
     {
-        opto_ftsensor_sub = nh_avatar_.subscribe("/optoforce/ftsensor", 100, &AvatarController::OptoforceFTCallback, this); // real robot experiment
+        // opto_ftsensor_sub = nh_avatar_.subscribe("/optoforce/ftsensor", 100, &AvatarController::OptoforceFTCallback, this); // real robot experiment
     }
 
     bool urdfmode = false;
@@ -9614,8 +9617,11 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     double b_nom_x_cpmpc = 0, b_nom_y_cpmpc = 0;
     
     // support foot // 어짜피 MPC 제어입력을 쓰는거기 때문에 아래의 minmax_cut이 의미가 없긴함. 혹시나 입력이 튈 경우
-    u0_x = DyrosMath::minmax_cut(des_cmp_ssp_mpc_x_, -0.09 - 0.016, 0.12 + 0.016); 
-    u0_y = DyrosMath::minmax_cut(des_cmp_ssp_mpc_y_, -0.06 - 0.016, 0.06 + 0.016);         
+    // u0_x = DyrosMath::minmax_cut(des_cmp_ssp_mpc_x_, -0.09 - 0.016, 0.12 + 0.016); 
+    // u0_y = DyrosMath::minmax_cut(des_cmp_ssp_mpc_y_, -0.06 - 0.016, 0.06 + 0.016);
+
+    u0_x = DyrosMath::minmax_cut(P_ssp_x_, -0.09 - 0.016, 0.12 + 0.016); 
+    u0_y = DyrosMath::minmax_cut(P_ssp_y_, -0.06 - 0.016, 0.06 + 0.016);
 
     u0_x_data_ = u0_x;
     u0_y_data_ = u0_y;
@@ -11791,32 +11797,36 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
     cp_predicted_x = F_cp_new_*cp_measured_mpc_(0) + F_cmp_new_*cpmpc_output_x_new_.segment(0, 2*N_cp);
     cp_predicted_y = F_cp_new_*cp_measured_mpc_(1) + F_cmp_new_*cpmpc_output_y_new_.segment(0, 2*N_cp);   
     
-    if(mpc_tick <= t_total_mpc_ - t_rest_last_ - t_double2_)
-    {
-        int landing_mpc_time = int((t_total_mpc_ - mpc_tick - t_rest_last_ - t_double2_)/MPC_synchro_hz );
-        // cp_eos_x_mpc_ = cp_x_ref_new(landing_mpc_time); 
-        // cp_eos_y_mpc_ = cp_y_ref_new(landing_mpc_time);
-
-        cp_eos_x_cpmpc_ = cp_predicted_x(landing_mpc_time); 
-        cp_eos_y_cpmpc_ = cp_predicted_y(landing_mpc_time);      
-    }
-    // t_start_, t_rest_init_, t_double1 should be replaced with mpc variable
     double des_cmp_ssp_tmp_x = 0;
     double des_cmp_ssp_tmp_y = 0;
     
     // double del_zmp_ssp_tmp_y = 0;
     // double del_zmp_ssp_mpc_y = 0;
-    int landing_mpc_time_sum = 0;
-    int landing_mpc_time_decrease = 0;
+    // int landing_mpc_time_sum = 0;
+    // int landing_mpc_time_decrease = 0;
 
-    if(walking_tick_mj_mpc_ >= t_start_ + t_rest_init_ + t_double1_ && walking_tick_mj_mpc_ < t_start_ + t_total_mpc_ - t_rest_last_ - t_double2_)
+    Eigen::MatrixXd B_cpmpc(1,2);
+    B_cpmpc(0,0) = 1 - exp(wn*T);
+    B_cpmpc(0,1) = (1 - exp(wn*T))/(rd_.link_[COM_id].mass * GRAVITY);
+    // MJ_graph << cp_predicted_x(N_cp-1) << "," << cp_predicted_y(N_cp-1) << "," << cp_x_ref_new(N_cp-1) << "," << cp_y_ref_new(N_cp-1) << endl;    
+    double P_ssp_gain = 0;
+    if(walking_tick_mj_mpc_ >= t_start_ + t_rest_init_ + t_double1_ && walking_tick_mj_mpc_ < t_start_ + t_total_mpc_ - t_rest_last_ - t_double2_ && current_step_num_mpc_ > 0)
     {    
-        int landing_mpc_time = int((t_total_mpc_ - mpc_tick - t_rest_last_ - t_double2_)/MPC_synchro_hz);
-        landing_mpc_time_decrease = landing_mpc_time;
+        int landing_mpc_time = int((t_total_mpc_ - t_rest_last_ - t_double2_ - mpc_tick)/MPC_synchro_hz)+1; // T-k
+        // landing_mpc_time_decrease = landing_mpc_time;
+
+        cp_eos_x_cpmpc_ = cp_predicted_x(landing_mpc_time-1); // (1~N)
+        cp_eos_y_cpmpc_ = cp_predicted_y(landing_mpc_time-1); 
+        P_ssp_gain = 1/(1-exp(wn*T*landing_mpc_time)); 
+        // 230712  
+        // cp_eos_x_cpmpc_ = cp_x_ref_new(landing_mpc_time-1); 
+        // cp_eos_y_cpmpc_ = cp_y_ref_new(landing_mpc_time-1);   
+
+
         ///////////////////////////////////////////// #1 CMP current value 
         // des_cmp_ssp_mpc_x_ = cpmpc_output_x_new_(0) + cpmpc_output_x_new_(1)/940.0;
-        // des_cmp_ssp_mpc_y_ = cpmpc_output_y_new_(0) - cpmpc_output_y_new_(1)/940.0;
-        
+        // des_cmp_ssp_mpc_y_ = cpmpc_output_y_new_(0) - cpmpc_output_y_new_(1)/940.0; 
+
         ///////////////////////////////////////////// #2 CMP average 
         for(int i = 0; i < landing_mpc_time; i ++)
         {   // desired zmp is equal to delta zmp in SSP.
@@ -11828,16 +11838,25 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
         {   
             des_cmp_ssp_mpc_x_ = des_cmp_ssp_tmp_x / landing_mpc_time;
             des_cmp_ssp_mpc_y_ = des_cmp_ssp_tmp_y / landing_mpc_time;
-            // del_zmp_ssp_mpc_y = del_zmp_ssp_tmp_y / landing_mpc_time;
         }
         else
         {
             des_cmp_ssp_mpc_x_ = des_cmp_ssp_tmp_x;
             des_cmp_ssp_mpc_y_ = des_cmp_ssp_tmp_y;
-            // del_zmp_ssp_mpc_y = del_zmp_ssp_tmp_y;
         }      
 
-        /////////////////////////////////////////// #3 CMP weighted average
+        /////////////////////////////////////////// #3 P_ssp from CP-MPC
+        // [A * B_cp_mpc_new]*cpmpc_output_x_new_(0 ~ 2*N_cp+1)
+        P_ssp_x_ = 0;
+        P_ssp_y_ = 0;
+
+        for(int i = 0; i < landing_mpc_time; i++) // prediction input matrix, N X 2N 
+        {                
+            P_ssp_x_ += P_ssp_gain*exp(wn*T*(landing_mpc_time-i-1))*(B_cpmpc(0,0)*cpmpc_output_x_new_(2*i) + B_cpmpc(0,1)*cpmpc_output_x_new_(2*i+1)); 
+            P_ssp_y_ += P_ssp_gain*exp(wn*T*(landing_mpc_time-i-1))*(B_cpmpc(0,0)*cpmpc_output_y_new_(2*i) + B_cpmpc(0,1)*cpmpc_output_y_new_(2*i+1));      
+        }   
+         
+        /////////////////////////////////////////// #4 CMP weighted average
         // for(int i = 0; i < landing_mpc_time; i ++)
         // {   // desired zmp is equal to delta zmp in SSP.
             
@@ -11860,12 +11879,15 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
         //     des_cmp_ssp_mpc_x_ = des_cmp_ssp_tmp_x;
         //     des_cmp_ssp_mpc_y_ = des_cmp_ssp_tmp_y;
         //     // del_zmp_ssp_mpc_y = del_zmp_ssp_tmp_y;
-        // }                       
+        // }     
+    //  MJ_graph << des_cmp_ssp_mpc_x_ << "," << P_ssp_x_ << "," << des_cmp_ssp_mpc_y_ << "," << P_ssp_y_  << "," << cp_predicted_x(landing_mpc_time-1) << "," << cp_measured_mpc_(0)*exp(wn*T*(landing_mpc_time)) + (1-exp(wn*T*(landing_mpc_time)))*P_ssp_x_ << "," <<  cp_predicted_y(landing_mpc_time-1) << "," << cp_measured_mpc_(1)*exp(wn*T*(landing_mpc_time)) + (1-exp(wn*T*(landing_mpc_time)))*P_ssp_y_ << endl;                    
     }
     else
     {
         des_cmp_ssp_mpc_x_ = 0;
         des_cmp_ssp_mpc_y_ = 0;
+        P_ssp_x_ = 0;
+        P_ssp_y_ = 0;
     }
     
     // static int aa = 0;
@@ -12425,15 +12447,15 @@ void AvatarController::TrackerStatusCallback(const std_msgs::Bool &msg)
 }
  
 // real robot experiment (is_real_robot == 1)
-void AvatarController::OptoforceFTCallback(const tocabi_msgs::FTsensor &msg)
-{
-    opto_ft_raw_(0) = msg.Fx;
-    opto_ft_raw_(1) = msg.Fy;
-    opto_ft_raw_(2) = msg.Fz;
-    opto_ft_raw_(3) = msg.Tx;
-    opto_ft_raw_(4) = msg.Ty;
-    opto_ft_raw_(5) = msg.Tz;
-}
+// void AvatarController::OptoforceFTCallback(const tocabi_msgs::FTsensor &msg)
+// {
+//     opto_ft_raw_(0) = msg.Fx;
+//     opto_ft_raw_(1) = msg.Fy;
+//     opto_ft_raw_(2) = msg.Fz;
+//     opto_ft_raw_(3) = msg.Tx;
+//     opto_ft_raw_(4) = msg.Ty;
+//     opto_ft_raw_(5) = msg.Tz;
+// }
 
 Eigen::MatrixXd AvatarController::discreteRiccatiEquationPrev(Eigen::MatrixXd a, Eigen::MatrixXd b, Eigen::MatrixXd r, Eigen::MatrixXd q)
 {
@@ -13075,8 +13097,8 @@ void AvatarController::getRobotState()
     // real robot experiment
     if(is_real_robot == 1)
     {
-        opto_ft_ = opto_ft_raw_; 
-        MJ_opto <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl; 
+        // opto_ft_ = opto_ft_raw_; 
+        // MJ_opto <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl; 
     }
 
     if (walking_tick_mj == 0)

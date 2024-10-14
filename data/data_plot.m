@@ -4,6 +4,50 @@ clc
 clear all
 close all
 
+data = readmatrix('MJ_graph.txt')
+figure(1)
+plot(data(:,1)) % ZMP Ref
+hold on
+grid on
+plot(data(:,2)) % ZMP des
+plot(data(:,5)) % del F
+plot(data(:,6)) % DCM des
+plot(data(:,7)) % DCM mea
+legend()
+
+figure(2)
+plot(data(:,3)) % centroidal moment
+
+data = readmatrix('MJ_graph_foottra_x.txt')
+figure(3)
+plot(data(:,1)) % del F (from BOLT)
+hold on
+grid on
+plot(data(:,2)) % lfoot traj
+plot(data(:,3)) % rfoot traj
+plot(data(:,5)) % foot traj from CP MPC
+legend()
+
+data = readmatrix('MJ_graph_foottra_z.txt')
+plot(data(:,1)) % lfoot traj
+hold on
+grid on
+plot(data(:,2)) % rfoot traj
+legend()
+
+data = readmatrix('MJ_graph_foottra_x.txt')
+figure(4)
+plot(data(:,6)) % del F (from BOLT)
+hold on
+grid on
+
+
+%% CP-MPC
+
+clc
+clear all
+close all
+
 data = readmatrix('MJ_graph1.txt')
 figure(1)
 plot(data(:,1)) % ZMP Ref
