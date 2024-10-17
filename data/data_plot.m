@@ -108,10 +108,36 @@ grid on
 plot(data(:,10)) % total
 legend()
 
+%% Torque
+clc
+clear all
+close all
+
+figure()
+data = readmatrix('MJ_torque.txt');
+joint_num = 1;
+plot(data(:, joint_num))    % mea
+hold on
+grid on
+plot(data(:, joint_num+6))  % des
+
+legend('lfoot torque', 'rfoot torque')
 %% Joint
 clc
 clear all
 close all
+
+figure()
+data = readmatrix('MJ_q_fast.txt');
+joint_num = 6;
+plot(data(:, joint_num))    % mea
+hold on
+grid on
+plot(data(:, joint_num+12))  % des
+legend('pos mea', 'pos des')
+title('q')
+
+%% Joint vel
 
 figure()
 data = readmatrix('MJ_qdot_fast.txt');
@@ -121,7 +147,6 @@ hold on
 grid on
 % plot(data(:, joint_num+6))  % des
 plot(data(:, joint_num+12))  % des
-
 legend('vel mea', 'vel des LPF')
 title('qdot')
 

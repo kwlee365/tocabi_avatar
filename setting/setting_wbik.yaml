@@ -6,7 +6,8 @@ w_hqp_wbik1 : [120.0,     # Foot
 
 w_hqp_wbik2 : [0.1,       # Hand
                1.0,       # Upperbody
-               3.0,       # pelvis
+              #  3.0,       # pelvis (20241014 real_robot)
+               5.0,       # pelvis
                0.1,       # cam smoothing    
                0.0001,    # Joint vel    
                1.5]       # Joint acc    
@@ -42,7 +43,8 @@ kp_wbik : [
 eps_         : 5.0
 eps_terminal : 0.0
 
-w_hqp_wbik_upper_x : 5.0
+# w_hqp_wbik_upper_x : 5.0 (20241014 real_robot)
+w_hqp_wbik_upper_x : 1.0
 w_hqp_wbik_upper_y : 1.0 
 
 w_hqp_wbik_com_y : 2.0
