@@ -6,14 +6,14 @@ w_hqp_wbik1 : [120.0,     # Foot
 
 w_hqp_wbik2 : [0.1,       # Hand
                1.0,       # Upperbody
-              #  3.0,       # pelvis (20241014 real_robot)
-               5.0,       # pelvis
+               3.0,       # pelvis # (20241014 real_robot)
+              #  5.0,       # pelvis # (20241017 sim)
                0.1,       # cam smoothing    
                0.0001,    # Joint vel    
                1.5]       # Joint acc    
 
 kp_wbik : [
-           30.0,       # v_x lfoot (walking in place)
+           15.0,       # v_x lfoot (walking in place)
            30.0,       # v_y lfoot (walking in place)
            30.0,       # v_z lfoot (walking in place)
 
@@ -21,7 +21,7 @@ kp_wbik : [
            30.0,       # w_y lfoot (walking in place)
            30.0,       # w_z lfoot (walking in place)
            
-           30.0,       # v_x rfoot (walking in place)
+           15.0,       # v_x rfoot (walking in place)
            30.0,       # v_y rfoot (walking in place)
            30.0,       # v_z rfoot (walking in place)
            
@@ -43,8 +43,8 @@ kp_wbik : [
 eps_         : 5.0
 eps_terminal : 0.0
 
-# w_hqp_wbik_upper_x : 5.0 (20241014 real_robot)
-w_hqp_wbik_upper_x : 1.0
+w_hqp_wbik_upper_x : 5.0 # (20241014 real_robot)
+# w_hqp_wbik_upper_x : 1.0 # (20241017 sim)
 w_hqp_wbik_upper_y : 1.0 
 
 w_hqp_wbik_com_y : 2.0
