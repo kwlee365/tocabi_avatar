@@ -43,7 +43,8 @@ kp_wbik : [
 eps_         : 5.0
 eps_terminal : 0.0
 
-w_hqp_wbik_upper_x : 5.0 # (20241014 real_robot)
+# w_hqp_wbik_upper_x : 5.0 # (20241014 real_robot, x)
+w_hqp_wbik_upper_x : 3.0 # (20241014 real_robot, y)
 # w_hqp_wbik_upper_x : 1.0 # (20241017 sim)
 w_hqp_wbik_upper_y : 1.0 
 

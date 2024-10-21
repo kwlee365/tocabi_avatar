@@ -9605,17 +9605,21 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     double l_p = 0.0;
     l_p = foot_step_support_frame_(current_step_num_, 1);
     // double w1_step = w_ux_temp_, w2_step = w_uy_temp_, w3_step = w_time_temp_, w4_step = w_bx_temp_, w5_step = w_by_temp_;
-    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
+    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 10.0, w4_step = 3000.0, w5_step = 3000.0;
     //double w1_step = 1.0, w2_step = 0.02, w3_step = 3.0; w4_step = 200.0, w5_step = 0.03; // ICRA real robot experiment
     double u0_x = 0, u0_y = 0;   
     double b_nom_x_cpmpc = 0, b_nom_y_cpmpc = 0;
     
-    // support foot // 어짜피 MPC 제어입력을 쓰는거기 때문에 아래의 minmax_cut이 의미가 없긴함. 혹시나 입력이 튈 경우
     // u0_x = DyrosMath::minmax_cut(des_cmp_ssp_mpc_x_, -0.09 - 0.016, 0.12 + 0.016); 
     // u0_y = DyrosMath::minmax_cut(des_cmp_ssp_mpc_y_, -0.06 - 0.016, 0.06 + 0.016);         
 
+    // 20241018 test
     u0_x = DyrosMath::minmax_cut(P_ssp_x_, -0.05 - 0.01, 0.12 + 0.01); 
     u0_y = DyrosMath::minmax_cut(P_ssp_y_, -0.07 - 0.01, 0.07 + 0.01); 
+
+    // MJ comment
+    // u0_x = DyrosMath::minmax_cut(P_ssp_x_, -0.09 - 0.016, 0.12 + 0.016); 
+    // u0_y = DyrosMath::minmax_cut(P_ssp_y_, -0.07 - 0.016, 0.07 + 0.016);  
 
     u0_x_data_ = u0_x;
     u0_y_data_ = u0_y;
@@ -9637,31 +9641,22 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
 
     L_nom = foot_step_support_frame_(current_step_num_, 0) + del_F_x_;     
     W_nom = foot_step_support_frame_(current_step_num_, 1) + del_F_y_;   
-    // W_nom = 0*foot_step_support_frame_(current_step_num_, 1) + del_F_y_;  
-    L_min = L_nom - 0.05; // 0.05
-    L_max = L_nom + 0.05;
-    W_min = W_nom - 0.05; // 0.05 in simulation
-    W_max = W_nom + 0.05; 
+
+    L_min = L_nom - 0.045; // 20241018 test: 0.05
+    L_max = L_nom + 0.035;
+    W_min = W_nom - 0.042; 
+    W_max = W_nom + 0.042; 
     
     T_nom = (t_total_const_ - (t_rest_init_ + t_rest_last_ + t_double1_ + t_double2_))/hz_; // 0.6하면 370 못버팀.
-    T_min = T_nom - 0.2;  
-    T_max = T_nom + 0.2;
+    T_min = T_nom - 0.1;  
+    T_max = T_nom + 0.1;
     tau_nom = exp(wn*T_nom); 
-
-    // Bolt
-    // b_nom_x = L_nom/(exp(wn*T_nom)-1); 
-    // b_nom_y = l_p/(1 + exp(wn*T_nom)) - W_nom/(1 - exp(wn*T_nom));
-    // Wieber
-    // b_nom_x = cp_eos_x_mpc_ - L_nom; 
-    // b_nom_y = cp_eos_y_mpc_ - W_nom;
 
     double cp_eos_x_cpmpc_temp = 0, cp_eos_y_cpmpc_temp = 0;
 
     cp_eos_x_cpmpc_temp = DyrosMath::minmax_cut(cp_eos_x_cpmpc_, -0.25, 0.25);
     cp_eos_y_cpmpc_temp = DyrosMath::minmax_cut(cp_eos_y_cpmpc_, -0.25, 0.25); 
 
-    // b_nom_x_cpmpc = L_nom/(exp(wn*T_nom)-1);
-    // b_nom_y_cpmpc = l_p/(1 + exp(wn*T_nom)) - W_nom/(1 - exp(wn*T_nom)); 
     b_nom_x_cpmpc = cp_eos_x_cpmpc_temp - L_nom;
     b_nom_y_cpmpc = cp_eos_y_cpmpc_temp - W_nom;
    
@@ -9675,12 +9670,15 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     H_step(3,3) = w4_step; // DCM offset in x
     H_step(4,4) = w5_step; // DCM offset in y // 0.01
     
+    // 20241018 test
     g_step.setZero(5);
     g_step(0) = -w1_step * L_nom;
     g_step(1) = -w2_step * W_nom; 
     g_step(2) = -w3_step * tau_nom;
     g_step(3) = -w4_step * b_nom_x_cpmpc;  
     g_step(4) = -w5_step * b_nom_y_cpmpc;  
+    
+    // MJ comment
     // g_step.setZero(5);
     // g_step(0) = -w1_step * (u0_x + L_nom);
     // g_step(1) = -w2_step * (u0_y + W_nom); 
@@ -9728,6 +9726,7 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     lb_step.setZero(7);
     ub_step.setZero(7);
 
+    // 20241018 test
     lb_step(0) = u0_x;
     lb_step(1) = u0_y;
     lb_step(2) = L_min;
@@ -9744,6 +9743,7 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     ub_step(5) = b_nom_x_cpmpc + 0.15; 
     ub_step(6) = b_nom_y_cpmpc + 0.15;    
     
+    // MJ comment
     // lb_step(0) = u0_x;
     // lb_step(1) = u0_y;
     // lb_step(2) = u0_x + L_min;
