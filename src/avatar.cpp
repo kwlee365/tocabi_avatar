@@ -9605,7 +9605,7 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     double l_p = 0.0;
     l_p = foot_step_support_frame_(current_step_num_, 1);
     // double w1_step = w_ux_temp_, w2_step = w_uy_temp_, w3_step = w_time_temp_, w4_step = w_bx_temp_, w5_step = w_by_temp_;
-    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 10.0, w4_step = 3000.0, w5_step = 3000.0;
+    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
     //double w1_step = 1.0, w2_step = 0.02, w3_step = 3.0; w4_step = 200.0, w5_step = 0.03; // ICRA real robot experiment
     double u0_x = 0, u0_y = 0;   
     double b_nom_x_cpmpc = 0, b_nom_y_cpmpc = 0;
@@ -9644,12 +9644,12 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
 
     L_min = L_nom - 0.045; // 20241018 test: 0.05
     L_max = L_nom + 0.035;
-    W_min = W_nom - 0.042; 
-    W_max = W_nom + 0.042; 
+    W_min = W_nom - 0.05; 
+    W_max = W_nom + 0.05; 
     
     T_nom = (t_total_const_ - (t_rest_init_ + t_rest_last_ + t_double1_ + t_double2_))/hz_; // 0.6하면 370 못버팀.
-    T_min = T_nom - 0.1;  
-    T_max = T_nom + 0.1;
+    T_min = T_nom - 0.2;  
+    T_max = T_nom + 0.2;
     tau_nom = exp(wn*T_nom); 
 
     double cp_eos_x_cpmpc_temp = 0, cp_eos_y_cpmpc_temp = 0;
@@ -11461,7 +11461,7 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
             // weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.02, 0.03, 0.001, 0.000001, 0.0, 0.0)*10;
 
             weighting_tau_damping_x_(i, i) = DyrosMath::cubic(abs(cpmpc_output_x_new_(2*i) - Z_x_ref_wo_offset_new(2*i)), 0.05, 0.10, 0.00000005, 0.0, 0.0, 0.0);
-            weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.05, 0.07, 0.00000005, 0.0, 0.0, 0.0); // Y dir disturbance 0.00000005 // Uneven 0.0000003
+            weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.05, 0.07, 0.00000005, 0.0, 0.0, 0.0); // X, Y dir disturbance 0.00000005 // Uneven 0.0000003
         }
         else if (is_real_robot == 0)
         {
@@ -13072,7 +13072,7 @@ void AvatarController::calculateFootStepTotal()
 
     if (length_to_target == 0)
     {
-        middle_total_step_number = 30; //
+        middle_total_step_number = 20; //
         dlength = 0;
     }
 
