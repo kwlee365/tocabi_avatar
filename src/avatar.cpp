@@ -9605,7 +9605,8 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     double l_p = 0.0;
     l_p = foot_step_support_frame_(current_step_num_, 1);
     // double w1_step = w_ux_temp_, w2_step = w_uy_temp_, w3_step = w_time_temp_, w4_step = w_bx_temp_, w5_step = w_by_temp_;
-    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
+    // double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
+    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 20.0, w4_step = 3000.0, w5_step = 3000.0;
     //double w1_step = 1.0, w2_step = 0.02, w3_step = 3.0; w4_step = 200.0, w5_step = 0.03; // ICRA real robot experiment
     double u0_x = 0, u0_y = 0;   
     double b_nom_x_cpmpc = 0, b_nom_y_cpmpc = 0;
@@ -9848,9 +9849,10 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
         stepping_input_(1) = del_F_(1);
     }
       
-    del_F_(0) = stepping_input_(0);
+    // del_F_(0) = stepping_input_(0);
+    del_F_(0) = -0.014;
     del_F_(1) = stepping_input_(1);
-    // del_F_(0) = DyrosMath::minmax_cut(del_F_(0), -0.1024, 0.1024);
+    del_F_(0) = DyrosMath::minmax_cut(del_F_(0), -0.1024, 0.0);
  
     std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now(); 
 }
@@ -11619,8 +11621,8 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
     ub_y_foot_cp_mpc_new.setZero();   
     lb_y_foot_cp_mpc_new.setZero();
 
-    double del_F_y_rightswing_min = -0.08, del_F_y_rightswing_max = 0.03;
-    double del_F_y_leftswing_min = -0.03, del_F_y_leftswing_max = 0.08;
+    double del_F_y_rightswing_min = -0.10, del_F_y_rightswing_max = 0.03;
+    double del_F_y_leftswing_min = -0.03,  del_F_y_leftswing_max = 0.10;
       
     // real robot experiment 0.2? 
     // 1을 줄이면 0이 더 많이 생길수도? 별 차이없음
@@ -11638,7 +11640,7 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
 
         // standard value of rfoot_support_current = -0.25
         ub_y_foot_cp_mpc_new(0) = -0.22 - rfoot_support_current_mpc_.translation()(1); // 0.03
-        lb_y_foot_cp_mpc_new(0) = -0.33 - rfoot_support_current_mpc_.translation()(1); //-0.1
+        lb_y_foot_cp_mpc_new(0) = -0.35 - rfoot_support_current_mpc_.translation()(1); //-0.1
         ub_y_foot_cp_mpc_new(1) = del_F_y_leftswing_max;
         lb_y_foot_cp_mpc_new(1) = del_F_y_leftswing_min; 
     }
@@ -11655,7 +11657,7 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
         lb_x_foot_cp_mpc_new(1) =-0.14; 
 
         // standard value of lfoot_support_current = +0.25
-        ub_y_foot_cp_mpc_new(0) =  0.33 - lfoot_support_current_mpc_.translation()(1); // 0.1
+        ub_y_foot_cp_mpc_new(0) =  0.35 - lfoot_support_current_mpc_.translation()(1); // 0.1
         lb_y_foot_cp_mpc_new(0) =  0.22 - lfoot_support_current_mpc_.translation()(1); // -0.03
         ub_y_foot_cp_mpc_new(1) = del_F_y_rightswing_max;
         lb_y_foot_cp_mpc_new(1) = del_F_y_rightswing_min; 
