@@ -99,8 +99,6 @@ AvatarController::AvatarController(RobotData &rd) : rd_(rd)
     RigidBodyDynamics::Addons::URDFReadFromFile(desc_package_path.c_str(), &model_C_, true, false);
     RigidBodyDynamics::Addons::URDFReadFromFile(desc_package_path.c_str(), &model_MJ_, true, false);
 
-    getParameterYAML();
-
     for (int i = 0; i < FILE_CNT; i++)
     {
         file[i].open(FILE_NAMES[i]);
@@ -560,10 +558,10 @@ void AvatarController::setGains()
     //WAIST
     // joint_limit_l_(12) =-30 * DEG2RAD;
     // joint_limit_h_(12) = 30 * DEG2RAD;
-    joint_limit_l_(13) =-20 * DEG2RAD;
-    joint_limit_h_(13) = 20 * DEG2RAD;
-    joint_limit_l_(14) =-20 * DEG2RAD;
-    joint_limit_h_(14) = 20 * DEG2RAD;
+    joint_limit_l_(13) =-15 * DEG2RAD;
+    joint_limit_h_(13) = 15 * DEG2RAD;
+    joint_limit_l_(14) =-15 * DEG2RAD;
+    joint_limit_h_(14) = 15 * DEG2RAD;
     //LEFT ARM
     joint_limit_l_(15) =-30 * DEG2RAD;
     joint_limit_h_(15) = 20 * DEG2RAD;
@@ -627,10 +625,10 @@ void AvatarController::setGains()
 
     // joint_vel_limit_l_(12) =-M_PI * 3.0;
     // joint_vel_limit_h_(12) = M_PI * 3.0;
-    joint_vel_limit_l_(13) =-M_PI / 3.0;
-    joint_vel_limit_h_(13) = M_PI / 3.0;
-    joint_vel_limit_l_(14) =-M_PI / 3.0;
-    joint_vel_limit_h_(14) = M_PI / 3.0;
+    joint_vel_limit_l_(13) =-M_PI / 6.0;
+    joint_vel_limit_h_(13) = M_PI / 6.0;
+    joint_vel_limit_l_(14) =-M_PI / 6.0;
+    joint_vel_limit_h_(14) = M_PI / 6.0;
 
     //1st arm joint vel limit
     joint_vel_limit_l_(15) =-M_PI * 1.5;
@@ -662,6 +660,8 @@ void AvatarController::computeSlow()
         if (initial_flag == 0)
         {
             Joint_gain_set_MJ();
+            getParameterYAML();
+
             walking_enable_ = true;
             // Initial pose
             ref_q_ = rd_.q_;
@@ -9606,7 +9606,7 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     l_p = foot_step_support_frame_(current_step_num_, 1);
     // double w1_step = w_ux_temp_, w2_step = w_uy_temp_, w3_step = w_time_temp_, w4_step = w_bx_temp_, w5_step = w_by_temp_;
     // double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
-    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 20.0, w4_step = 3000.0, w5_step = 3000.0;
+    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
     //double w1_step = 1.0, w2_step = 0.02, w3_step = 3.0; w4_step = 200.0, w5_step = 0.03; // ICRA real robot experiment
     double u0_x = 0, u0_y = 0;   
     double b_nom_x_cpmpc = 0, b_nom_y_cpmpc = 0;
@@ -9645,8 +9645,10 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
 
     L_min = L_nom - 0.045; // 20241018 test: 0.05
     L_max = L_nom + 0.035;
-    W_min = W_nom - 0.05; 
-    W_max = W_nom + 0.05; 
+    // W_min = W_nom - 0.05; 
+    // W_max = W_nom + 0.05;    // x,y perturb test (20241025)
+    W_min = W_nom - 0.10;   // obstacle test (20241029) 
+    W_max = W_nom + 0.10; 
     
     T_nom = (t_total_const_ - (t_rest_init_ + t_rest_last_ + t_double1_ + t_double2_))/hz_; // 0.6하면 370 못버팀.
     T_min = T_nom - 0.2;  
@@ -9849,10 +9851,10 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
         stepping_input_(1) = del_F_(1);
     }
       
-    // del_F_(0) = stepping_input_(0);
-    del_F_(0) = -0.014;
+    del_F_(0) = stepping_input_(0);
+    // del_F_(0) = -0.014;
     del_F_(1) = stepping_input_(1);
-    del_F_(0) = DyrosMath::minmax_cut(del_F_(0), -0.1024, 0.0);
+    // del_F_(0) = DyrosMath::minmax_cut(del_F_(0), -0.1024, 0.0);
  
     std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now(); 
 }
@@ -11462,8 +11464,8 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
             // weighting_tau_damping_x_(i, i) = DyrosMath::cubic(abs(cpmpc_output_x_new_(2*i) - Z_x_ref_wo_offset_new(2*i)), 0.00, 0.05, 0.0000001, 0.0, 0.0, 0.0);
             // weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.02, 0.03, 0.001, 0.000001, 0.0, 0.0)*10;
 
-            weighting_tau_damping_x_(i, i) = DyrosMath::cubic(abs(cpmpc_output_x_new_(2*i) - Z_x_ref_wo_offset_new(2*i)), 0.05, 0.10, 0.00000005, 0.0, 0.0, 0.0);
-            weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.05, 0.07, 0.00000005, 0.0, 0.0, 0.0); // X, Y dir disturbance 0.00000005 // Uneven 0.0000003
+            weighting_tau_damping_x_(i, i) = DyrosMath::cubic(abs(cpmpc_output_x_new_(2*i) - Z_x_ref_wo_offset_new(2*i)), 0.05, 0.10, 0.0000003, 0.0, 0.0, 0.0);
+            weighting_tau_damping_y_(i, i) = DyrosMath::cubic(abs(cpmpc_output_y_new_(2*i) - Z_y_ref_wo_offset_new(2*i)), 0.05, 0.07, 0.0000003, 0.0, 0.0, 0.0); // X, Y dir disturbance 0.00000005 // Uneven 0.0000003
         }
         else if (is_real_robot == 0)
         {
@@ -13974,8 +13976,8 @@ void AvatarController::addZmpOffset()
     // lfoot_zmp_offset_ = -0.02; // 1.1 초
     // rfoot_zmp_offset_ = 0.02;
 
-    lfoot_zmp_offset_ = -0.015; // MJ FINAL CP MPC
-    rfoot_zmp_offset_ =  0.015;
+    lfoot_zmp_offset_ = -0.005; // MJ FINAL CP MPC
+    rfoot_zmp_offset_ =  0.005;
 
     foot_step_support_frame_offset_ = foot_step_support_frame_;
 
@@ -15910,12 +15912,12 @@ void AvatarController::GravityCalculate_MJ()
 
 void AvatarController::parameterSetting()
 {       
-    target_x_ = 0.0;
+    target_x_ = 1.3;
     target_y_ = 0.0;
     target_z_ = 0.0;
     com_height_ = 0.71;
     target_theta_ = 0.0;
-    step_length_x_ = 0.0;
+    step_length_x_ = 0.1;
     step_length_y_ = 0.0;
     is_right_foot_swing_ = 1;
 
@@ -16230,7 +16232,7 @@ void AvatarController::CP_compen_MJ_FT_REAL_ROBOT()
     double zmp_offset = 0;
     double alpha_new = 0;
 
-    zmp_offset = 0.015; // MJ FINAL CP MPC
+    zmp_offset = 0.005; // MJ FINAL CP MPC
     // zmp_offset = 0.020; // 
 
     if (walking_tick_mj > t_temp_)
@@ -16375,11 +16377,11 @@ void AvatarController::CP_compen_MJ_FT_REAL_ROBOT()
     // Roll 방향 (-0.02/-30 0.9초) large foot(blue pad): 0.05/50 / small foot(orange pad): 0.07/50
     //   F_T_L_x_input_dot = -0.015*(Tau_L_x - l_ft_LPF(3)) - Kl_roll*F_T_L_x_input;
     // 0.025/0.0005/-10 : DG data collection
-    F_T_L_x_input_dot = 0.02 * (Tau_L_x_error_) +0.0005*Tau_L_x_error_dot_ - 10.0 * F_T_L_x_input;
+    F_T_L_x_input_dot = 0.030 * (Tau_L_x_error_) +0.0005*Tau_L_x_error_dot_ - 10.0 * F_T_L_x_input;
     F_T_L_x_input = F_T_L_x_input + F_T_L_x_input_dot * del_t;
     //   F_T_L_x_input = 0;
     //   F_T_R_x_input_dot = -0.015*(Tau_R_x - r_ft_LPF(3)) - Kr_roll*F_T_R_x_input;
-    F_T_R_x_input_dot = 0.02 * (Tau_R_x_error_) +0.0005*Tau_R_x_error_dot_ - 10.0 * F_T_R_x_input;
+    F_T_R_x_input_dot = 0.030 * (Tau_R_x_error_) +0.0005*Tau_R_x_error_dot_ - 10.0 * F_T_R_x_input;
     F_T_R_x_input = F_T_R_x_input + F_T_R_x_input_dot * del_t;
     //   F_T_R_x_input = 0;
 
@@ -16387,11 +16389,11 @@ void AvatarController::CP_compen_MJ_FT_REAL_ROBOT()
     //   F_T_L_y_input_dot = 0.005*(Tau_L_y - l_ft_LPF(4)) - Kl_pitch*F_T_L_y_input;
     // 0.035/0.0005/-5: 3degree slope possilbe
     // 0.02/0.0005/-5 : DG data collection
-    F_T_L_y_input_dot = 0.02 * (Tau_L_y_error_) + 0.0005*Tau_L_y_error_dot_ - 10.0 * F_T_L_y_input;
+    F_T_L_y_input_dot = 0.030 * (Tau_L_y_error_) + 0.0005*Tau_L_y_error_dot_ - 10.0 * F_T_L_y_input;
     F_T_L_y_input = F_T_L_y_input + F_T_L_y_input_dot * del_t;
     //   F_T_L_y_input = 0;
     //   F_T_R_y_input_dot = 0.005*(Tau_R_y - r_ft_LPF(4)) - Kr_pitch*F_T_R_y_input;
-    F_T_R_y_input_dot = 0.02 * (Tau_R_y_error_) + 0.0005*Tau_R_y_error_dot_ - 10.0 * F_T_R_y_input;
+    F_T_R_y_input_dot = 0.030 * (Tau_R_y_error_) + 0.0005*Tau_R_y_error_dot_ - 10.0 * F_T_R_y_input;
     F_T_R_y_input = F_T_R_y_input + F_T_R_y_input_dot * del_t;
   
     F_T_L_x_input = DyrosMath::minmax_cut(F_T_L_x_input, -20*DEG2RAD, 20*DEG2RAD);
@@ -17407,8 +17409,8 @@ void AvatarController::HqpCamComJacobianWBIK()
     const int variable_size           = MODEL_DOF_VIRTUAL;
     const int control_size_leg        = 12;
     const int control_size_com        = 3;
-    const int control_size_cam        = 2;                      // Roll, Pitch 
-    // const int control_size_cam        = 3;                      // Roll, Pitch, Yaw
+    // const int control_size_cam        = 2;                      // Roll, Pitch 
+    const int control_size_cam        = 3;                      // Roll, Pitch, Yaw
     const int control_size_pelvis     = 3;
     const int control_size_upperbody  = 3;
     const int control_size_hand       = 12;
