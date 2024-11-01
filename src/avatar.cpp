@@ -9606,7 +9606,7 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
     l_p = foot_step_support_frame_(current_step_num_, 1);
     // double w1_step = w_ux_temp_, w2_step = w_uy_temp_, w3_step = w_time_temp_, w4_step = w_bx_temp_, w5_step = w_by_temp_;
     // double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
-    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 1.0, w4_step = 3000.0, w5_step = 3000.0;
+    double w1_step = 1000.0, w2_step = 1000.0, w3_step = 50.0, w4_step = 3000.0, w5_step = 3000.0;
     //double w1_step = 1.0, w2_step = 0.02, w3_step = 3.0; w4_step = 200.0, w5_step = 0.03; // ICRA real robot experiment
     double u0_x = 0, u0_y = 0;   
     double b_nom_x_cpmpc = 0, b_nom_y_cpmpc = 0;
@@ -9851,9 +9851,13 @@ void AvatarController::CPMPC_bolt_Controller_MJ()
         stepping_input_(1) = del_F_(1);
     }
       
-    del_F_(0) = stepping_input_(0);
-    // del_F_(0) = -0.014;
-    del_F_(1) = stepping_input_(1);
+    // del_F_(0) = stepping_input_(0);
+    // // del_F_(0) = -0.014;
+    // del_F_(1) = stepping_input_(1);
+
+    // 20241101 pebble test
+    del_F_(0) = L_nom;
+    del_F_(1) = W_nom;
     // del_F_(0) = DyrosMath::minmax_cut(del_F_(0), -0.1024, 0.0);
  
     std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now(); 
@@ -11261,8 +11265,10 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
         zmp_bound_y_new(2*i) = 0.07;  
         if(is_real_robot == 1)
         {
-            Tau_x_limit(2*i + 1) = 7.0;//20.0;
-            Tau_y_limit(2*i + 1) = 7.0;//20.0;
+            // Tau_x_limit(2*i + 1) = 7.0;//20.0;
+            // Tau_y_limit(2*i + 1) = 7.0;//20.0;
+            Tau_x_limit(2*i + 1) = 7.0; // 20241101 REALROBOT TEST, pebble test;
+            Tau_y_limit(2*i + 1) = 7.0; // 20241101 REALROBOT TEST, pebble test;
         }
         else if(is_real_robot == 0)
         {
@@ -11623,8 +11629,8 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
     ub_y_foot_cp_mpc_new.setZero();   
     lb_y_foot_cp_mpc_new.setZero();
 
-    double del_F_y_rightswing_min = -0.10, del_F_y_rightswing_max = 0.03;
-    double del_F_y_leftswing_min = -0.03,  del_F_y_leftswing_max = 0.10;
+    double del_F_y_rightswing_min = -0.03, del_F_y_rightswing_max = 0.03;
+    double del_F_y_leftswing_min = -0.03,  del_F_y_leftswing_max = 0.03;
       
     // real robot experiment 0.2? 
     // 1을 줄이면 0이 더 많이 생길수도? 별 차이없음
@@ -11635,14 +11641,14 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
         // ub_x_foot_cp_mpc_new(1) = 0.2; 
         // lb_x_foot_cp_mpc_new(1) =-0.2; 
 
-        ub_x_foot_cp_mpc_new(0) = 0.14 - rfoot_support_current_mpc_.translation()(0);
-        lb_x_foot_cp_mpc_new(0) =-0.14 - rfoot_support_current_mpc_.translation()(0);
-        ub_x_foot_cp_mpc_new(1) = 0.14; 
-        lb_x_foot_cp_mpc_new(1) =-0.14; 
+        ub_x_foot_cp_mpc_new(0) = 0.03 - rfoot_support_current_mpc_.translation()(0);
+        lb_x_foot_cp_mpc_new(0) =-0.03 - rfoot_support_current_mpc_.translation()(0);
+        ub_x_foot_cp_mpc_new(1) = 0.03; 
+        lb_x_foot_cp_mpc_new(1) =-0.03; 
 
         // standard value of rfoot_support_current = -0.25
         ub_y_foot_cp_mpc_new(0) = -0.22 - rfoot_support_current_mpc_.translation()(1); // 0.03
-        lb_y_foot_cp_mpc_new(0) = -0.35 - rfoot_support_current_mpc_.translation()(1); //-0.1
+        lb_y_foot_cp_mpc_new(0) = -0.28 - rfoot_support_current_mpc_.translation()(1); //-0.1
         ub_y_foot_cp_mpc_new(1) = del_F_y_leftswing_max;
         lb_y_foot_cp_mpc_new(1) = del_F_y_leftswing_min; 
     }
@@ -11653,13 +11659,13 @@ void AvatarController::new_cpcontroller_MPC_MJDG(double MPC_freq, double preview
         // ub_x_foot_cp_mpc_new(1) = 0.2; 
         // lb_x_foot_cp_mpc_new(1) =-0.2; 
 
-        ub_x_foot_cp_mpc_new(0) = 0.14 - lfoot_support_current_mpc_.translation()(0);
-        lb_x_foot_cp_mpc_new(0) =-0.14 - lfoot_support_current_mpc_.translation()(0);
-        ub_x_foot_cp_mpc_new(1) = 0.14; 
-        lb_x_foot_cp_mpc_new(1) =-0.14; 
+        ub_x_foot_cp_mpc_new(0) = 0.03 - lfoot_support_current_mpc_.translation()(0);
+        lb_x_foot_cp_mpc_new(0) =-0.03 - lfoot_support_current_mpc_.translation()(0);
+        ub_x_foot_cp_mpc_new(1) = 0.03; 
+        lb_x_foot_cp_mpc_new(1) =-0.03; 
 
         // standard value of lfoot_support_current = +0.25
-        ub_y_foot_cp_mpc_new(0) =  0.35 - lfoot_support_current_mpc_.translation()(1); // 0.1
+        ub_y_foot_cp_mpc_new(0) =  0.28 - lfoot_support_current_mpc_.translation()(1); // 0.1
         lb_y_foot_cp_mpc_new(0) =  0.22 - lfoot_support_current_mpc_.translation()(1); // -0.03
         ub_y_foot_cp_mpc_new(1) = del_F_y_rightswing_max;
         lb_y_foot_cp_mpc_new(1) = del_F_y_rightswing_min; 
@@ -13367,7 +13373,7 @@ void AvatarController::calculateFootStepTotal_MJ()
 
     if (length_to_target == 0.0)
     {
-        middle_total_step_number = 35; //total foot step number
+        middle_total_step_number = 20; //total foot step number
         dlength = 0;
     }
 
@@ -15912,12 +15918,12 @@ void AvatarController::GravityCalculate_MJ()
 
 void AvatarController::parameterSetting()
 {       
-    target_x_ = 1.3;
+    target_x_ = 0.0;
     target_y_ = 0.0;
     target_z_ = 0.0;
     com_height_ = 0.71;
     target_theta_ = 0.0;
-    step_length_x_ = 0.1;
+    step_length_x_ = 0.0;
     step_length_y_ = 0.0;
     is_right_foot_swing_ = 1;
 
@@ -16367,7 +16373,6 @@ void AvatarController::CP_compen_MJ_FT_REAL_ROBOT()
     Tau_L_y_error_ = Tau_L_y - l_ft_LPF(4);
     Tau_L_y_error_dot_ = (Tau_L_y_error_ - Tau_L_y_error_pre_)*hz_;
 
-
     Tau_R_y_error_pre_ = Tau_R_y_error_;
     Tau_R_y_error_ = Tau_R_y - r_ft_LPF(4);
     Tau_R_y_error_dot_ = (Tau_R_y_error_ - Tau_R_y_error_pre_)*hz_;
@@ -16377,11 +16382,11 @@ void AvatarController::CP_compen_MJ_FT_REAL_ROBOT()
     // Roll 방향 (-0.02/-30 0.9초) large foot(blue pad): 0.05/50 / small foot(orange pad): 0.07/50
     //   F_T_L_x_input_dot = -0.015*(Tau_L_x - l_ft_LPF(3)) - Kl_roll*F_T_L_x_input;
     // 0.025/0.0005/-10 : DG data collection
-    F_T_L_x_input_dot = 0.030 * (Tau_L_x_error_) +0.0005*Tau_L_x_error_dot_ - 10.0 * F_T_L_x_input;
+    F_T_L_x_input_dot = 0.040 * (Tau_L_x_error_) +0.0005*Tau_L_x_error_dot_ - 10.0 * F_T_L_x_input;
     F_T_L_x_input = F_T_L_x_input + F_T_L_x_input_dot * del_t;
     //   F_T_L_x_input = 0;
     //   F_T_R_x_input_dot = -0.015*(Tau_R_x - r_ft_LPF(3)) - Kr_roll*F_T_R_x_input;
-    F_T_R_x_input_dot = 0.030 * (Tau_R_x_error_) +0.0005*Tau_R_x_error_dot_ - 10.0 * F_T_R_x_input;
+    F_T_R_x_input_dot = 0.040 * (Tau_R_x_error_) +0.0005*Tau_R_x_error_dot_ - 10.0 * F_T_R_x_input;
     F_T_R_x_input = F_T_R_x_input + F_T_R_x_input_dot * del_t;
     //   F_T_R_x_input = 0;
 
@@ -16389,11 +16394,11 @@ void AvatarController::CP_compen_MJ_FT_REAL_ROBOT()
     //   F_T_L_y_input_dot = 0.005*(Tau_L_y - l_ft_LPF(4)) - Kl_pitch*F_T_L_y_input;
     // 0.035/0.0005/-5: 3degree slope possilbe
     // 0.02/0.0005/-5 : DG data collection
-    F_T_L_y_input_dot = 0.030 * (Tau_L_y_error_) + 0.0005*Tau_L_y_error_dot_ - 10.0 * F_T_L_y_input;
+    F_T_L_y_input_dot = 0.040 * (Tau_L_y_error_) + 0.0005*Tau_L_y_error_dot_ - 10.0 * F_T_L_y_input;
     F_T_L_y_input = F_T_L_y_input + F_T_L_y_input_dot * del_t;
     //   F_T_L_y_input = 0;
     //   F_T_R_y_input_dot = 0.005*(Tau_R_y - r_ft_LPF(4)) - Kr_pitch*F_T_R_y_input;
-    F_T_R_y_input_dot = 0.030 * (Tau_R_y_error_) + 0.0005*Tau_R_y_error_dot_ - 10.0 * F_T_R_y_input;
+    F_T_R_y_input_dot = 0.040 * (Tau_R_y_error_) + 0.0005*Tau_R_y_error_dot_ - 10.0 * F_T_R_y_input;
     F_T_R_y_input = F_T_R_y_input + F_T_R_y_input_dot * del_t;
   
     F_T_L_x_input = DyrosMath::minmax_cut(F_T_L_x_input, -20*DEG2RAD, 20*DEG2RAD);
