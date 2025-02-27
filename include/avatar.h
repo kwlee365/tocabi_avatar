@@ -14,6 +14,7 @@
 #include <fstream>
 /* REAL ROBOT */
 #include "tocabi_msgs/FTsensor.h" // real robot experiment
+#include <sensor_msgs/Joy.h>
 
 //lexls
 // #include <lexls/lexlsi.h>
@@ -81,6 +82,9 @@ public:
     ros::CallbackQueue queue_avatar_;
     void avatar_callback(const std_msgs::StringConstPtr& msg);
     ros::Subscriber sub_1;
+
+    void joyCallback(const sensor_msgs::Joy::ConstPtr& joy);
+    ros::Subscriber joy_sub_;
 
     CQuadraticProgram QP_qdot;
     CQuadraticProgram QP_qdot_larm;
@@ -363,7 +367,16 @@ public:
     double first_torque_supplier_;                         // this increase with cubic function from 0 to 1 during [program_start_time + program_ready_duration_, program_start_time + program_ready_duration_ + walking_control_transition_duration_]
     double swingfoot_force_control_converter_;
     double swingfoot_highest_time_;
-    
+
+    Eigen::Vector3d target_vel_;
+    double target_vel_x_ = 0.0;
+    double target_vel_y_ = 0.0;
+    double target_vel_yaw_ = 0.0;
+
+    double target_pos_joy_x_ = 0.0;
+    double target_pos_joy_y_ = 0.0;
+    double target_pos_joy_yaw_ = 0.0;
+
     // CoM variables in global frame
     Eigen::Vector3d com_pos_desired_; 
     Eigen::Vector3d com_vel_desired_;
@@ -371,13 +384,10 @@ public:
     Eigen::Vector3d com_pos_current_;
     Eigen::Vector3d com_vel_current_;
     Eigen::Vector3d com_acc_current_;
-
-
-    
+   
     double com_vel_cutoff_freq_;
     double wn_;
     double com_mass_;
-
 
     Eigen::Vector3d com_pos_init_;
     Eigen::Vector3d com_vel_init_;
@@ -1473,6 +1483,7 @@ public:
 
     void CP_compen_MJ();
     void CP_compen_MJ_FT();
+    void CP_compen_MJ_FT_REAL_ROBOT();
     void CLIPM_ZMP_compen_MJ(double XZMP_ref, double YZMP_ref);
     double U_ZMP_y_ssp = 0;
     double U_ZMP_y_ssp_LPF = 0;
@@ -1586,8 +1597,11 @@ public:
     Eigen::Isometry3d lfoot_pitch_rot_;
 
     Eigen::Isometry3d pelv_float_current_;
+    Eigen::Vector6d pelv_float_current_dot_;
     Eigen::Isometry3d lfoot_float_current_;
     Eigen::Isometry3d rfoot_float_current_;
+    Eigen::Vector6d lfoot_float_current_dot_;
+    Eigen::Vector6d rfoot_float_current_dot_;
     Eigen::Isometry3d lfoot_float_current_fast_;
     Eigen::Isometry3d rfoot_float_current_fast_;
     Eigen::Isometry3d lfoot_float_current_slow_;
@@ -1618,6 +1632,8 @@ public:
 
     Eigen::Isometry3d lfoot_support_current_;
     Eigen::Isometry3d rfoot_support_current_;
+    Eigen::Vector6d lfoot_support_current_dot_;
+    Eigen::Vector6d rfoot_support_current_dot_;
 
     Eigen::Isometry3d lfoot_support_init_;
     Eigen::Isometry3d rfoot_support_init_;
@@ -1663,6 +1679,26 @@ public:
     Eigen::Vector2d zmp_err_;
     Eigen::Vector2d zmp_measured_LPF_;
 
+    double Tau_L_x_error_ = 0;
+    double Tau_L_x_error_pre_ = 0;
+    double Tau_L_x_error_dot_ = 0;    
+
+    double Tau_L_y_error_ = 0;
+    double Tau_L_y_error_pre_ = 0;
+    double Tau_L_y_error_dot_ = 0;    
+
+    double Tau_R_x_error_ = 0;
+    double Tau_R_x_error_pre_ = 0;
+    double Tau_R_x_error_dot_ = 0;    
+
+    double Tau_R_y_error_ = 0;
+    double Tau_R_y_error_pre_ = 0;
+    double Tau_R_y_error_dot_ = 0;    
+
+    double F_F_error_ = 0;
+    double F_F_error_pre_ = 0;
+    double F_F_error_dot_ = 0;
+    
     double P_angle_i = 0;
     double P_angle = 0;
     double P_angle_input_dot = 0;
@@ -1931,6 +1967,7 @@ public:
     void FootTorqueController(Eigen::Vector3d T_R, Eigen::Vector3d T_L, double alpha);
     void FootForceController(Eigen::Vector3d F_R, Eigen::Vector3d F_L, double alpha);
     void CentroidalMomentCalculator();
+    void contactWrenchCalculator();
     void HqpCamController();
     void getSelectedCMM(Eigen::MatrixXd &cmm_, int joint_idx[], const int joint_dim);
     void getSelectedCMM_VirtualJoint(Eigen::MatrixXd &cmm_, int joint_idx[], const int joint_dim);
@@ -2155,6 +2192,7 @@ public:
     Eigen::Vector6d lfoot_vel_trajectory_float_slow_;
 
     Eigen::Vector3d com_desired_dot_;
+    Eigen::Vector3d com_desired_ddot_;
     Eigen::Vector3d com_desired_prev_;
 
     Eigen::Vector3d com_trajectory_support_;
@@ -2236,6 +2274,12 @@ public:
     double del_zmp_y_dcm_nmpc = 0.0;
     double del_footstep_x_dcm_nmpc = 0.0;
     double del_footstep_y_dcm_nmpc = 0.0;
+
+    double del_footstep_x_dcm_nmpc_max = 0.0;
+    double del_footstep_y_dcm_nmpc_max = 0.0;
+    double del_footstep_x_dcm_nmpc_min = 0.0;
+    double del_footstep_y_dcm_nmpc_min = 0.0;
+
     double del_dcm_offset_x_dcm_nmpc = 0.0;
     double del_dcm_offset_y_dcm_nmpc = 0.0;
     double del_steptime_dcm_nmpc = 0.0;
@@ -2332,6 +2376,8 @@ public:
     Eigen::VectorXd v_nmpc_;
     Eigen::VectorXd v_nmpc_prev_;
 
+    double v_stepsize_nmpc = 0.0;
+ 
     // Contact Schedule Optimization (2024-05-20)
     struct DyrosContactScheduler{
         // PARAM //
@@ -2370,7 +2416,7 @@ public:
         double dT_max = 0.0;
         double dT_SSP_min =-0.1;    
         double dT_DSP_min =-0.2;    // (***) dT_min must not be less than T_dsp.
-        
+
         // std::string current_path = std::filesystem::current_path().parent_path().string();
         // std::string prefix_code  = current_path + "/catkin_ws/src/tocabi_avatar/function/";   // The user should modify this variable your own directory.
         // std::string prefix_lib   = current_path + "/catkin_ws/src/tocabi_avatar/lib/";
@@ -2389,8 +2435,8 @@ public:
     void computeIkControl_COM(const Eigen::Vector3d &xCOM_target, Eigen::Isometry3d xPEL_target, const Eigen::Isometry3d &xLF_target, const Eigen::Isometry3d &xRF_target, Eigen::Vector12d &desired_leg_q);
 
     void getGradHessDcm_NMPC_Real_Robot(Eigen::VectorXd &v, Eigen::MatrixXd &Q, Eigen::VectorXd &p, Eigen::MatrixXd &A, Eigen::VectorXd &lbA, Eigen::VectorXd &ubA, const Eigen::MatrixXd &xi_ref_horizon, const Eigen::MatrixXd &p_init_ref_horizon, const Eigen::MatrixXd &p_end_ref_horizon, const Eigen::VectorXd &T_step_ref_horizon, const Eigen::VectorXd &big_M, const double &transition_phase_current_time);
-    void getGradHessDcm_NMPC_Real_Robot(Eigen::VectorXd &v, Eigen::MatrixXd &Q, Eigen::VectorXd &p, Eigen::MatrixXd &A, Eigen::VectorXd &lbA, Eigen::VectorXd &ubA, const Eigen::MatrixXd &xi_ref_horizon, const Eigen::MatrixXd &p_init_ref_horizon, const Eigen::MatrixXd &p_end_ref_horizon, const Eigen::VectorXd &T_step_ref_horizon, const Eigen::VectorXd &big_M, const double &transition_phase_current_time, double dU_y_prev);
-    void NMPC_Costfunc(Eigen::MatrixXd &J_vv, Eigen::VectorXd &J_v, const Eigen::VectorXd &U);
+    void getGradHessDcm_NMPC_Real_Robot(Eigen::VectorXd &v, Eigen::MatrixXd &Q, Eigen::VectorXd &p, Eigen::MatrixXd &A, Eigen::VectorXd &lbA, Eigen::VectorXd &ubA, const Eigen::MatrixXd &xi_ref_horizon, const Eigen::MatrixXd &p_init_ref_horizon, const Eigen::MatrixXd &p_end_ref_horizon, const Eigen::VectorXd &T_step_ref_horizon, const Eigen::VectorXd &big_M, const double &transition_phase_current_time, const Eigen::VectorXd &U_prev);
+    void NMPC_Costfunc(Eigen::MatrixXd &J_vv, Eigen::VectorXd &J_v, double &J, const Eigen::VectorXd &U, const Eigen::VectorXd &U_prev);
     void NMPC_ceq1(Eigen::VectorXd &ceq1, Eigen::MatrixXd &ceq1_v, const Eigen::VectorXd &x, const Eigen::VectorXd &U, const double &b, const double &t_step, const Eigen::MatrixXd &xi_ref_horizon, const Eigen::MatrixXd &p_init_ref_horizon, const Eigen::MatrixXd &p_end_ref_horizon, const Eigen::VectorXd &T_step_ref_horizon);
     void NMPC_ceq2(Eigen::VectorXd &ceq2, Eigen::MatrixXd &ceq2_v, const Eigen::VectorXd &U);
     void NMPC_cineq1(Eigen::VectorXd &cineq1_max, Eigen::VectorXd &cineq1_min, Eigen::MatrixXd &cineq1_v, const Eigen::VectorXd &U, const double &p_c_x_max, const double &p_c_x_min, const double &p_c_y_max, const double &p_c_y_min);
@@ -2398,6 +2444,11 @@ public:
     void NMPC_cineq3(Eigen::VectorXd &cineq3_max, Eigen::VectorXd &cineq3_min, Eigen::MatrixXd &cineq3_v, const Eigen::VectorXd &U, const double &dU_x_max, const double &dU_x_min, const double &dU_y_max, const double &dU_y_min);
     void NMPC_cineq4(Eigen::VectorXd &cineq4_max, Eigen::VectorXd &cineq4_min, Eigen::MatrixXd &cineq4_v, const Eigen::VectorXd &U, const Eigen::VectorXd &M);
     void NMPC_cineq5(Eigen::VectorXd &cineq5_max, Eigen::VectorXd &cineq5_min, Eigen::MatrixXd &cineq5_v, const Eigen::VectorXd &U, const double &dT_max, const Eigen::VectorXd &dT_min);
+    double backtrackingLineSearchNMPC(const Eigen::VectorXd &x_k, const Eigen::VectorXd &dx_k, const Eigen::MatrixXd &xi_ref_horizon, const Eigen::MatrixXd &p_init_ref_horizon, const Eigen::MatrixXd &p_end_ref_horizon, const Eigen::VectorXd &T_step_ref_horizon, const Eigen::VectorXd &big_M, const double &transition_phase_current_time, const Eigen::VectorXd &x_k_prev, double &nmpc_cost_, double &nmpc_equality_violation);
+    double relaxedBarrier(const double &h, const double &t, const double &delta);
+    Eigen::VectorXd relaxedBarrierVector(const Eigen::VectorXd &h, const double &t, const double &delta);
+    Eigen::VectorXd relaxedBarrierGradientVector(const Eigen::VectorXd &h, const Eigen::MatrixXd &J_h, const double &t, const double &delta);
+    
     int is_simul = 0;
 
     bool nmpc_update_ {false};
@@ -2446,6 +2497,8 @@ public:
 
     const int nmpc_control_input_dim = 5;
     int impact_target = 0;
+    double kp_x_foot_pos = 0.0;
+    double kp_y_foot_pos = 0.0;
     double kp_z_foot_pos = 0.0;
     double kp_x_foot_ori = 0.0;
     double kp_y_foot_ori = 0.0;
@@ -2478,6 +2531,51 @@ public:
     double lfoot_zmp_offset_y = 0.0;
     double rfoot_zmp_offset_y = 0.0;
     double foot_offset_x = 0.0;
+    double getMpcFrequency() const;
+
+    bool is_contact_wrench_calc_ = true;
+    std::vector<Eigen::MatrixXd> J_task;
+    std::vector<Eigen::MatrixXd> J_task_prev;
+    std::vector<Eigen::MatrixXd> J_task_dot;
+    std::vector<Eigen::MatrixXd> lambda;
+    std::vector<Eigen::MatrixXd> lambda_inv;
+
+    std::vector<Eigen::VectorXd> accel_des;
+
+    Eigen::VectorVQd contact_wrench_torque;
+    Eigen::VectorQd feedforward_torque;
+    void calculateFootPlacement();
+
+    // moving Average
+    bool is_joy_cmd_applied = false;
+    bool is_raibert_init_ = true;
+    Eigen::Vector2d applyMovingAverageFilter(const Eigen::Vector2d &new_value);
+    static const int filter_window_size_ = 50;  
+    Eigen::Vector2d p_m_des_history_[filter_window_size_];  
+    Eigen::Vector2d p_m_des_sum_; 
+    int history_index_ = 0;  
+    bool is_history_filled_ = false;
+
+    // WBD
+    void getVirtualJointState(const Eigen::Isometry3d& transform_global_to_float, const Eigen::Isometry3d& transform_float_to_support);
+
+    Eigen::MatrixVQVQd InertiaMatrix; 
+    Eigen::VectorVQd NonlinearVectorLPF;
+    Eigen::VectorVQd qdotLPF;
+
+    Eigen::VectorVQd q_virtual;
+    Eigen::VectorVQd qdot_virtual;
+    Eigen::VectorVQd qddot_virtual;
+
+    Eigen::VectorVQd q_error_virtual;
+    Eigen::VectorVQd q_desired_virtual;
+    Eigen::VectorVQd qdot_desired_virtual;
+    Eigen::VectorVQd qddot_desired_virtual;
+
+    Eigen::VectorVQd Kp_virtual;
+    Eigen::VectorVQd Kd_virtual;
+
+    void KinJacobianWBC();
 
 private:    
     //////////////////////////////// Myeong-Ju
@@ -2489,4 +2587,6 @@ private:
     unsigned int initial_flag = 0;
     const double hz_ = 2000.0; 
 
+    const int mpc_freq =  50;
+    const int mpc_N    = 100;  // 3 sec
 };
