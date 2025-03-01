@@ -86,6 +86,8 @@ public:
     void joyCallback(const sensor_msgs::Joy::ConstPtr& joy);
     ros::Subscriber joy_sub_;
 
+    CQuadraticProgram QP_wbid;
+    
     CQuadraticProgram QP_qdot;
     CQuadraticProgram QP_qdot_larm;
     CQuadraticProgram QP_qdot_rarm;
@@ -127,6 +129,8 @@ public:
     std::atomic<bool> atb_cpmpc_x_update_{false};
     std::atomic<bool> atb_cpmpc_y_update_{false};
     std::atomic<bool> atb_new_cpmpc_rcv_update_{false};
+
+    std::atomic<bool> atb_desired_torque_update_{false};
 
     RigidBodyDynamics::Model model_d_;  //updated by desired q
     RigidBodyDynamics::Model model_c_;  //updated by current q
@@ -1607,6 +1611,21 @@ public:
     Eigen::Isometry3d lfoot_float_current_slow_;
     Eigen::Isometry3d rfoot_float_current_slow_;
     Eigen::Isometry3d pelv_float_init_;
+
+    Eigen::Isometry3d lhand_float_current_;
+    Eigen::Isometry3d rhand_float_current_;
+    Eigen::Isometry3d chest_float_current_;
+
+    Eigen::Isometry3d lhand_support_current_;
+    Eigen::Isometry3d rhand_support_current_;
+    Eigen::Isometry3d chest_support_current_;
+
+    Eigen::Vector6d lhand_float_current_dot_;
+    Eigen::Vector6d rhand_float_current_dot_;
+    Eigen::Vector6d chest_float_current_dot_;
+
+    Eigen::Isometry3d upper_float_init_;
+
     Eigen::Isometry3d lfoot_float_init_;
     Eigen::Isometry3d rfoot_float_init_;
     double wn = 0;
@@ -2006,18 +2025,29 @@ public:
     void cpcontroller_MPC_LIPM(double MPC_freq, double preview_window);
 
     bool is_left_foot_support = false;
-    bool is_right_foot_support = false;
     bool is_left_foot_support_thread = false;
-    bool is_right_foot_support_thread = false;
     bool is_left_foot_support_mpc = false;
+    bool is_left_foot_support_container = false;
+    bool is_left_foot_support_fast = false;
+
+    bool is_right_foot_support = false;
+    bool is_right_foot_support_thread = false;
     bool is_right_foot_support_mpc = false;
+    bool is_right_foot_support_container = false;
+    bool is_right_foot_support_fast = false;
 
     bool is_ssp = false;
     bool is_ssp_thread = false;
     bool is_ssp_mpc = false;
+    bool is_ssp_container = false;
+    bool is_ssp_fast = false;
+
+
     bool is_dsp = false;
     bool is_dsp_thread = false;
     bool is_dsp_mpc = false;
+    bool is_dsp_container = false;
+    bool is_dsp_fast = false;
 
     bool is_dsp1 = false;
     bool is_dsp2 = false;
@@ -2042,6 +2072,7 @@ public:
     bool is_cpt_ctrl = true;
     bool is_step_change = false;
     bool is_ik_init_ = true;
+    bool is_wbid_init_ = true;
     bool is_print_init_ = true;
     bool is_save_init_ = true;
     bool is_foot_traj_init_ = true;
@@ -2173,6 +2204,9 @@ public:
     Eigen::Vector3d com_dot_trajectory_float_fast_;
     Eigen::Vector3d com_dot_trajectory_float_slow_;
 
+    Eigen::Vector3d com_ddot_trajectory_float_;
+
+
     Eigen::Isometry3d rfoot_trajectory_float_;
     Eigen::Isometry3d rfoot_trajectory_float_pre_;
     Eigen::Isometry3d rfoot_trajectory_float_fast_;
@@ -2211,6 +2245,12 @@ public:
     Eigen::Vector6d rfoot_vel_trajectory_support_fast_;  
     Eigen::Vector6d rfoot_vel_trajectory_support_slow_;  
 
+    Eigen::Vector6d lfoot_acc_trajectory_support_;  //local frame
+    Eigen::Vector6d rfoot_acc_trajectory_support_;  //local frame
+    Eigen::Vector6d lfoot_acc_trajectory_float_;    //local frame
+    Eigen::Vector6d rfoot_acc_trajectory_float_;    //local frame
+
+
     Eigen::Vector6d pelv_vel_trajectory_support_;
     Eigen::Vector6d pelv_vel_trajectory_support_fast_;
     Eigen::Vector6d pelv_vel_trajectory_support_slow_;
@@ -2245,9 +2285,6 @@ public:
     Eigen::Isometry3d pelv_to_support_isometry_slow_;
 
     Eigen::Vector3d com_transform_pre_desired_from_;
-
-    Eigen::Isometry3d lhand_trajectory_init_;
-    Eigen::Isometry3d rhand_trajectory_init_;
 
     int alpha_step_thread_ = 0;
 
@@ -2542,7 +2579,6 @@ public:
 
     std::vector<Eigen::VectorXd> accel_des;
 
-    Eigen::VectorVQd contact_wrench_torque;
     Eigen::VectorQd feedforward_torque;
     void calculateFootPlacement();
 
@@ -2569,13 +2605,55 @@ public:
 
     Eigen::VectorVQd q_error_virtual;
     Eigen::VectorVQd q_desired_virtual;
+    Eigen::VectorVQd q_desired_virtual_pre;
     Eigen::VectorVQd qdot_desired_virtual;
     Eigen::VectorVQd qddot_desired_virtual;
+    Eigen::VectorVQd qddot_desired_virtual_container_;
+    Eigen::VectorVQd qddot_desired_virtual_fast_;
 
     Eigen::VectorVQd Kp_virtual;
     Eigen::VectorVQd Kd_virtual;
 
     void KinJacobianWBC();
+    bool is_init_position_save_init_ = true;
+    Eigen::Isometry3d lhand_trajectory_float_;
+    Eigen::Isometry3d rhand_trajectory_float_;
+    Eigen::Isometry3d chest_trajectory_float_;
+
+    Eigen::Isometry3d lhand_trajectory_support_;
+    Eigen::Isometry3d rhand_trajectory_support_;
+    Eigen::Isometry3d chest_trajectory_support_;
+
+    Eigen::VectorQd torque_wbd_;
+    Eigen::VectorQd torque_wbd_container_;
+    Eigen::VectorQd torque_wbd_fast_;
+
+    Eigen::VectorQd torque_desired_prev_;
+    Eigen::VectorQd torque_desired_prev_container_;
+    Eigen::VectorQd torque_desired_prev_fast_;
+
+    Eigen::Vector12d contact_wrench_;
+    Eigen::Vector12d contact_wrench_container_;
+    Eigen::Vector12d contact_wrench_fast_;
+    Eigen::VectorQd MitWholebodyInverseDynamicsController(const Eigen::VectorQd &torque_prev, const Eigen::VectorVQd &qddot_cmd, const Eigen::Vector12d &f_c_cmd);
+
+    Eigen::Matrix6Vd J_lfoot_;
+    Eigen::Matrix6Vd J_lfoot_pre_;
+    Eigen::Matrix6Vd J_lfoot_dot_;
+    Eigen::Matrix6Vd J_rfoot_;
+    Eigen::Matrix6Vd J_rfoot_pre_;
+    Eigen::Matrix6Vd J_rfoot_dot_;
+
+    Eigen::VectorQd torque_min;
+    Eigen::VectorQd torque_max;
+
+    double W_q_wbid = 0.0;
+    double W_torque_1_wbid = 0.0;
+    double W_torque_2_wbid = 0.0;
+    double W_f_lfoot_wbid = 0.0;
+    double W_f_rfoot_wbid = 0.0;
+    double W_c_lfoot_wbid = 0.0;
+    double W_c_rfoot_wbid = 0.0;
 
 private:    
     //////////////////////////////// Myeong-Ju

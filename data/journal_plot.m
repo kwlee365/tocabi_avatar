@@ -163,7 +163,7 @@ legend("lfoot", "rfoot", "lfoot cur", "rfoot cur")
 
 clc
 clear all
-close all
+% close all
 
 data = readmatrix('KW_journal_data_analysis_x.txt');
 time = [1:1:length(data(:,1))];
@@ -235,3 +235,131 @@ legend("calc time")
 %hold on
 %plot(time, iter);
 %legend("iter")
+
+%% Joint POSE
+
+clc
+clear all
+close all
+
+data = readmatrix('KW_journal_data_joint.txt');
+time = [1:1:length(data(:,1))];
+
+figure(1)
+sgtitle('Virtual Joint')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+12));
+    % legend(i)
+end
+
+figure(2)
+sgtitle('Leg Joint')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i+6));
+    plot(time, data(:,i+18));
+    % legend(i)
+end
+% 
+% data = readmatrix('KW_journal_data_jointdot.txt');
+% time = [1:1:length(data(:,1))];
+% 
+% figure(3)
+% sgtitle('Virtual Joint')
+% for i = 1:1:6
+%     subplot(6,1,i)
+%     hold on
+%     % plot(time, data(:,i));
+%     plot(time, data(:,i+12));
+%     legend()
+% end
+% 
+% figure(4)
+% sgtitle('Leg Joint')
+% for i = 1:1:6
+%     subplot(6,1,i)
+%     hold on
+%     % plot(time, data(:,i+6));
+%     plot(time, data(:,i+18));
+%     legend()
+% end
+
+data = readmatrix('KW_journal_data_torque.txt');
+time = [1:1:length(data(:,1))];
+
+figure(5)
+sgtitle('feedforward')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    % plot(time, data(:,i));
+    % plot(time, data(:,i+18));
+    plot(time, data(:,i)+data(:,i+18));
+    
+    % plot(time, data(:,i+36));
+    % plot(time,-data(:,i+36));
+    legend('feedforward', 'PD torque', 'torque sum', 'ub', 'lb')
+end
+
+%% KW_journal_wbid_qddot
+clc
+clear all
+close all
+data = readmatrix('KW_journal_wbid_qddot.txt');
+time = [1:1:length(data(:,1))];
+
+figure(1)
+sgtitle('wbid qddot')
+for i = 1:1:12
+    subplot(12,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+12));
+    legend('qddot opt', 'qddot cmd')
+end
+
+% KW_journal_wbid_torque
+data = readmatrix('KW_journal_wbid_torque.txt');
+time = [1:1:length(data(:,1))];
+
+figure(2)
+sgtitle('wbid torque')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+12));
+    legend('torque opt', 'torque prev')
+end
+
+% KW_journal_wbid_acc
+data = readmatrix('KW_journal_wbid_acc.txt');
+time = [1:1:length(data(:,1))];
+
+figure(3)
+sgtitle('wbid contact acc')
+for i = 1:1:12
+    subplot(12,1,i)
+    hold on
+    plot(time, data(:,i));
+    % plot(time, data(:,i+6));
+    legend('contac acc opt')
+end
+
+% KW_journal_wbid_force
+data = readmatrix('KW_journal_wbid_force.txt');
+time = [1:1:length(data(:,1))];
+
+figure(4)
+sgtitle('wbid contact force')
+for i = 1:1:12
+    subplot(12,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+12));
+    legend('contac force opt', 'contac force cmd')
+end

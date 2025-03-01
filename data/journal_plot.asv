@@ -19,13 +19,14 @@ dcm_mea_x = data(time,4);
 
 dcm_err_x  = dcm_mea_x - dcm_ref_x;
 
-hold on
+figure()
 h1 = plot(time, zmp_bound_front_x, 'color',  [0.5 0.5 0.5], 'LineWidth', 1.5) 
+hold on
 h2 = plot(time, zmp_bound_behind_x, 'color', [0.5 0.5 0.5], 'LineWidth', 1.5) 
 h3 = plot(time, zmp_ctrl_x, 'r', 'LineWidth', 1.5) 
-h5 = plot(time, bT_x,     'k', 'LineWidth', 1.5)
+h4 = plot(time, uT_x,     'b', 'LineWidth', 1.5) 
 h7 = plot(time, dcm_err_x,'g' ,'LineWidth', 1.5)
-legend( [h3, h1, h2, h5, h7], ...
+legend( [h3, h1, h2, h4, h7], ...
         {'$p_x^{\mathrm{ctrl}}$', ...
         '$\overline{p}_x$', ...
         '$\underline{p}_x$', ...
@@ -36,7 +37,7 @@ legend( [h3, h1, h2, h5, h7], ...
 
 xlabel('Time [sec]', 'Interpreter', 'latex', 'FontName', 'Times New Roman')
 ylabel('Displacement [m]', 'Interpreter', 'latex', 'FontName', 'Times New Roman')
-xlim([0 315])
+%xlim([0 315])
 ylim([-0.2 0.5])
 % pbaspect([8 2 1])
 grid on
@@ -57,21 +58,19 @@ zmp_bound_behind_y =-0.20 * 0.5 * 0.7 * ones(end_tick, 1);
 
 zmp_ctrl_y = data(time,1);
 uT_y       = data(time,2);
-bT_y      = data(time,3);
-dcm_ref_y  = data(time,4);
-dcm_mea_y  = data(time,5);
+dcm_ref_y  = data(time,3);
+dcm_mea_y  = data(time,4);
 
 dcm_err_y  = dcm_mea_y - dcm_ref_y;
 
 figure()
-hold on
 h1 = plot(time, zmp_bound_front_y, 'color',  [0.5 0.5 0.5], 'LineWidth', 1.5) 
+hold on
 h2 = plot(time, zmp_bound_behind_y, 'color', [0.5 0.5 0.5], 'LineWidth', 1.5) 
 h3 = plot(time, zmp_ctrl_y, 'r', 'LineWidth', 1.5) 
 h4 = plot(time, uT_y,     'b', 'LineWidth', 1.5) 
-h5 = plot(time, bT_y,     'k', 'LineWidth', 1.5)
 h7 = plot(time, dcm_err_y,'g' ,'LineWidth', 1.5)
-legend( [h3, h1, h2, h4, h5, h7], ...
+legend( [h3, h1, h2, h4, h7], ...
         {'$p_y^{\mathrm{ctrl}}$', ...
         '$\overline{p}_y$', ...
         '$\underline{p}_y$', ...
@@ -85,7 +84,7 @@ ylabel('Displacement [m]', 'Interpreter', 'latex', 'FontName', 'Times New Roman'
 % pbaspect([8 2 1])
 grid on
 
-data = readmatrix('KW_journal_data_time.txt');
+data = readmatrix('KW_journal_data_time_thread1.txt');
 time = [1:1:length(data(:,1))] ;
 
 T_ref = data(:,1);
@@ -229,10 +228,120 @@ hold on
 plot(time, calc_hz);
 legend("calc time")
 
-data = readmatrix('KW_journal_data_iter.txt');
+%data = readmatrix('KW_journal_data_iter.txt');
+%time = [1:1:length(data(:,1))];
+%iter = data(:,1)
+%figure()
+%hold on
+%plot(time, iter);
+%legend("iter")
+
+%% Joint POSE
+
+clc
+clear all
+close all
+
+data = readmatrix('KW_journal_data_joint.txt');
 time = [1:1:length(data(:,1))];
-iter = data(:,1)
-figure()
-hold on
-plot(time, iter);
-legend("iter")
+
+figure(1)
+sgtitle('Virtual Joint')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+12));
+    % legend(i)
+end
+
+figure(2)
+sgtitle('Leg Joint')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i+6));
+    plot(time, data(:,i+18));
+    % legend(i)
+end
+
+data = readmatrix('KW_journal_data_jointdot.txt');
+time = [1:1:length(data(:,1))];
+
+figure(3)
+sgtitle('Virtual Joint')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+12));
+    % legend(i)
+end
+
+figure(4)
+sgtitle('Leg Joint')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i+6));
+    plot(time, data(:,i+18));
+    % legend(i)
+end
+
+data = readmatrix('KW_journal_data_torque.txt');
+time = [1:1:length(data(:,1))];
+
+figure(1)
+sgtitle('feedforward')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+18));
+    plot(time, data(:,i+36));
+    plot(time,-data(:,i+36));
+    legend('feedforward', 'PD torque', 'ub', 'lb')
+end
+
+%% KW_journal_wbid_qddot
+data = readmatrix('KW_journal_wbid_qddot.txt');
+time = [1:1:length(data(:,1))];
+
+figure(1)
+sgtitle('wbid qddot')
+for i = 1:1:12
+    subplot(12,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+12));
+    legend('qddot opt', 'qddot cmd')
+end
+
+
+%% KW_journal_wbid_torque
+data = readmatrix('KW_journal_wbid_torque.txt');
+time = [1:1:length(data(:,1))];
+
+figure(1)
+sgtitle('wbid torque')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+6));
+    legend('torque opt', 'torque prev')
+end
+
+%% KW_journal_wbid_torque
+data = readmatrix('KW_journal_wbid_acc.txt');
+time = [1:1:length(data(:,1))];
+
+figure(1)
+sgtitle('wbid contact acc')
+for i = 1:1:6
+    subplot(6,1,i)
+    hold on
+    plot(time, data(:,i));
+    plot(time, data(:,i+6));
+    legend('contac acc opt', 'torque prev')
+end
