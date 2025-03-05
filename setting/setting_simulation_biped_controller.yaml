@@ -43,8 +43,10 @@ kd_y_pelv_com : 0.1
 kp_z_pelv_com : 1.0
 kd_z_pelv_com : 0.1
 
-kp_x_pelv_ori : 2.0
-kp_y_pelv_ori : 2.0
+kp_x_pelv_ori : 6.25
+kp_y_pelv_ori : 6.25
+kd_x_pelv_ori : 5.0
+kd_y_pelv_ori : 5.0
 
 kp_x_foot_pos : 0.0
 kp_y_foot_pos : 0.0

@@ -296,12 +296,12 @@ sgtitle('feedforward')
 for i = 1:1:6
     subplot(6,1,i)
     hold on
-    % plot(time, data(:,i));
-    % plot(time, data(:,i+18));
+    plot(time, data(:,i));
+    plot(time, data(:,i+18));
     plot(time, data(:,i)+data(:,i+18));
-    
-    % plot(time, data(:,i+36));
-    % plot(time,-data(:,i+36));
+
+    plot(time, data(:,i+36));
+    plot(time,-data(:,i+36));
     legend('feedforward', 'PD torque', 'torque sum', 'ub', 'lb')
 end
 

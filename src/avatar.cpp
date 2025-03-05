@@ -16890,8 +16890,10 @@ void AvatarController::contactWrenchCalculator()
     alpha_lpf_ = DyrosMath::minmax_cut(alpha_lpf_, 0.0, 1.0);
 
     //////////// FORCE ////////////
-    F_R = -(1 - alpha) * rd_.link_[COM_id].mass * GRAVITY;
-    F_L =     - alpha  * rd_.link_[COM_id].mass * GRAVITY;
+    double real_robot_mass_offset_ = 6.17805; // 20250305: TOCABI 101.8 kg 
+
+    F_R = -(1 - alpha) * (rd_.link_[COM_id].mass + real_robot_mass_offset_) * GRAVITY;
+    F_L =     - alpha  * (rd_.link_[COM_id].mass + real_robot_mass_offset_) * GRAVITY;
 
     //////////// TORQUE ////////////
     Eigen::Vector2d pL; pL.setZero(); pL = lfoot_support_current_.translation().segment(0, 2);
@@ -17235,8 +17237,8 @@ void AvatarController::getPelvTrajectory()
         P_angle_input = 0;
         R_angle_input = 0;
     }
-    R_angle_input_dot = kp_x_pelv_ori * (0.0 - R_angle) ;
-    P_angle_input_dot = kp_y_pelv_ori * (0.0 - P_angle) ;
+    R_angle_input_dot = kp_x_pelv_ori * (0.0 - R_angle) + kd_x_pelv_ori * (0.0 - rd_.link_[Pelvis].w(0));
+    P_angle_input_dot = kp_y_pelv_ori * (0.0 - P_angle) + kd_y_pelv_ori * (0.0 - rd_.link_[Pelvis].w(1));
 
     R_angle_input = R_angle_input + R_angle_input_dot * del_t;
     P_angle_input = P_angle_input + P_angle_input_dot * del_t;
@@ -20314,7 +20316,9 @@ void AvatarController::getParameterYAML()
     ros::param::get("/tocabi_controller/kd_z_pelv_com", kd_z_pelv_com);
     ros::param::get("/tocabi_controller/kp_x_pelv_ori", kp_x_pelv_ori);
     ros::param::get("/tocabi_controller/kp_y_pelv_ori", kp_y_pelv_ori);
-    
+    ros::param::get("/tocabi_controller/kd_x_pelv_ori", kd_x_pelv_ori);
+    ros::param::get("/tocabi_controller/kd_y_pelv_ori", kd_y_pelv_ori);
+
     ros::param::get("/tocabi_controller/kp_x_foot_pos", kp_x_foot_pos);
     ros::param::get("/tocabi_controller/kp_y_foot_pos", kp_y_foot_pos);
     ros::param::get("/tocabi_controller/kp_z_foot_pos", kp_z_foot_pos);
@@ -20330,6 +20334,8 @@ void AvatarController::getParameterYAML()
     std::cout << "kd_z_pelv_com: " << kd_z_pelv_com << std::endl;
     std::cout << "kp_x_pelv_ori: " << kp_x_pelv_ori << std::endl;
     std::cout << "kp_y_pelv_ori: " << kp_y_pelv_ori << std::endl;
+    std::cout << "kd_x_pelv_ori: " << kd_x_pelv_ori << std::endl;
+    std::cout << "kd_y_pelv_ori: " << kd_y_pelv_ori << std::endl;
     std::cout << "kp_z_foot_pos: " << kp_z_foot_pos << std::endl;
     std::cout << "kp_x_foot_ori: " << kp_x_foot_ori << std::endl;
     std::cout << "kp_y_foot_ori: " << kp_y_foot_ori << std::endl;
@@ -20385,14 +20391,29 @@ void AvatarController::getParameterYAML()
     std::cout << "foot_offset_x: " << foot_offset_x << std::endl;
 
     // WBID
-    ros::param::get("/tocabi_controller/W_q",        W_q_wbid);
+    ros::param::get("/tocabi_controller/W_qb_x", W_qb_x_wbid);
+    ros::param::get("/tocabi_controller/W_qb_y", W_qb_y_wbid);
+    ros::param::get("/tocabi_controller/W_qb_z", W_qb_z_wbid);
+    ros::param::get("/tocabi_controller/W_qb_roll", W_qb_roll_wbid);
+    ros::param::get("/tocabi_controller/W_qb_pitch", W_qb_pitch_wbid);
+    ros::param::get("/tocabi_controller/W_qb_yaw", W_qb_yaw_wbid);
+    ros::param::get("/tocabi_controller/W_qa",   W_qa_wbid);
+
     ros::param::get("/tocabi_controller/W_torque_1", W_torque_1_wbid);
     ros::param::get("/tocabi_controller/W_torque_2", W_torque_2_wbid);
     ros::param::get("/tocabi_controller/W_f_lfoot",  W_f_lfoot_wbid);
     ros::param::get("/tocabi_controller/W_f_rfoot",  W_f_rfoot_wbid);
     ros::param::get("/tocabi_controller/W_c_lfoot",  W_c_lfoot_wbid);
     ros::param::get("/tocabi_controller/W_c_rfoot",  W_c_rfoot_wbid);
-    std::cout << "W_q_wbid: "         << W_q_wbid << std::endl;
+    std::cout << "W_qb_x_wbid: "         << W_qb_x_wbid << std::endl;
+    std::cout << "W_qb_y_wbid: "         << W_qb_y_wbid << std::endl;
+    std::cout << "W_qb_z_wbid: "         << W_qb_z_wbid << std::endl;
+    std::cout << "W_qb_roll_wbid: "      << W_qb_roll_wbid << std::endl;
+    std::cout << "W_qb_pitch_wbid: "     << W_qb_pitch_wbid << std::endl;
+    std::cout << "W_qb_yaw_wbid: "       << W_qb_yaw_wbid << std::endl;
+    
+    std::cout << "W_qa_wbid: "         << W_qa_wbid << std::endl;
+
     std::cout << "W_torque_1_wbid: "  << W_torque_1_wbid << std::endl;
     std::cout << "W_torque_2_wbid: "  << W_torque_2_wbid << std::endl;
     std::cout << "W_f_lfoot_wbid: "   << W_f_lfoot_wbid << std::endl;
@@ -22220,7 +22241,15 @@ Eigen::VectorQd AvatarController::MitWholebodyInverseDynamicsController(const Ei
     J_contact_dot.topRows(6)    = J_lfoot_dot_;
     J_contact_dot.bottomRows(6) = J_rfoot_dot_;
 
-    double W_q        = W_q_wbid; 
+    double W_qb_x = W_qb_x_wbid; 
+    double W_qb_y = W_qb_y_wbid; 
+    double W_qb_z = W_qb_z_wbid; 
+    double W_qb_roll  = W_qb_roll_wbid; 
+    double W_qb_pitch = W_qb_pitch_wbid; 
+    double W_qb_yaw   = W_qb_yaw_wbid; 
+
+    double W_qa   = W_qa_wbid; 
+
     double W_torque_1 = W_torque_1_wbid;
     double W_torque_2 = W_torque_2_wbid;
     double W_c_lfoot  = W_c_lfoot_wbid;
@@ -22257,7 +22286,16 @@ Eigen::VectorQd AvatarController::MitWholebodyInverseDynamicsController(const Ei
     // COST FUNCTION
     Eigen::MatrixXd H_wbid; H_wbid.setZero(variable_size, variable_size);
     unsigned int H_idx = 0;
-    H_wbid.block(H_idx, H_idx, control_size_qddot, control_size_qddot) = W_q * Eigen::MatrixXd::Identity(control_size_qddot, control_size_qddot);
+
+    Eigen::MatrixXd W_q; W_q.setIdentity(control_size_qddot, control_size_qddot);
+    W_q(0, 0) = W_qb_x;
+    W_q(1, 1) = W_qb_y;
+    W_q(2, 2) = W_qb_z;
+    W_q(3, 3) = W_qb_roll;
+    W_q(4, 4) = W_qb_pitch;
+    W_q(5, 5) = W_qb_yaw;
+    for (int i = 6; i < control_size_qddot; ++i) {W_q(i, i) = W_qa;}
+    H_wbid.block(H_idx, H_idx, control_size_qddot, control_size_qddot) = W_q;
     H_idx += control_size_qddot;
     H_wbid.block(H_idx, H_idx, control_size_torque, control_size_torque) = (W_torque_1 + W_torque_2) * Eigen::MatrixXd::Identity(control_size_torque, control_size_torque);
     H_idx += control_size_torque;

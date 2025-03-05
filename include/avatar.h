@@ -1728,6 +1728,13 @@ public:
     double aa = 0; 
     double Y_angle = 0;
 
+    double X_pelv_input_dot = 0.0;
+    double Y_pelv_input_dot = 0.0;
+    double Z_pelv_input_dot = 0.0;
+    double X_pelv_input = 0.0;
+    double Y_pelv_input = 0.0;
+    double Z_pelv_input = 0.0;
+
     double del_t = 0.0005;
     double xi_mj_;
     double yi_mj_;
@@ -2398,6 +2405,8 @@ public:
     double kd_z_pelv_com;
     double kp_x_pelv_ori;
     double kp_y_pelv_ori;
+    double kd_x_pelv_ori;
+    double kd_y_pelv_ori;
     // Disturbance setting
     double impact_timing;
     double impact_duration;
@@ -2647,7 +2656,15 @@ public:
     Eigen::VectorQd torque_min;
     Eigen::VectorQd torque_max;
 
-    double W_q_wbid = 0.0;
+    double W_qb_x_wbid = 0.0;
+    double W_qb_y_wbid = 0.0;
+    double W_qb_z_wbid = 0.0;
+    double W_qb_roll_wbid = 0.0;
+    double W_qb_pitch_wbid = 0.0;
+    double W_qb_yaw_wbid = 0.0;
+
+    double W_qa_wbid = 0.0;
+
     double W_torque_1_wbid = 0.0;
     double W_torque_2_wbid = 0.0;
     double W_f_lfoot_wbid = 0.0;
