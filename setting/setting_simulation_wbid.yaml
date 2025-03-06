@@ -5,9 +5,9 @@ W_qb_roll : 1000.0
 W_qb_pitch: 1000.0
 W_qb_yaw  : 1000.0
 W_qa      : 2000.0
-W_torque_1 : 0.0
+W_torque_1 : 100.0
 W_torque_2 : 2000.0
 W_c_lfoot : 1.0
 W_c_rfoot : 1.0
-W_f_lfoot : 1000.0 
-W_f_rfoot : 1000.0
+W_f_lfoot : 2000.0 
+W_f_rfoot : 2000.0

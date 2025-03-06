@@ -8,62 +8,48 @@ using namespace TOCABI;
 // ofstream KW_journal_foot_data2(             "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data2.txt");
 // ofstream KW_journal_foot_data3(             "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data3.txt");
 // ofstream KW_journal_data_time(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time.txt");
-ofstream KW_journal_data_calc_time(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_calc_time.txt");
+// ofstream KW_journal_data_calc_time(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_calc_time.txt");
 // ofstream KW_journal_data_iter(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_iter.txt");
-
-ofstream KW_journal_data1_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1_thread1.txt");
-ofstream KW_journal_data2_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2_thread1.txt");
-ofstream KW_journal_data_time_thread1(      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time_thread1.txt");
-ofstream KW_journal_foot_data1_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data1_thread1.txt");
-ofstream KW_journal_foot_data2_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data2_thread1.txt");
-ofstream KW_journal_foot_data3_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data3_thread1.txt");
-ofstream KW_journal_data_analysis_x(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
-ofstream KW_journal_data_analysis_y(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
-
-// ofstream KW_journal_data_analysis_zmp_x(    "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_x.txt");
-// ofstream KW_journal_data_analysis_zmp_y(    "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_y.txt");
-// ofstream KW_journal_data_analysis_zmp_ref_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_ref_x.txt");
-// ofstream KW_journal_data_analysis_zmp_ref_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_ref_y.txt");
-// ofstream KW_journal_data_analysis_com_x(    "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_x.txt");
-// ofstream KW_journal_data_analysis_com_y(    "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_y.txt");
-// ofstream KW_journal_data_analysis_dcm_x(    "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_x.txt");
-// ofstream KW_journal_data_analysis_dcm_y(    "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_y.txt");
-// ofstream KW_journal_data_cost(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_cost.txt");
-
-ofstream KW_journal_data_joint(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_joint.txt");
-ofstream KW_journal_data_jointdot(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_jointdot.txt");
-// ofstream KW_journal_data_wrench(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_wrench.txt");
-ofstream KW_journal_data_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_torque.txt");
-
-ofstream KW_journal_wbid_qddot(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_qddot.txt");
-ofstream KW_journal_wbid_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_torque.txt");
-ofstream KW_journal_wbid_acc(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_acc.txt");
-ofstream KW_journal_wbid_force(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_force.txt");
-ofstream KW_journal_wbid_qp(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_qp.txt");
-
+// 
+// ofstream KW_journal_data1_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1_thread1.txt");
+// ofstream KW_journal_data2_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2_thread1.txt");
+// ofstream KW_journal_data_time_thread1(      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time_thread1.txt");
+// ofstream KW_journal_foot_data1_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data1_thread1.txt");
+// ofstream KW_journal_foot_data2_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data2_thread1.txt");
+// ofstream KW_journal_foot_data3_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data3_thread1.txt");
+// ofstream KW_journal_data_analysis_x(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
+// ofstream KW_journal_data_analysis_y(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
+// 
+// ofstream KW_journal_data_joint(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_joint.txt");
+// ofstream KW_journal_data_jointdot(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_jointdot.txt");
+// ofstream KW_journal_data_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_torque.txt");
+// 
+// ofstream KW_journal_wbid_qddot(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_qddot.txt");
+// ofstream KW_journal_wbid_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_torque.txt");
+// ofstream KW_journal_wbid_acc(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_acc.txt");
+// ofstream KW_journal_wbid_force(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_force.txt");
+// ofstream KW_journal_wbid_qp(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_qp.txt");
 
 /* REAL ROBOT */
-// ofstream KW_journal_data1(                 "/home/dyros/data/kwan/KW_journal_data1.txt");
-// ofstream KW_journal_data2(                 "/home/dyros/data/kwan/KW_journal_data2.txt");
-// ofstream KW_journal_foot_data1(            "/home/dyros/data/kwan/KW_journal_foot_data1.txt");
-// ofstream KW_journal_foot_data2(            "/home/dyros/data/kwan/KW_journal_foot_data2.txt");
-// ofstream KW_journal_foot_data3(            "/home/dyros/data/kwan/KW_journal_foot_data3.txt");
-// ofstream KW_journal_data_time(             "/home/dyros/data/kwan/KW_journal_data_time.txt");
-// ofstream KW_journal_data_calc_time(        "/home/dyros/data/kwan/KW_journal_data_calc_time.txt");
-// ofstream KW_journal_data1_thread1    (     "/home/dyros/data/kwan/KW_journal_data1_thread1.txt");
-// ofstream KW_journal_data2_thread1    (     "/home/dyros/data/kwan/KW_journal_data2_thread1.txt");
-// ofstream KW_journal_data_time_thread1(     "/home/dyros/data/kwan/KW_journal_data_time_thread1.txt");
-// ofstream KW_journal_data_analysis_x(       "/home/dyros/data/kwan/KW_journal_data_analysis_x.txt");
-// ofstream KW_journal_data_analysis_y(       "/home/dyros/data/kwan/KW_journal_data_analysis_y.txt");
-// ofstream KW_journal_data_analysis_zmp_x(   "/home/dyros/data/kwan/KW_journal_data_analysis_zmp_x.txt");
-// ofstream KW_journal_data_analysis_zmp_y(   "/home/dyros/data/kwan/KW_journal_data_analysis_zmp_y.txt");
-// ofstream KW_journal_data_analysis_com_x(   "/home/dyros/data/kwan/KW_journal_data_analysis_com_x.txt");
-// ofstream KW_journal_data_analysis_com_y(   "/home/dyros/data/kwan/KW_journal_data_analysis_com_y.txt");
-// ofstream KW_journal_data_analysis_dcm_x(   "/home/dyros/data/kwan/KW_journal_data_analysis_dcm_x.txt");
-// ofstream KW_journal_data_analysis_dcm_y(   "/home/dyros/data/kwan/KW_journal_data_analysis_dcm_y.txt");
+ofstream KW_journal_data1_thread1    (      "/home/dyros/data/kwan/KW_journal_data1_thread1.txt");
+ofstream KW_journal_data2_thread1    (      "/home/dyros/data/kwan/KW_journal_data2_thread1.txt");
+ofstream KW_journal_data_time_thread1(      "/home/dyros/data/kwan/KW_journal_data_time_thread1.txt");
+ofstream KW_journal_foot_data1_thread1(     "/home/dyros/data/kwan/KW_journal_foot_data1_thread1.txt");
+ofstream KW_journal_foot_data2_thread1(     "/home/dyros/data/kwan/KW_journal_foot_data2_thread1.txt");
+ofstream KW_journal_foot_data3_thread1(     "/home/dyros/data/kwan/KW_journal_foot_data3_thread1.txt");
+ofstream KW_journal_data_analysis_x(        "/home/dyros/data/kwan/KW_journal_data_analysis_x.txt");
+ofstream KW_journal_data_analysis_y(        "/home/dyros/data/kwan/KW_journal_data_analysis_y.txt");
 
-// ofstream KW_journal_data_opto(             "/home/dyros/data/kwan/KW_journal_data_opto.txt");
-// ofstream KW_journal_data_opto_thread1(     "/home/dyros/data/kwan/KW_journal_data_opto_thread1.txt");
+ofstream KW_journal_data_calc_time(         "/home/dyros/data/kwan/KW_journal_data_calc_time.txt");
+
+ofstream KW_journal_data_joint(             "/home/dyros/data/kwan/KW_journal_data_joint.txt");
+ofstream KW_journal_data_jointdot(          "/home/dyros/data/kwan/KW_journal_data_jointdot.txt");
+ofstream KW_journal_data_torque(            "/home/dyros/data/kwan/KW_journal_data_torque.txt");
+ofstream KW_journal_wbid_qddot(             "/home/dyros/data/kwan/KW_journal_wbid_qddot.txt");
+ofstream KW_journal_wbid_torque(            "/home/dyros/data/kwan/KW_journal_wbid_torque.txt");
+ofstream KW_journal_wbid_acc(               "/home/dyros/data/kwan/KW_journal_wbid_acc.txt");
+ofstream KW_journal_wbid_force(             "/home/dyros/data/kwan/KW_journal_wbid_force.txt");
+ofstream KW_journal_wbid_qp(                "/home/dyros/data/kwan/KW_journal_wbid_qp.txt");
 
 AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 {
