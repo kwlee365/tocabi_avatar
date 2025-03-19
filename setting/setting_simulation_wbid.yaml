@@ -6,7 +6,7 @@ W_qb_pitch: 1000.0
 W_qb_yaw  : 1000.0
 W_qa      : 2000.0
 W_torque_1 : 100.0
-W_torque_2 : 2000.0
+W_torque_2 : 2500.0
 W_c_lfoot : 1.0
 W_c_rfoot : 1.0
 W_f_lfoot : 2000.0 

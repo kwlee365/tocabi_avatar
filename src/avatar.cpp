@@ -989,6 +989,7 @@ void AvatarController::computeSlow()
 
         ///////////////////////////////WBD CONTROLLER/////////////////////////////
         Eigen::VectorQd torque_sum = torque_wbd_ + (Kp_virtual.asDiagonal() * q_error_virtual - Kd_virtual.asDiagonal() * rd_.q_dot_virtual_).segment(6, MODEL_DOF);
+        // Eigen::VectorQd torque_sum = torque_wbd_ - (Kd_virtual.asDiagonal() * rd_.q_dot_virtual_).segment(6, MODEL_DOF);
 
         for(int i = 0; i < MODEL_DOF; i++)
         {
@@ -16876,10 +16877,19 @@ void AvatarController::contactWrenchCalculator()
     alpha_lpf_ = DyrosMath::minmax_cut(alpha_lpf_, 0.0, 1.0);
 
     //////////// FORCE ////////////
-    double real_robot_mass_offset_ = 6.17805; // 20250305: TOCABI 101.8 kg 
+    double real_robot_mass_offset_ = 0.0; // 20250305: TOCABI 101.8 kg 
+
+    /* REAL ROBOT */
+    // double real_robot_mass_offset_ = 6.17805; // 20250305: TOCABI 101.8 kg 
 
     F_R = -(1 - alpha) * (rd_.link_[COM_id].mass + real_robot_mass_offset_) * GRAVITY;
     F_L =     - alpha  * (rd_.link_[COM_id].mass + real_robot_mass_offset_) * GRAVITY;
+
+    double F_R_error = F_R - rd_.RF_FT(2);
+    double F_L_error = F_L - rd_.LF_FT(2);
+
+    F_R += F_R_error;
+    F_L += F_L_error;
 
     //////////// TORQUE ////////////
     Eigen::Vector2d pL; pL.setZero(); pL = lfoot_support_current_.translation().segment(0, 2);
