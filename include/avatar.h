@@ -30,7 +30,8 @@
 #include <std_msgs/Float32.h>
 
 // KW add
-// #include <filesystem>
+#include <filesystem>
+#include <casadi/casadi.hpp>
 
 const int FILE_CNT = 14;
 
@@ -2671,6 +2672,126 @@ public:
     double W_f_rfoot_wbid = 0.0;
     double W_c_lfoot_wbid = 0.0;
     double W_c_rfoot_wbid = 0.0;
+
+    void EigenMatrixToCasadiDM(casadi::DM &casadi_dm, Eigen::MatrixXd eigen_matrix, int col, int row);
+    void EigenVectorToCasadiDM(casadi::DM &casadi_dm, Eigen::VectorXd eigen_vector, int length);
+    Eigen::MatrixXd CasadiDMVectorToEigenMatrix(std::vector<casadi::DM> casadi_dm_vector);
+    Eigen::VectorXd CasadiDMVectorToEigenVector(std::vector<casadi::DM> casadi_dm_vector);
+
+    /*KAIST*/
+    void CasADiFunctionGeneration_KAIST();
+    void dcmController_NMPC_KAIST();
+    void dcmController_NMPC_KAIST(double del_zmp_x, double del_zmp_y, double del_footstep_x, double del_footstep_y, double dT, double hiptorque_x, double hiptorque_y);
+    void getGradHessDcm_NMPC_KAIST(Eigen::VectorXd &v, Eigen::MatrixXd &Q, Eigen::VectorXd &p, Eigen::MatrixXd &A, Eigen::VectorXd &lbA, Eigen::VectorXd &ubA);
+
+    void dcmRefWindow(Eigen::MatrixXd &xi_ref_horizon, double stepping_current_time, double ssp_ref_time, double dsp_ref_time, double w, double H, double dt_MPC, Eigen::VectorXd x_com_pos_MPC, Eigen::VectorXd x_com_vel_MPC, Eigen::VectorXd y_com_pos_MPC, Eigen::VectorXd y_com_vel_MPC);    
+    void ddthetaMinMax(double theta_x_prev, double dtheta_x_prev, double theta_y_prev, double dtheta_y_prev, double &ddtheta_x_min, double &ddtheta_x_max, double &ddtheta_y_min, double &ddtheta_y_max);
+
+    struct KAIST_DCM_NMPC
+    {
+        // MPC param //
+        const int H = 20;
+        const double dt_MPC = 0.02; // 50 Hz
+        const int state_length = 2;
+        const int input_length = 9;
+        const int total_num_constraint = 13;
+
+        // Robot (TOCABI) //
+        double J_x = 0.0;
+        double J_y = 0.0;
+
+        double Foot_length_front = 0.17;
+        double Foot_length_back  = 0.13;
+        double Foot_width  = 0.20;
+
+        double V_x_max = 5.0; double V_x_min = -5.0;
+        double V_y_max = 5.0; double V_y_min = -5.0;
+
+        double safety_factor_x = 0.7;
+        double safety_factor_y = 0.7;
+        double p_c_x_max = safety_factor_x *( 1.0*Foot_length_front);
+        double p_c_y_max = safety_factor_y *( 0.5*Foot_width);
+        double p_c_x_min = safety_factor_x *(-1.0*Foot_length_back);
+        double p_c_y_min = safety_factor_y *(-0.5*Foot_width);
+
+        double dU_x_max = 0.3;
+        double dU_y_max = 0.25;
+        double dU_x_min =-0.3;
+        double dU_y_min =-0.0;
+        double dT_max = 0.0;
+        double dT_min =-0.1;
+
+        double kp = 6;
+        double kd = 9; // critical damping
+        
+        double theta_x_max   = 0*DEG2RAD;   double theta_y_max = 0*DEG2RAD;
+        double theta_x_min   =-0*DEG2RAD;   double theta_y_min =-0*DEG2RAD;        
+        double dtheta_x_max  = 0*DEG2RAD;  double dtheta_y_max = 0*DEG2RAD;
+        double dtheta_x_min  =-0*DEG2RAD;  double dtheta_y_min =-0*DEG2RAD;
+        double ddtheta_x_max = 0*DEG2RAD; double ddtheta_y_max = 0*DEG2RAD;
+        double ddtheta_x_min =-0*DEG2RAD; double ddtheta_y_min =-0*DEG2RAD;
+
+        std::string current_path = std::filesystem::current_path().parent_path().string();
+        std::string prefix_code  = current_path + "/catkin_ws/src/tocabi_avatar/function/";   // The user should modify this variable your own directory.
+        std::string prefix_lib   = current_path + "/catkin_ws/src/tocabi_avatar/lib/";
+        std::string func_name    = "nmpc_func.c";
+        std::string lib_name     = "lib_nmpc_func.so";
+    };
+
+    /* DLR */
+     struct DlrContactScheduler{
+        // PARAM //
+
+        const int planning_step_number = 1;
+        const int n_phi = 2 * planning_step_number + 1;
+        // const int n_phi = 2;
+        const int n_wp = n_phi + 1;
+
+        const int state_length = 2;
+        const int input_length = 4;
+        const int variable_num = state_length * n_phi + input_length * (n_phi - 1) + 1;
+
+        const int total_num_constraint = state_length * (n_phi - 0)
+                                       + input_length * (n_phi - 1)  
+                                       + 1;
+
+        const int nmpc_ctrl_input_num = 5;
+
+        // Robot (TOCABI) //
+        double dU_x_max = 0.3;
+        double dU_y_max = 0.25;
+        double dU_x_min =-0.3;
+        double dU_y_min =-0.0;
+
+        double dT_max = 0.0;
+        double dT_SSP_min =-0.1;    
+        double dT_DSP_min =-0.2;    // (***) dT_min must not be less than T_dsp.
+        
+        std::string current_path = std::filesystem::current_path().parent_path().string();
+        std::string prefix_code  = current_path + "/catkin_ws/src/tocabi_avatar/function/";   // The user should modify this variable your own directory.
+        std::string prefix_lib   = current_path + "/catkin_ws/src/tocabi_avatar/lib/";
+        std::string func_name    = "nmpc_func.c";
+        std::string lib_name     = "lib_nmpc_func.so";
+    };
+    void CasADiFunctionGeneration_DLR();
+    void dcmController_NMPC_DLR();
+    void dcmController_NMPC_DLR(double del_zmp_x, double del_zmp_y, double del_footstep_x, double del_footstep_y, double T_new, double hiptorque_x, double hiptorque_y);
+    void getGradHessDcm_NMPC_DLR(Eigen::VectorXd &v, Eigen::MatrixXd &Q, Eigen::VectorXd &p, Eigen::MatrixXd &A, Eigen::VectorXd &lbA, Eigen::VectorXd &ubA, const Eigen::VectorXd &T_step_ref_horizon, const double &transition_phase_current_time);
+    
+    Eigen::Vector2d cp_current_dlr;
+    Eigen::Vector2d cp_current_dlr_diff;
+    Eigen::Vector2d cp_current_dlr_prev;
+    Eigen::Vector2d cp_current_dlr_thread;
+    Eigen::Vector2d cp_current_dlr_interpol;
+
+    double dynamics_score_x = 0.0; 
+    double dynamics_score_y = 0.0; 
+
+    double dynamics_score_x_max = 0.0;
+    double dynamics_score_y_max = 0.0;
+
+    double lf_ft_z_max = 0.0;
+    double rf_ft_z_max = 0.0;
 
 private:    
     //////////////////////////////// Myeong-Ju

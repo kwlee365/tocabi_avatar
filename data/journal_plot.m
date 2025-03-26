@@ -7,7 +7,7 @@ data = readmatrix('KW_journal_data1_thread1.txt');
 
 end_tick = length(data(:,1));
 
-time = [1:1:end_tick];
+time  = [1:1:end_tick];
 
 zmp_bound_front_x  = 0.17 * 0.7 * ones(end_tick, 1);
 zmp_bound_behind_x =-0.13 * 0.7 * ones(end_tick, 1);
@@ -28,12 +28,11 @@ h4 = plot(time, uT_x,     'b', 'LineWidth', 1.5)
 h7 = plot(time, dcm_err_x,'g' ,'LineWidth', 1.5)
 legend( [h3, h1, h2, h4, h7], ...
         {'$p_x^{\mathrm{ctrl}}$', ...
-        '$\overline{p}_x$', ...
-        '$\underline{p}_x$', ...
-        '$u_{T,x,1}$', ...
-        '$b_{T,x,1}$', ...
-        '$\xi_{\mathrm{err},x}$'}, ...
-        'Interpreter', 'latex', 'FontSize', 12, 'FontName', 'Times New Roman')
+         '$\overline{p}_x$', ...
+         '$\underline{p}_x$', ...
+         '$u_{T,x,1}$', ...
+         '$\xi_{\mathrm{err},x}$'}, ...
+         'Interpreter', 'latex', 'FontSize', 12, 'FontName', 'Times New Roman')
 
 xlabel('Time [sec]', 'Interpreter', 'latex', 'FontName', 'Times New Roman')
 ylabel('Displacement [m]', 'Interpreter', 'latex', 'FontName', 'Times New Roman')
@@ -75,14 +74,13 @@ legend( [h3, h1, h2, h4, h7], ...
         '$\overline{p}_y$', ...
         '$\underline{p}_y$', ...
         '$u_{T,y,1}$', ...
-        '$b_{T,y,1}$', ...
         '$\xi_{\mathrm{err},y}$'}, ...
         'Interpreter', 'latex', 'FontSize', 12, 'FontName', 'Times New Roman')
 
 xlabel('Time [sec]', 'Interpreter', 'latex', 'FontName', 'Times New Roman')
 ylabel('Displacement [m]', 'Interpreter', 'latex', 'FontName', 'Times New Roman')
 % pbaspect([8 2 1])
-grid on
+grid on 
 
 data = readmatrix('KW_journal_data_time_thread1.txt');
 time = [1:1:length(data(:,1))] ;
@@ -159,6 +157,26 @@ plot(time, lfoot_z_cur);
 plot(time, rfoot_z_cur);
 legend("lfoot", "rfoot", "lfoot cur", "rfoot cur")
 
+% clc
+% clear all
+% close all
+% data = readmatrix('KW_journal_dynamics_score.txt');
+% time = [1:1:length(data(:,1))];
+% 
+% figure()
+% hold on
+% plot(data(:,1))
+% title('dynamics score x')
+% legend()
+% grid on
+% 
+% figure()
+% hold on
+% plot(data(:,2))
+% title('dynamics score y')
+% legend()
+% grid on
+
 %% ZMP_x
 
 clc
@@ -208,6 +226,7 @@ plot(time, dcm_mea_y);
 legend("zmp ref y",  "com y", "dcm y", "dcm mea y")
 % legend("zmp ref y", "zmp des y", "com y", "dcm y", "dcm mea y")
 
+
 %% Calc time
 
 clc
@@ -227,139 +246,3 @@ figure()
 hold on
 plot(time, calc_hz);
 legend("calc time")
-
-%data = readmatrix('KW_journal_data_iter.txt');
-%time = [1:1:length(data(:,1))];
-%iter = data(:,1)
-%figure()
-%hold on
-%plot(time, iter);
-%legend("iter")
-
-%% Joint POSE
-
-clc
-clear all
-close all
-
-data = readmatrix('KW_journal_data_joint.txt');
-time = [1:1:length(data(:,1))];
-
-figure(1)
-sgtitle('Virtual Joint')
-for i = 1:1:6
-    subplot(6,1,i)
-    hold on
-    plot(time, data(:,i));
-    plot(time, data(:,i+12));
-    % legend(i)
-end
-
-figure(2)
-sgtitle('Leg Joint')
-for i = 1:1:6
-    subplot(6,1,i)
-    hold on
-    plot(time, data(:,i+6));
-    plot(time, data(:,i+18));
-    % legend(i)
-end
-% 
-% data = readmatrix('KW_journal_data_jointdot.txt');
-% time = [1:1:length(data(:,1))];
-% 
-% figure(3)
-% sgtitle('Virtual Joint')
-% for i = 1:1:6
-%     subplot(6,1,i)
-%     hold on
-%     % plot(time, data(:,i));
-%     plot(time, data(:,i+12));
-%     legend()
-% end
-% 
-% figure(4)
-% sgtitle('Leg Joint')
-% for i = 1:1:6
-%     subplot(6,1,i)
-%     hold on
-%     % plot(time, data(:,i+6));
-%     plot(time, data(:,i+18));
-%     legend()
-% end
-
-data = readmatrix('KW_journal_data_torque.txt');
-time = [1:1:length(data(:,1))];
-
-figure(5)
-sgtitle('feedforward')
-for i = 1:1:6
-    subplot(6,1,i)
-    hold on
-    plot(time, data(:,i));
-    plot(time, data(:,i+18));
-    plot(time, data(:,i)+data(:,i+18));
-
-    plot(time, data(:,i+36));
-    plot(time,-data(:,i+36));
-    legend('feedforward', 'PD torque', 'torque sum', 'ub', 'lb')
-end
-
-%% KW_journal_wbid_qddot
-clc
-clear all
-close all
-data = readmatrix('KW_journal_wbid_qddot.txt');
-time = [1:1:length(data(:,1))];
-
-figure(1)
-sgtitle('wbid qddot')
-for i = 1:1:12
-    subplot(12,1,i)
-    hold on
-    plot(time, data(:,i));
-    plot(time, data(:,i+12));
-    legend('qddot opt', 'qddot cmd')
-end
-
-% KW_journal_wbid_torque
-data = readmatrix('KW_journal_wbid_torque.txt');
-time = [1:1:length(data(:,1))];
-
-figure(2)
-sgtitle('wbid torque')
-for i = 1:1:6
-    subplot(6,1,i)
-    hold on
-    plot(time, data(:,i));
-    plot(time, data(:,i+12));
-    legend('torque opt', 'torque prev')
-end
-
-% KW_journal_wbid_acc
-data = readmatrix('KW_journal_wbid_acc.txt');
-time = [1:1:length(data(:,1))];
-
-figure(3)
-sgtitle('wbid contact acc')
-for i = 1:1:12
-    subplot(12,1,i)
-    hold on
-    plot(time, data(:,i));
-    % plot(time, data(:,i+6));
-    legend('contac acc opt')
-end
-
-% KW_journal_wbid_force
-data = readmatrix('KW_journal_wbid_force.txt');
-time = [1:1:length(data(:,1))];
-
-figure(4)
-sgtitle('wbid contact force')
-for i = 1:1:12
-    subplot(12,1,i)
-    hold on
-    plot(time, data(:,i));
-    plot(time, data(:,i+12));
-    legend('contac force opt', 'contac force cmd')
-end

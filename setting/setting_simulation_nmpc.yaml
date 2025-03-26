@@ -28,13 +28,13 @@ w_nmpc : [100,   # time
 #           1000]        # w_db_y
 
 # DLR Stepping Controller
-w_xi_err_x_dlr  : 5.0
-w_xi_err_y_dlr  : 5.0
-w_gain_time_dlr : 5.0
-w_p_end_x_dlr   : 50.0
-w_p_end_y_dlr   : 50.0
-w_p_init_x_dlr  : 50.0
-w_p_init_y_dlr  : 50.0
+w_xi_err_x_dlr  : 50.0
+w_xi_err_y_dlr  : 50.0
+w_gain_time_dlr : 50.0
+w_p_end_x_dlr   : 200.0
+w_p_end_y_dlr   : 200.0
+w_p_init_x_dlr  : 200.0
+w_p_init_y_dlr  : 200.0
 
 safety_factor_x : 0.7
 safety_factor_y : 0.7
@@ -42,7 +42,7 @@ safety_factor_y : 0.7
 dU_x_max :  0.15
 dU_y_max :  0.15
 dU_x_min : -0.15
-dU_y_min : -0.02
+dU_y_min : -0.03
 
 dT_max   : 0.0
 
