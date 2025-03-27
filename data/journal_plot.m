@@ -157,26 +157,6 @@ plot(time, lfoot_z_cur);
 plot(time, rfoot_z_cur);
 legend("lfoot", "rfoot", "lfoot cur", "rfoot cur")
 
-% clc
-% clear all
-% close all
-% data = readmatrix('KW_journal_dynamics_score.txt');
-% time = [1:1:length(data(:,1))];
-% 
-% figure()
-% hold on
-% plot(data(:,1))
-% title('dynamics score x')
-% legend()
-% grid on
-% 
-% figure()
-% hold on
-% plot(data(:,2))
-% title('dynamics score y')
-% legend()
-% grid on
-
 %% ZMP_x
 
 clc
@@ -195,12 +175,12 @@ dcm_mea_x = data(:,5);
 figure()
 hold on
 plot(time, zmp_ref_x);
-% plot(time, zmp_des_x);
+plot(time, zmp_des_x);
 plot(time, com_x);
 plot(time, dcm_x);
 plot(time, dcm_mea_x);
-legend("zmp ref x",  "com x", "dcm x", "dcm mea x")
-% legend("zmp ref x", "zmp des x", "com x", "dcm x", "dcm mea x")
+% legend("zmp ref x",  "com x", "dcm x", "dcm mea x")
+legend("zmp ref x", "zmp des x", "com x", "dcm x", "dcm mea x")
 % ZMP_y
 
 clc
@@ -219,12 +199,12 @@ dcm_mea_y = data(:,5);
 figure()
 hold on
 plot(time, zmp_ref_y);
-% plot(time, zmp_des_y);
+plot(time, zmp_des_y);
 plot(time, com_y);
 plot(time, dcm_y);
 plot(time, dcm_mea_y);
-legend("zmp ref y",  "com y", "dcm y", "dcm mea y")
-% legend("zmp ref y", "zmp des y", "com y", "dcm y", "dcm mea y")
+% legend("zmp ref y",  "com y", "dcm y", "dcm mea y")
+legend("zmp ref y", "zmp des y", "com y", "dcm y", "dcm mea y")
 
 
 %% Calc time
@@ -246,3 +226,39 @@ figure()
 hold on
 plot(time, calc_hz);
 legend("calc time")
+
+%% mpc
+clc
+% clear all
+% close all
+
+format long
+
+zmp_ref_x = readmatrix('KW_journal_data_analysis_zmp_ref_x.txt');
+zmp_ref_y = readmatrix('KW_journal_data_analysis_zmp_ref_y.txt');
+com_x = readmatrix('KW_journal_data_analysis_com_x.txt');
+com_y = readmatrix('KW_journal_data_analysis_com_y.txt');
+dcm_x = readmatrix('KW_journal_data_analysis_dcm_x.txt');
+dcm_y = readmatrix('KW_journal_data_analysis_dcm_y.txt');
+zmp_x = readmatrix('KW_journal_data_analysis_zmp_x.txt');
+zmp_y = readmatrix('KW_journal_data_analysis_zmp_y.txt');
+time = [1:1:length(data(:,1))];
+
+mpc_tick = 110;
+figure()
+plot(zmp_ref_x(mpc_tick,:))
+hold on
+grid on
+plot(com_x(mpc_tick,:))
+plot(dcm_x(mpc_tick,:))
+plot(zmp_x(mpc_tick,:))
+legend('zmp ref', 'com', 'dcm', 'zmp')
+
+figure()
+plot(zmp_ref_y(mpc_tick,:))
+hold on
+grid on
+plot(com_y(mpc_tick,:))
+plot(dcm_y(mpc_tick,:))
+plot(zmp_y(mpc_tick,:))
+legend('zmp ref', 'com', 'dcm', 'zmp')

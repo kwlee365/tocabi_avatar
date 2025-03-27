@@ -13,9 +13,18 @@ ofstream KW_journal_dynamics_score(         "/home/kwan/catkin_ws/src/tocabi_ava
 
 ofstream KW_journal_data_wrench(            "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_wrench.txt");
 
-// ofstream KW_journal_data_analysis_x(        "//home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
-// ofstream KW_journal_data_analysis_y(        "//home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
-// ofstream KW_journal_data_calc_time(         "//home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_calc_time.txt");
+ofstream KW_journal_data_analysis_x(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
+ofstream KW_journal_data_analysis_y(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
+ofstream KW_journal_data_calc_time(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_calc_time.txt");
+
+ofstream KW_journal_data_analysis_zmp_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_x.txt");
+ofstream KW_journal_data_analysis_zmp_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_y.txt");
+ofstream KW_journal_data_analysis_zmp_ref_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_ref_x.txt");
+ofstream KW_journal_data_analysis_zmp_ref_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_zmp_ref_y.txt");
+ofstream KW_journal_data_analysis_com_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_x.txt");
+ofstream KW_journal_data_analysis_com_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_com_y.txt");
+ofstream KW_journal_data_analysis_dcm_x("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_x.txt");
+ofstream KW_journal_data_analysis_dcm_y("/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_dcm_y.txt");
 
 // ofstream KW_journal_data_joint(             "//home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_joint.txt");
 
@@ -869,7 +878,7 @@ void AvatarController::computeSlow()
 
                 if(is_simul == 0)
                 {
-                    dcmController_NMPC_DYROS(del_zmp_x_dcm_nmpc, del_zmp_y_dcm_nmpc, del_footstep_x_dcm_nmpc, del_footstep_y_dcm_nmpc, del_steptime_dcm_nmpc_interpol, hiptorque_x_dcm_nmpc, hiptorque_y_dcm_nmpc);
+                    dcmController_NMPC_DYROS(del_zmp_x_dcm_nmpc, del_zmp_y_dcm_nmpc, del_footstep_x_dcm_nmpc, del_footstep_y_dcm_nmpc, del_steptime_dcm_nmpc, hiptorque_x_dcm_nmpc, hiptorque_y_dcm_nmpc);
                 }
                 else if (is_simul == 1)
                 {
@@ -921,6 +930,7 @@ void AvatarController::computeSlow()
                    (walking_tick_mj >= t_start_impact_ + impact_timing * hz_)  && 
                    (walking_tick_mj <  t_start_impact_ + impact_timing * hz_ + impact_duration * hz_))
                 {
+                    // std::cout << "impact!" << std::endl;
                     mujoco_applied_ext_force_.data[0] = impact_force*sin(impact_theta*DEG2RAD); //x-axis linear force
                     mujoco_applied_ext_force_.data[1] =-impact_force*cos(impact_theta*DEG2RAD); //y-axis linear force
                     mujoco_applied_ext_force_.data[2] = 0.0; //z-axis linear force
@@ -1062,8 +1072,8 @@ void AvatarController::computeSlow()
         // rd_.torque_desired = torque_lower_ + torque_upper_;
         ///////////////////////////////////////////////////////////////////////////////
 
-        // KW_journal_data_analysis_x <<  ZMP_X_REF_ << " " << ZMP_X_REF_ + del_zmp(0) << " " << com_desired_(0) << " " << cp_desired_(0) << " " << cp_measured_(0) << std::endl;
-        // KW_journal_data_analysis_y <<  ZMP_Y_REF_ << " " << ZMP_Y_REF_ + del_zmp(1) << " " << com_desired_(1) << " " << cp_desired_(1) << " " << cp_measured_(1) << std::endl;
+        KW_journal_data_analysis_x <<  ZMP_X_REF_ << " " << ZMP_X_REF_ + del_zmp(0) << " " << com_desired_(0) << " " << cp_desired_(0) << " " << cp_measured_(0) << std::endl;
+        KW_journal_data_analysis_y <<  ZMP_Y_REF_ << " " << ZMP_Y_REF_ + del_zmp(1) << " " << com_desired_(1) << " " << cp_desired_(1) << " " << cp_measured_(1) << std::endl;
         
         // KW_journal_data_joint << q_desired_virtual.segment(0,12).transpose() << " "
         //                       << q_virtual.segment(0,12).transpose() << std::endl;
@@ -9936,12 +9946,15 @@ void AvatarController::computeThread3()
     else if (is_simul == 2)
     {
         dcmController_NMPC_DLR();
-        // cpcontroller_MPC_MJDG(50.0, 1.5);
+    }
+    else if (is_simul == 3)
+    {
+        cpcontroller_MPC_MJDG(50.0, 1.5);
     }
 
     std::chrono::steady_clock::time_point t3 = std::chrono::steady_clock::now();
 
-    // KW_journal_data_calc_time << std::chrono::duration_cast<std::chrono::microseconds>(t3 - t1).count() << std::endl;
+    KW_journal_data_calc_time << std::chrono::duration_cast<std::chrono::microseconds>(t3 - t1).count() << std::endl;
 }
 
 // void AvatarController::comGenerator_MPC_wieber(double MPC_freq, double T, double preview_window, int MPC_synchro_hz_)
@@ -18264,17 +18277,14 @@ void AvatarController::comGenerator_MPC_wieber(double MPC_freq, double T, double
         std::cout << "Y DIR COM MPC CANNOT BE SOLVED!" << std::endl;
     }
 
-    // KW_journal_data_analysis_zmp_x     <<  x_zmp_recur_.transpose() << std::endl;
-    // KW_journal_data_analysis_zmp_y     <<  y_zmp_recur_.transpose() << std::endl;
-
-    // KW_journal_data_analysis_zmp_ref_x <<  zx_ref.transpose() << std::endl;
-    // KW_journal_data_analysis_zmp_ref_y <<  zy_ref.transpose() << std::endl;
-
-    // KW_journal_data_analysis_com_x <<  x_com_pos_recur_.transpose() << std::endl;
-    // KW_journal_data_analysis_com_y <<  y_com_pos_recur_.transpose() << std::endl;
-
-    // KW_journal_data_analysis_dcm_x <<  (x_com_pos_recur_ + x_com_vel_recur_ / wn).transpose() << std::endl;
-    // KW_journal_data_analysis_dcm_y <<  (y_com_pos_recur_ + y_com_vel_recur_ / wn).transpose() << std::endl;
+    KW_journal_data_analysis_zmp_x     <<  x_zmp_recur_.transpose() << std::endl;
+    KW_journal_data_analysis_zmp_y     <<  y_zmp_recur_.transpose() << std::endl;
+    KW_journal_data_analysis_zmp_ref_x <<  zx_ref.transpose() << std::endl;
+    KW_journal_data_analysis_zmp_ref_y <<  zy_ref.transpose() << std::endl;
+    KW_journal_data_analysis_com_x <<  x_com_pos_recur_.transpose() << std::endl;
+    KW_journal_data_analysis_com_y <<  y_com_pos_recur_.transpose() << std::endl;
+    KW_journal_data_analysis_dcm_x <<  (x_com_pos_recur_ + x_com_vel_recur_ / wn).transpose() << std::endl;
+    KW_journal_data_analysis_dcm_y <<  (y_com_pos_recur_ + y_com_vel_recur_ / wn).transpose() << std::endl;
 
     std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
 }
@@ -22904,139 +22914,109 @@ void AvatarController::dcmController_NMPC_KAIST()
     if(is_dcm_nmpc_init == true)
     {
         SQP_NMPC_DCM_.InitializeProblemSize((state_length + input_length) * MPC_Horizon, total_num_constraint * MPC_Horizon);
-        std::cout << "NMPC Initialization Complete" << std::endl;
-
-        is_dcm_nmpc_init = false;
+        // std::cout << "NMPC Initialization Complete" << std::endl;
+        // is_dcm_nmpc_init = false;
     } 
 
     int iter = 0;
     if(current_step_num_mpc_ > 0 && (current_step_num_mpc_ != total_step_num_-1))
     {
-        if(is_ssp_mpc == true)
+        while (dv.norm() > 1.0)
         {
-            while (dv.norm() > 1.0)
+            if (iter >= 3)  // At most 3 times.
             {
-                if (iter >= 3)  // At most 3 times.
-                {
-                    std::cout << "ITERATION EXCEED" << std::endl;
-                    is_iter_over = true;
-                    break;
-                }
-                // getGradHessDcm_NMPC(v, state_length, input_length, total_num_constraint, dt_MPC, MPC_Horizon, Q, p, A, lbA, ubA);
-                getGradHessDcm_NMPC_KAIST(v, Q, p, A, lbA, ubA);
-
-                SQP_NMPC_DCM_.EnableEqualityCondition(equality_condition_eps_);
-                SQP_NMPC_DCM_.UpdateMinProblem(Q, p);
-                SQP_NMPC_DCM_.DeleteSubjectToAx();
-                SQP_NMPC_DCM_.UpdateSubjectToAx(A, lbA, ubA);
-
-                // SQP_NMPC_DCM_.PrintMinProb();
-                // SQP_NMPC_DCM_.PrintSubjectToAx();
-
-                int QP_iteration_num = 200; // If the QP_iter_num is low, the m_status which contains the bool information about hot_start is 0.
-                if(SQP_NMPC_DCM_.SolveQPoases(QP_iteration_num, dv_))
-                {   
-                    dv = dv_.segment(0, (state_length + input_length) * MPC_Horizon);
-                }
-                else
-                {
-                    dv.setZero();
-                    std::cout << "NMPC CANNOT BE SOLVED." << std::endl;
-                    break;    
-                }
-
-                static bool flag_NAN = false;
-                for (int i = 0; i < (state_length + input_length) * MPC_Horizon; i++)
-                    if (dv(i) != dv(i)){flag_NAN = true;}
-                if (flag_NAN == true)
-                {
-                    std::cout << "NAN!!!" << std::endl;
-                    break;
-                }
-
-                v = v + 1.0 * dv;
-
-                iter = iter + 1;
+                std::cout << "ITERATION EXCEED" << std::endl;
+                is_iter_over = true;
+                break;
             }
+            // getGradHessDcm_NMPC(v, state_length, input_length, total_num_constraint, dt_MPC, MPC_Horizon, Q, p, A, lbA, ubA);
+            getGradHessDcm_NMPC_KAIST(v, Q, p, A, lbA, ubA);
 
-            if (atb_nmpc_update_ == false)
-            {
-                atb_nmpc_update_ = true;
-                nmpc_ctrl_input_thread << v(state_length * MPC_Horizon + 0), // p_c_x
-                                          v(state_length * MPC_Horizon + 1), // p_c_y
-                                          v(state_length * MPC_Horizon + 2), // u_T_x
-                                          v(state_length * MPC_Horizon + 3), // u_T_y
-                                          v(state_length * MPC_Horizon + 6); // dT
+            SQP_NMPC_DCM_.EnableEqualityCondition(equality_condition_eps_);
+            SQP_NMPC_DCM_.UpdateMinProblem(Q, p);
+            SQP_NMPC_DCM_.DeleteSubjectToAx();
+            SQP_NMPC_DCM_.UpdateSubjectToAx(A, lbA, ubA);
+            SQP_NMPC_DCM_.DeleteSubjectToX();
 
-                dU_x_prev = v(state_length * MPC_Horizon + 2);
-                dU_y_prev = v(state_length * MPC_Horizon + 3);
+            // SQP_NMPC_DCM_.PrintMinProb();
+            // SQP_NMPC_DCM_.PrintSubjectToAx();
 
-                ddtheta_x_prev   = v(state_length * MPC_Horizon + 7);
-                dtheta_x_prev    = dtheta_x_prev + ddtheta_x_prev * dt_MPC;
-                theta_x_prev     = theta_x_prev  + dtheta_x_prev  * dt_MPC + (ddtheta_x_prev / 2.0) * dt_MPC * dt_MPC;
-
-                ddtheta_y_prev   = v(state_length * MPC_Horizon + 8);
-                dtheta_y_prev    = dtheta_y_prev + ddtheta_y_prev * dt_MPC;
-                theta_y_prev     = theta_y_prev  + dtheta_y_prev  * dt_MPC + (ddtheta_y_prev / 2.0) * dt_MPC * dt_MPC;    
-
-                atb_nmpc_update_ = false;
-            }
-
-            if(current_step_num_thread_ == current_step_num_mpc_)
-            {
-                nmpc_update_ = true;
+            int QP_iteration_num = 200; // If the QP_iter_num is low, the m_status which contains the bool information about hot_start is 0.
+            if(SQP_NMPC_DCM_.SolveQPoases(QP_iteration_num, dv_, false))
+            {   
+                dv = dv_.segment(0, (state_length + input_length) * MPC_Horizon);
             }
             else
             {
-                std::cout << "Nonlinear DCM MPC Update is ignored. " << std::endl;
+                dv.setZero();
+                std::cout << "NMPC CANNOT BE SOLVED." << std::endl;
+                break;    
             }
 
-            Eigen::Vector2d xi_ref; xi_ref.setZero();   
-            double b = 1 / wn;
-            xi_ref(0) = x_com_pos_recur_(0) + x_com_vel_recur_(0) * b;
-            xi_ref(1) = y_com_pos_recur_(0) + y_com_vel_recur_(0) * b; 
-            Eigen::Vector2d xi;     xi.setZero();       xi = cp_measured_mpc_; 
-            Eigen::Vector2d xi_err; xi_err.setZero();   xi_err = xi - xi_ref; 
-            double m = rd_.link_[COM_id].mass;  // [kg]
-            double g = GRAVITY;                 // [m/s^2]
-            double h = com_height_;  
-            casadi::DM dm_X; EigenVectorToCasadiDM(dm_X, v.head(MPC_Horizon * state_length), MPC_Horizon * state_length);
-            casadi::DM dm_U; EigenVectorToCasadiDM(dm_U, v.head(MPC_Horizon * input_length), MPC_Horizon * input_length);
-            casadi::DM dm_xi_err; EigenVectorToCasadiDM(dm_xi_err, xi_err, state_length);
-            KAIST_DCM_NMPC knmpc;
-            std::string lib_full_name = knmpc.prefix_lib + knmpc.lib_name;
-            casadi::Function ceq0 = casadi::external("ceq0_func", lib_full_name);
-            std::vector<casadi::DM> ceq0_result = ceq0(std::vector<casadi::DM>{dm_xi_err, dm_X, dm_U, m, g, wn, dt_MPC, 0.0, 0.0});
+            static bool flag_NAN = false;
+            for (int i = 0; i < (state_length + input_length) * MPC_Horizon; i++)
+                if (dv(i) != dv(i)){flag_NAN = true;}
+            if (flag_NAN == true)
+            {
+                std::cout << "NAN!!!" << std::endl;
+                break;
+            }
 
-            dynamics_score_x = CasadiDMVectorToEigenVector(ceq0_result)(0);
-            dynamics_score_y = CasadiDMVectorToEigenVector(ceq0_result)(1);
-    
-            std::cout << "dynamics_score_x: " << dynamics_score_x << std::endl;
-            std::cout << "dynamics_score_y: " << dynamics_score_y << std::endl;
+            v = v + 1.0 * dv;
 
-            KW_journal_dynamics_score << dynamics_score_x << " " << dynamics_score_y << std::endl;
-    
-            dynamics_score_x_max = max(dynamics_score_x, dynamics_score_x_max);
-            dynamics_score_y_max = max(dynamics_score_y, dynamics_score_y_max);
+            iter = iter + 1;
+        }
+
+        dU_x_prev = v(state_length * MPC_Horizon + 2);
+        dU_y_prev = v(state_length * MPC_Horizon + 3);
+
+        ddtheta_x_prev   = v(state_length * MPC_Horizon + 7);
+        dtheta_x_prev    = dtheta_x_prev + ddtheta_x_prev * dt_MPC;
+        theta_x_prev     = theta_x_prev  + dtheta_x_prev  * dt_MPC + (ddtheta_x_prev / 2.0) * dt_MPC * dt_MPC;
+
+        ddtheta_y_prev   = v(state_length * MPC_Horizon + 8);
+        dtheta_y_prev    = dtheta_y_prev + ddtheta_y_prev * dt_MPC;
+        theta_y_prev     = theta_y_prev  + dtheta_y_prev  * dt_MPC + (ddtheta_y_prev / 2.0) * dt_MPC * dt_MPC;    
+
+        if (atb_nmpc_update_ == false)
+        {
+            atb_nmpc_update_ = true;
+            nmpc_ctrl_input_thread << v(state_length * MPC_Horizon + 0), // p_c_x
+                                        v(state_length * MPC_Horizon + 1), // p_c_y
+                                        v(state_length * MPC_Horizon + 2), // u_T_x
+                                        v(state_length * MPC_Horizon + 3), // u_T_y
+                                        v(state_length * MPC_Horizon + 6); // dT
+            atb_nmpc_update_ = false;
+        }
+
+        if(current_step_num_thread_ == current_step_num_mpc_)
+        {
+            nmpc_update_ = true;
         }
         else
         {
-            nmpc_ctrl_input.setZero();
-            nmpc_ctrl_input_diff.setZero();
-            nmpc_ctrl_input_prev.setZero();
-            nmpc_ctrl_input_thread.setZero();
-
-            dU_x_prev = 0.0;
-            dU_y_prev = 0.0;
-
-            ddtheta_x_prev= 0.0;
-            dtheta_x_prev = 0.0;
-            theta_x_prev  = 0.0;
-            
-            ddtheta_y_prev= 0.0;
-            dtheta_y_prev = 0.0;
-            theta_y_prev  = 0.0;    
+            std::cout << "Nonlinear DCM MPC Update is ignored. " << std::endl;
         }
+
+        // std::cout << "cp_measured_mpc_: " << cp_measured_mpc_.transpose() << std::endl; 
+        // std::cout << "xi_ref: " << xi_ref.transpose() << std::endl; 
+        // std::cout << "current_step_num_mpc_: " << current_step_num_mpc_ << std::endl;
+        // std::cout << "walking_tick_mj_mpc: " << walking_tick_mj_mpc_ << std::endl;
+        // std::cout << "dv_.norm(): " << dv_.norm() << std::endl; 
+        // std::cout << "v(state_length * MPC_Horizon + 0): "  << v(state_length * MPC_Horizon + 0) << std::endl;
+        // std::cout << "v(state_length * MPC_Horizon + 1): "  << v(state_length * MPC_Horizon + 1) << std::endl;
+        // std::cout << "v(state_length * MPC_Horizon + 2): "  << v(state_length * MPC_Horizon + 2) << std::endl;
+        // std::cout << "v(state_length * MPC_Horizon + 3): "  << v(state_length * MPC_Horizon + 3) << std::endl;
+        // std::cout << "v(state_length * MPC_Horizon + 4): "  << v(state_length * MPC_Horizon + 4) << std::endl;
+        // std::cout << "v(state_length * MPC_Horizon + 5): "  << v(state_length * MPC_Horizon + 5) << std::endl;
+        // std::cout << "v(state_length * MPC_Horizon + 6): "  << v(state_length * MPC_Horizon + 6) << std::endl;
+        // std::cout << "v(state_length * MPC_Horizon + 7): "  << v(state_length * MPC_Horizon + 7) << std::endl;
+        // std::cout << "v(state_length * MPC_Horizon + 8): "  << v(state_length * MPC_Horizon + 8) << std::endl;
+        // std::cout << "dv_: " << dv_.transpose() << std::endl;
+        // std::cout << "v" << v.transpose() << std::endl;
+        // SQP_NMPC_DCM_.PrintMinProb();
+        // SQP_NMPC_DCM_.PrintSubjectToAx();
+        // std::cout << std::endl;
     }
 
     std::chrono::steady_clock::time_point t2 = std::chrono::steady_clock::now();
@@ -23050,21 +23030,21 @@ void AvatarController::dcmController_NMPC_KAIST(double del_zmp_x, double del_zmp
     // ZMP -> ZmpController() (in computeslow) //
     if(current_step_num_ > 0 && (current_step_num_ != total_step_num_-1))
     {
-        if (is_ssp == true)
+        if(is_ssp == true)
         {
             del_zmp_nmpc(0) = del_zmp_x;    // From Nonlinear MPC
             del_zmp_nmpc(1) = del_zmp_y;    // From Nonlinear MPC
         }
-        else if(is_dsp == true)
-        {
-            del_zmp_nmpc(0) = 0.0;
-            del_zmp_nmpc(1) = 0.0;
+        else{
+            del_zmp_nmpc = 1.4 * (cp_measured_ - cp_desired_); 
         }
     }
     else
     {
         del_zmp_nmpc = 1.4 * (cp_measured_ - cp_desired_); 
     }
+
+    // del_zmp_nmpc = 1.4 * (cp_measured_ - cp_desired_);
 
     ///////////////////////////////////////////////////////////////
     // Stepping -> getFootTrajectory_stepping() (in computeslow) //
@@ -23161,8 +23141,8 @@ void AvatarController::dcmController_NMPC_KAIST(double del_zmp_x, double del_zmp
     }
 
     // REAL ROBOT //
-    KW_journal_data1_thread1      << del_zmp_x_dcm_nmpc_interpol << " " << del_footstep_x_dcm_nmpc_interpol << " " << cp_desired_(0) << " " << cp_measured_(0) << std::endl;
-    KW_journal_data2_thread1      << del_zmp_y_dcm_nmpc_interpol << " " << del_footstep_y_dcm_nmpc_interpol << " " << cp_desired_(1) << " " << cp_measured_(1) << std::endl;
+    KW_journal_data1_thread1      << del_zmp_x_dcm_nmpc << " " << del_footstep_x_dcm_nmpc_interpol << " " << cp_desired_(0) << " " << cp_measured_(0) << std::endl;
+    KW_journal_data2_thread1      << del_zmp_y_dcm_nmpc << " " << del_footstep_y_dcm_nmpc_interpol << " " << cp_desired_(1) << " " << cp_measured_(1) << std::endl;
     // KW_journal_data_opto_thread1  <<  opto_ft_(0) << "," << opto_ft_(1) << "," << opto_ft_(2) << "," << opto_ft_(3) << "," << opto_ft_(4) << "," << opto_ft_(5) << endl;
     KW_journal_foot_data1_thread1 << del_F_(0) << " " << lfoot_trajectory_support_.translation()(0) << " " << rfoot_trajectory_support_.translation()(0) << " " << lfoot_support_current_.translation()(0) << " " << rfoot_support_current_.translation()(0) << std::endl;
     KW_journal_foot_data2_thread1 << del_F_(1) << " " << lfoot_trajectory_support_.translation()(1) << " " << rfoot_trajectory_support_.translation()(1) << " " << lfoot_support_current_.translation()(1) << " " << rfoot_support_current_.translation()(1) << std::endl; 
@@ -23267,7 +23247,7 @@ void AvatarController::getGradHessDcm_NMPC_KAIST(Eigen::VectorXd &v, Eigen::Matr
     X = v.segment(               0, H * state_length);
     U = v.segment(H * state_length, H * input_length);
 
-    double w_dT        = 100.0;
+    double w_dT        = 1.0;
 
     double w_xi_err_x  = 1.0;
     double w_p_c_x     = 1.0;

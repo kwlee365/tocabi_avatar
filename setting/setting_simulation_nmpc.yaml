@@ -53,7 +53,7 @@ iter_num : 20
 
 dv_norm_threshold : 0.000001
 
-is_simul : 0
+is_simul : 1
 # 0: DYROS  iter 5
 # 1: KAIST  iter 5
 # 2: DLR

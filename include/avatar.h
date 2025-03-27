@@ -2690,15 +2690,15 @@ public:
     struct KAIST_DCM_NMPC
     {
         // MPC param //
-        const int H = 20;
+        const int H = 3;
         const double dt_MPC = 0.02; // 50 Hz
         const int state_length = 2;
         const int input_length = 9;
         const int total_num_constraint = 13;
 
         // Robot (TOCABI) //
-        double J_x = 0.0;
-        double J_y = 0.0;
+        double J_x = 10.0;
+        double J_y = 10.0;
 
         double Foot_length_front = 0.17;
         double Foot_length_back  = 0.13;
