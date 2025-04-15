@@ -38,7 +38,8 @@ kp_x_pelv_com : 1.2 # x push : 0.4 / y push : 1.0
 kd_x_pelv_com : 0.2 # x push : 0.0 / y push : 0.1
 # BEST : 1.2 / 0.2
 
-kp_y_pelv_com : 0.8
+# kp_y_pelv_com : 0.8 # push
+kp_y_pelv_com : 1.2 # compliant terrain
 kd_y_pelv_com : 0.2
 
 kp_z_pelv_com : 1.0
@@ -49,9 +50,12 @@ kp_y_pelv_ori : 6.25
 kd_x_pelv_ori : 2.5
 kd_y_pelv_ori : 2.5
 
-kp_x_foot_pos : 1.0
-kp_y_foot_pos : 1.0
-kp_z_foot_pos : 1.0
+# kp_x_foot_pos : 1.0 # PUSH
+# kp_y_foot_pos : 1.0
+# kp_z_foot_pos : 1.0
+kp_x_foot_pos : 0.0 # COMPLIANT TERRAIN
+kp_y_foot_pos : 0.0
+kp_z_foot_pos : 0.0
 
 kp_x_foot_ori : 5.0
 kp_y_foot_ori : 5.0

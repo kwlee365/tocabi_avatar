@@ -2472,6 +2472,7 @@ public:
     };
 
     CQuadraticProgram SQP_NMPC_DCM_;
+    CQuadraticProgram SQP_NMPC_DCM_KAIST;
     void dcmController_NMPC_DYROS();
     void dcmController_NMPC_DYROS_MAIN_THREAD();
     void dcmController_NMPC_DYROS(double del_zmp_x, double del_zmp_y, double del_footstep_x, double del_footstep_y, double dT, double hiptorque_x, double hiptorque_y);
@@ -2690,22 +2691,22 @@ public:
     struct KAIST_DCM_NMPC
     {
         // MPC param //
-        const int H = 3;
+        const int H = 20;
         const double dt_MPC = 0.02; // 50 Hz
         const int state_length = 2;
         const int input_length = 9;
         const int total_num_constraint = 13;
 
         // Robot (TOCABI) //
-        double J_x = 10.0;
-        double J_y = 10.0;
+        double J_x = 0.0;
+        double J_y = 0.0;
 
         double Foot_length_front = 0.17;
         double Foot_length_back  = 0.13;
         double Foot_width  = 0.20;
 
-        double V_x_max = 5.0; double V_x_min = -5.0;
-        double V_y_max = 5.0; double V_y_min = -5.0;
+        double V_x_max = 0.7; double V_x_min = -0.6;
+        double V_y_max = 0.7; double V_y_min = -0.6;
 
         double safety_factor_x = 0.7;
         double safety_factor_y = 0.7;
@@ -2717,7 +2718,7 @@ public:
         double dU_x_max = 0.3;
         double dU_y_max = 0.25;
         double dU_x_min =-0.3;
-        double dU_y_min =-0.0;
+        double dU_y_min =-0.3;
         double dT_max = 0.0;
         double dT_min =-0.1;
 

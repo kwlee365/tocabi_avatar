@@ -150,6 +150,7 @@ lfoot_z_cur = data(:,3);
 rfoot_z_cur = data(:,4);
 
 figure()
+%% 
 hold on
 plot(time, lfoot_z);
 plot(time, rfoot_z);
@@ -229,8 +230,8 @@ legend("calc time")
 
 %% mpc
 clc
-% clear all
-% close all
+clear all
+close all
 
 format long
 
@@ -242,9 +243,13 @@ dcm_x = readmatrix('KW_journal_data_analysis_dcm_x.txt');
 dcm_y = readmatrix('KW_journal_data_analysis_dcm_y.txt');
 zmp_x = readmatrix('KW_journal_data_analysis_zmp_x.txt');
 zmp_y = readmatrix('KW_journal_data_analysis_zmp_y.txt');
-time = [1:1:length(data(:,1))];
+dcm_x_mpc = readmatrix('KW_journal_data_analysis_dcm_x_mpc.txt');
+dcm_y_mpc = readmatrix('KW_journal_data_analysis_dcm_y_mpc.txt');
+zmp_x_mpc = readmatrix('KW_journal_data_analysis_zmp_x_mpc.txt');
+zmp_y_mpc = readmatrix('KW_journal_data_analysis_zmp_y_mpc.txt');
+% time = [1:1:length(data(:,1))];
 
-mpc_tick = 110;
+mpc_tick = 250;
 figure()
 plot(zmp_ref_x(mpc_tick,:))
 hold on
@@ -252,7 +257,10 @@ grid on
 plot(com_x(mpc_tick,:))
 plot(dcm_x(mpc_tick,:))
 plot(zmp_x(mpc_tick,:))
-legend('zmp ref', 'com', 'dcm', 'zmp')
+plot(dcm_x_mpc(mpc_tick,:))
+plot(zmp_x_mpc(mpc_tick,:))
+legend('zmp ref', 'com', 'dcm', 'zmp', 'dcm mpc', 'zmp mpc')
+ylim([-0.2 0.2])
 
 figure()
 plot(zmp_ref_y(mpc_tick,:))
@@ -261,4 +269,7 @@ grid on
 plot(com_y(mpc_tick,:))
 plot(dcm_y(mpc_tick,:))
 plot(zmp_y(mpc_tick,:))
-legend('zmp ref', 'com', 'dcm', 'zmp')
+plot(dcm_y_mpc(mpc_tick,:))
+plot(zmp_y_mpc(mpc_tick,:))
+legend('zmp ref', 'com', 'dcm', 'zmp', 'dcm mpc', 'zmp mpc')
+ylim([-0.2 0.2])
