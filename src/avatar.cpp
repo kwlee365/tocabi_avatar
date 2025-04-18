@@ -2,15 +2,6 @@
 using namespace TOCABI;
 
 /* SIMULATION */
-// ofstream KW_journal_data1(                  "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1.txt");
-// ofstream KW_journal_data2(                  "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2.txt");
-// ofstream KW_journal_foot_data1(             "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data1.txt");
-// ofstream KW_journal_foot_data2(             "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data2.txt");
-// ofstream KW_journal_foot_data3(             "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data3.txt");
-// ofstream KW_journal_data_time(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time.txt");
-// ofstream KW_journal_data_calc_time(         "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_calc_time.txt");
-// ofstream KW_journal_data_iter(              "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_iter.txt");
-// 
 // ofstream KW_journal_data1_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1_thread1.txt");
 // ofstream KW_journal_data2_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2_thread1.txt");
 // ofstream KW_journal_data_time_thread1(      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time_thread1.txt");
@@ -19,11 +10,10 @@ using namespace TOCABI;
 // ofstream KW_journal_foot_data3_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data3_thread1.txt");
 // ofstream KW_journal_data_analysis_x(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
 // ofstream KW_journal_data_analysis_y(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
-// 
+
 // ofstream KW_journal_data_joint(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_joint.txt");
 // ofstream KW_journal_data_jointdot(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_jointdot.txt");
 // ofstream KW_journal_data_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_torque.txt");
-// 
 // ofstream KW_journal_wbid_qddot(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_qddot.txt");
 // ofstream KW_journal_wbid_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_torque.txt");
 // ofstream KW_journal_wbid_acc(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_acc.txt");
@@ -988,8 +978,38 @@ void AvatarController::computeSlow()
         }
 
         ///////////////////////////////WBD CONTROLLER/////////////////////////////
-        Eigen::VectorQd torque_sum = torque_wbd_ + (Kp_virtual.asDiagonal() * q_error_virtual - Kd_virtual.asDiagonal() * rd_.q_dot_virtual_).segment(6, MODEL_DOF);
-        // Eigen::VectorQd torque_sum = torque_wbd_ - (Kd_virtual.asDiagonal() * rd_.q_dot_virtual_).segment(6, MODEL_DOF);
+        // Eigen::VectorQd torque_sum = torque_wbd_ + (Kp_virtual.asDiagonal() * q_error_virtual - Kd_virtual.asDiagonal() * rd_.q_dot_virtual_).segment(6, MODEL_DOF);
+        
+        /* PUSH RECOVERY */
+        for (int i = 0; i < 15; i++)
+        {
+            Kp(i) = 1600.0;
+            Kd(i) =   80.0;
+        }
+        for (int i = 15; i < MODEL_DOF; i++)
+        {
+            Kp(i) = 50.0;
+            Kd(i) =  2.0;
+        }
+        Eigen::VectorQd torque_sum = torque_wbd_ + (Kp.asDiagonal() * q_error_virtual.segment(6, MODEL_DOF) - Kd.asDiagonal() * rd_.q_dot_virtual_.segment(6, MODEL_DOF));
+
+        /* UNENVEN TERRAIN */
+        // for (int i = 0; i < 12; i++)
+        // {
+        //     Kp(i) =  0.0;
+        //     Kd(i) = 80.0;
+        // }
+        // for (int i = 12; i < 15; i++)
+        // {
+        //     Kp(i) =1600.0;
+        //     Kd(i) =  80.0;
+        // }
+        // for (int i = 15; i < MODEL_DOF; i++)
+        // {
+        //     Kp(i) = 50.0;
+        //     Kd(i) =  2.0;
+        // }
+        // Eigen::VectorQd torque_sum = torque_wbd_ + (Kp.asDiagonal() * q_error_virtual.segment(6, MODEL_DOF) - Kd.asDiagonal() * rd_.q_dot_virtual_.segment(6, MODEL_DOF));
 
         for(int i = 0; i < MODEL_DOF; i++)
         {
@@ -999,8 +1019,6 @@ void AvatarController::computeSlow()
         torque_desired_prev_ = torque_sum;
 
         rd_.torque_desired = torque_sum;
-
-
 
         // torque_lower_.setZero();
         // for (int i = 0; i < 12; i++)
@@ -2623,9 +2641,9 @@ void AvatarController::getProcessedRobotData()
     // com_vel_current_lpf_from_support_ = DyrosMath::lpf<3>(com_vel_current_from_support_, com_vel_pre_lpf_from_support_, 1 / dt_, com_vel_cutoff_freq_);
 
     zc_ = com_pos_current_from_support_(2);
-    wn_ = sqrt(GRAVITY / zc_);
+    wn = sqrt(GRAVITY / com_height_);
 
-    cp_current_from_suppport_ = com_pos_current_from_support_ + com_vel_current_lpf_from_support_ / wn_;
+    cp_current_from_suppport_ = com_pos_current_from_support_ + com_vel_current_lpf_from_support_ / wn;
 
     // zmp_measured_local_ = WBC::GetZMPpos_fromFT(rd_, true);
 
@@ -16873,8 +16891,6 @@ void AvatarController::contactWrenchCalculator()
 
     alpha = (ZMP_Y_REF_alpha_ + del_zmp(1) - pR_sharp(1)) / (pL_sharp(1) - pR_sharp(1));
     alpha = DyrosMath::minmax_cut(alpha, 0.0, 1.0);
-    alpha_lpf_ = DyrosMath::lpf(alpha, alpha_lpf_, 2000.0, 50.0);
-    alpha_lpf_ = DyrosMath::minmax_cut(alpha_lpf_, 0.0, 1.0);
 
     //////////// FORCE ////////////
     double real_robot_mass_offset_ = 0.0; // 20250305: TOCABI 101.8 kg 
@@ -16882,8 +16898,10 @@ void AvatarController::contactWrenchCalculator()
     /* REAL ROBOT */
     // double real_robot_mass_offset_ = 6.17805; // 20250305: TOCABI 101.8 kg 
 
-    F_R = -(1 - alpha) * (rd_.link_[COM_id].mass + real_robot_mass_offset_) * GRAVITY;
-    F_L =     - alpha  * (rd_.link_[COM_id].mass + real_robot_mass_offset_) * GRAVITY;
+    double real_robot_mass = rd_.link_[COM_id].mass + real_robot_mass_offset_;
+
+    F_R = -(1 - alpha) * real_robot_mass * GRAVITY;
+    F_L =     - alpha  * real_robot_mass * GRAVITY;
 
     double F_R_error = F_R - rd_.RF_FT(2);
     double F_L_error = F_L - rd_.LF_FT(2);
@@ -16906,8 +16924,21 @@ void AvatarController::contactWrenchCalculator()
     Tau_L_x =     alpha  * Tau_all_x;
     Tau_L_y =     alpha  * Tau_all_y;
 
-    lfoot_contact_wrench << 0.0, 0.0, F_L, Tau_L_x, Tau_L_y, 0.0;
-    rfoot_contact_wrench << 0.0, 0.0, F_R, Tau_R_x, Tau_R_y, 0.0;
+    // lfoot_contact_wrench << 0.0, 0.0, F_L, Tau_L_x, Tau_L_y, 0.0;
+    // rfoot_contact_wrench << 0.0, 0.0, F_R, Tau_R_x, Tau_R_y, 0.0;
+    /////////// XY COMPONENTS OF GRF ///////////
+    // double F_Rx = -(1 - alpha) * real_robot_mass * com_desired_ddot_(0);
+    // double F_Lx =     - alpha  * real_robot_mass * com_desired_ddot_(0);    
+    // double F_Ry = -(1 - alpha) * real_robot_mass * com_desired_ddot_(1);
+    // double F_Ly =     - alpha  * real_robot_mass * com_desired_ddot_(1);
+
+    double F_Rx = -(1 - alpha) * real_robot_mass * wn * wn * (com_desired_(0) - (ZMP_X_REF_       + del_zmp(0)));
+    double F_Lx =     - alpha  * real_robot_mass * wn * wn * (com_desired_(0) - (ZMP_X_REF_       + del_zmp(0)));    
+    double F_Ry = -(1 - alpha) * real_robot_mass * wn * wn * (com_desired_(1) - (ZMP_Y_REF_alpha_ + del_zmp(1)));
+    double F_Ly =     - alpha  * real_robot_mass * wn * wn * (com_desired_(1) - (ZMP_Y_REF_alpha_ + del_zmp(1)));
+
+    lfoot_contact_wrench << F_Lx, F_Ly, F_L, Tau_L_x, Tau_L_y, 0.0;
+    rfoot_contact_wrench << F_Rx, F_Ry, F_R, Tau_R_x, Tau_R_y, 0.0;
 
     contact_wrench_.head(6) = -lfoot_contact_wrench;
     contact_wrench_.tail(6) = -rfoot_contact_wrench;
@@ -18095,12 +18126,12 @@ void AvatarController::comGenerator_MPC_wieber(double MPC_freq, double T, double
 
     // Capturability Condition
     Eigen::MatrixXd Scap;     Scap.setZero(1, N);   Scap(0, N-1) = 1;
-    Eigen::MatrixXd Acap;     Acap.setZero(1, N);   Acap = Scap * (P_pu + P_vu / wn_);
+    Eigen::MatrixXd Acap;     Acap.setZero(1, N);   Acap = Scap * (P_pu + P_vu / wn);
 
-    Eigen::VectorXd lbAcap_x; lbAcap_x.setZero(1);  lbAcap_x(0) = zx_ref(N-1) - (Scap * ((P_ps + P_vs / wn_) * x_hat_)).value();
-    Eigen::VectorXd ubAcap_x; ubAcap_x.setZero(1);  ubAcap_x(0) = zx_ref(N-1) - (Scap * ((P_ps + P_vs / wn_) * x_hat_)).value();
-    Eigen::VectorXd lbAcap_y; lbAcap_y.setZero(1);  lbAcap_y(0) = zy_ref(N-1) - (Scap * ((P_ps + P_vs / wn_) * y_hat_)).value();
-    Eigen::VectorXd ubAcap_y; ubAcap_y.setZero(1);  ubAcap_y(0) = zy_ref(N-1) - (Scap * ((P_ps + P_vs / wn_) * y_hat_)).value();
+    Eigen::VectorXd lbAcap_x; lbAcap_x.setZero(1);  lbAcap_x(0) = zx_ref(N-1) - (Scap * ((P_ps + P_vs / wn) * x_hat_)).value();
+    Eigen::VectorXd ubAcap_x; ubAcap_x.setZero(1);  ubAcap_x(0) = zx_ref(N-1) - (Scap * ((P_ps + P_vs / wn) * x_hat_)).value();
+    Eigen::VectorXd lbAcap_y; lbAcap_y.setZero(1);  lbAcap_y(0) = zy_ref(N-1) - (Scap * ((P_ps + P_vs / wn) * y_hat_)).value();
+    Eigen::VectorXd ubAcap_y; ubAcap_y.setZero(1);  ubAcap_y(0) = zy_ref(N-1) - (Scap * ((P_ps + P_vs / wn) * y_hat_)).value();
 
     Eigen::MatrixXd A_x;   A_x.setZero(constraint_num, N); 
     Eigen::VectorXd lbA_x; lbA_x.setZero(constraint_num);  
@@ -20889,7 +20920,7 @@ void AvatarController::getGradHessDcm_NMPC_Real_Robot(Eigen::VectorXd &v, Eigen:
     const int n_phi        = nmpc.n_phi;
 
     const int total_num_constraint = nmpc.total_num_constraint;
-    double b = 1 / wn_;
+    double b = 1 / wn;
 
     Eigen::Vector2d xi_ref; xi_ref.setZero();                xi_ref(0) = xi_ref_horizon(0,0); xi_ref(1) = xi_ref_horizon(1,0); 
     Eigen::Vector2d xi;     xi.setZero();                    xi = cp_measured_mpc_; 
@@ -21071,7 +21102,7 @@ void AvatarController::referenceWindow(Eigen::MatrixXd &xi_ref_horizon, Eigen::M
     if(is_dsp_mpc == true) {transition_phase_start_time = 0;} 
     if(is_ssp_mpc == true) {transition_phase_start_time = t_dsp_const_;} 
 
-    double b = 1 / wn_;
+    double b = 1 / wn;
 
     // Step time reference
     if(is_dsp_mpc == true)
@@ -21665,7 +21696,7 @@ double AvatarController::backtrackingLineSearchNMPC(const Eigen::VectorXd &x_k, 
     Eigen::Vector2d xi;     xi.setZero();                    xi = cp_measured_mpc_; 
     Eigen::Vector2d xi_err; xi_err.setZero();                xi_err = xi - xi_ref; 
     
-    double b = 1 / wn_;
+    double b = 1 / wn;
 
     // ZMP constraints
     double p_c_x_max = safety_factor_x_nmpc *( 1.0*nmpc.Foot_length_front); 

@@ -7,7 +7,7 @@ data = readmatrix('KW_journal_data1_thread1.txt');
 
 end_tick = length(data(:,1));
 
-time = [1:1:end_tick];
+time = [1:1:end_tick]; 
 
 zmp_bound_front_x  = 0.17 * 0.7 * ones(end_tick, 1);
 zmp_bound_behind_x =-0.13 * 0.7 * ones(end_tick, 1);
@@ -163,7 +163,7 @@ legend("lfoot", "rfoot", "lfoot cur", "rfoot cur")
 
 clc
 clear all
-% close all
+close all
 
 data = readmatrix('KW_journal_data_analysis_x.txt');
 time = [1:1:length(data(:,1))];
@@ -177,12 +177,12 @@ dcm_mea_x = data(:,5);
 figure()
 hold on
 plot(time, zmp_ref_x);
-% plot(time, zmp_des_x);
+plot(time, zmp_des_x);
 plot(time, com_x);
 plot(time, dcm_x);
 plot(time, dcm_mea_x);
-legend("zmp ref x",  "com x", "dcm x", "dcm mea x")
-% legend("zmp ref x", "zmp des x", "com x", "dcm x", "dcm mea x")
+% legend("zmp ref x",  "com x", "dcm x", "dcm mea x")
+legend("zmp ref x", "zmp des x", "com x", "dcm x", "dcm mea x")
 % ZMP_y
 
 clc
@@ -201,12 +201,12 @@ dcm_mea_y = data(:,5);
 figure()
 hold on
 plot(time, zmp_ref_y);
-% plot(time, zmp_des_y);
+plot(time, zmp_des_y);
 plot(time, com_y);
 plot(time, dcm_y);
 plot(time, dcm_mea_y);
-legend("zmp ref y",  "com y", "dcm y", "dcm mea y")
-% legend("zmp ref y", "zmp des y", "com y", "dcm y", "dcm mea y")
+% legend("zmp ref y",  "com y", "dcm y", "dcm mea y")
+legend("zmp ref y", "zmp des y", "com y", "dcm y", "dcm mea y")
 
 %% Calc time
 
