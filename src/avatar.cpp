@@ -2,44 +2,44 @@
 using namespace TOCABI;
 
 /* SIMULATION */
-// ofstream KW_journal_data1_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1_thread1.txt");
-// ofstream KW_journal_data2_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2_thread1.txt");
-// ofstream KW_journal_data_time_thread1(      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time_thread1.txt");
-// ofstream KW_journal_foot_data1_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data1_thread1.txt");
-// ofstream KW_journal_foot_data2_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data2_thread1.txt");
-// ofstream KW_journal_foot_data3_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data3_thread1.txt");
-// ofstream KW_journal_data_analysis_x(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
-// ofstream KW_journal_data_analysis_y(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
+ofstream KW_journal_data1_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data1_thread1.txt");
+ofstream KW_journal_data2_thread1    (      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data2_thread1.txt");
+ofstream KW_journal_data_time_thread1(      "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_time_thread1.txt");
+ofstream KW_journal_foot_data1_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data1_thread1.txt");
+ofstream KW_journal_foot_data2_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data2_thread1.txt");
+ofstream KW_journal_foot_data3_thread1(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_foot_data3_thread1.txt");
+ofstream KW_journal_data_analysis_x(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_x.txt");
+ofstream KW_journal_data_analysis_y(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_analysis_y.txt");
 
-// ofstream KW_journal_data_joint(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_joint.txt");
-// ofstream KW_journal_data_jointdot(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_jointdot.txt");
-// ofstream KW_journal_data_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_torque.txt");
-// ofstream KW_journal_wbid_qddot(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_qddot.txt");
-// ofstream KW_journal_wbid_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_torque.txt");
-// ofstream KW_journal_wbid_acc(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_acc.txt");
-// ofstream KW_journal_wbid_force(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_force.txt");
-// ofstream KW_journal_wbid_qp(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_qp.txt");
+ofstream KW_journal_data_joint(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_joint.txt");
+ofstream KW_journal_data_jointdot(     "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_jointdot.txt");
+ofstream KW_journal_data_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_data_torque.txt");
+ofstream KW_journal_wbid_qddot(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_qddot.txt");
+ofstream KW_journal_wbid_torque(       "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_torque.txt");
+ofstream KW_journal_wbid_acc(          "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_acc.txt");
+ofstream KW_journal_wbid_force(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_force.txt");
+ofstream KW_journal_wbid_qp(        "/home/kwan/catkin_ws/src/tocabi_avatar/data/KW_journal_wbid_qp.txt");
 
 /* REAL ROBOT */
-ofstream KW_journal_data1_thread1    (      "/home/dyros/data/kwan/KW_journal_data1_thread1.txt");
-ofstream KW_journal_data2_thread1    (      "/home/dyros/data/kwan/KW_journal_data2_thread1.txt");
-ofstream KW_journal_data_time_thread1(      "/home/dyros/data/kwan/KW_journal_data_time_thread1.txt");
-ofstream KW_journal_foot_data1_thread1(     "/home/dyros/data/kwan/KW_journal_foot_data1_thread1.txt");
-ofstream KW_journal_foot_data2_thread1(     "/home/dyros/data/kwan/KW_journal_foot_data2_thread1.txt");
-ofstream KW_journal_foot_data3_thread1(     "/home/dyros/data/kwan/KW_journal_foot_data3_thread1.txt");
-ofstream KW_journal_data_analysis_x(        "/home/dyros/data/kwan/KW_journal_data_analysis_x.txt");
-ofstream KW_journal_data_analysis_y(        "/home/dyros/data/kwan/KW_journal_data_analysis_y.txt");
+// ofstream KW_journal_data1_thread1    (      "/home/dyros/data/kwan/KW_journal_data1_thread1.txt");
+// ofstream KW_journal_data2_thread1    (      "/home/dyros/data/kwan/KW_journal_data2_thread1.txt");
+// ofstream KW_journal_data_time_thread1(      "/home/dyros/data/kwan/KW_journal_data_time_thread1.txt");
+// ofstream KW_journal_foot_data1_thread1(     "/home/dyros/data/kwan/KW_journal_foot_data1_thread1.txt");
+// ofstream KW_journal_foot_data2_thread1(     "/home/dyros/data/kwan/KW_journal_foot_data2_thread1.txt");
+// ofstream KW_journal_foot_data3_thread1(     "/home/dyros/data/kwan/KW_journal_foot_data3_thread1.txt");
+// ofstream KW_journal_data_analysis_x(        "/home/dyros/data/kwan/KW_journal_data_analysis_x.txt");
+// ofstream KW_journal_data_analysis_y(        "/home/dyros/data/kwan/KW_journal_data_analysis_y.txt");
 
 ofstream KW_journal_data_calc_time(         "/home/dyros/data/kwan/KW_journal_data_calc_time.txt");
 
-ofstream KW_journal_data_joint(             "/home/dyros/data/kwan/KW_journal_data_joint.txt");
-ofstream KW_journal_data_jointdot(          "/home/dyros/data/kwan/KW_journal_data_jointdot.txt");
-ofstream KW_journal_data_torque(            "/home/dyros/data/kwan/KW_journal_data_torque.txt");
-ofstream KW_journal_wbid_qddot(             "/home/dyros/data/kwan/KW_journal_wbid_qddot.txt");
-ofstream KW_journal_wbid_torque(            "/home/dyros/data/kwan/KW_journal_wbid_torque.txt");
-ofstream KW_journal_wbid_acc(               "/home/dyros/data/kwan/KW_journal_wbid_acc.txt");
-ofstream KW_journal_wbid_force(             "/home/dyros/data/kwan/KW_journal_wbid_force.txt");
-ofstream KW_journal_wbid_qp(                "/home/dyros/data/kwan/KW_journal_wbid_qp.txt");
+// ofstream KW_journal_data_joint(             "/home/dyros/data/kwan/KW_journal_data_joint.txt");
+// ofstream KW_journal_data_jointdot(          "/home/dyros/data/kwan/KW_journal_data_jointdot.txt");
+// ofstream KW_journal_data_torque(            "/home/dyros/data/kwan/KW_journal_data_torque.txt");
+// ofstream KW_journal_wbid_qddot(             "/home/dyros/data/kwan/KW_journal_wbid_qddot.txt");
+// ofstream KW_journal_wbid_torque(            "/home/dyros/data/kwan/KW_journal_wbid_torque.txt");
+// ofstream KW_journal_wbid_acc(               "/home/dyros/data/kwan/KW_journal_wbid_acc.txt");
+// ofstream KW_journal_wbid_force(             "/home/dyros/data/kwan/KW_journal_wbid_force.txt");
+// ofstream KW_journal_wbid_qp(                "/home/dyros/data/kwan/KW_journal_wbid_qp.txt");
 
 AvatarController::AvatarController(RobotData &rd) : rd_(rd)
 {
@@ -978,20 +978,21 @@ void AvatarController::computeSlow()
         }
 
         ///////////////////////////////WBD CONTROLLER/////////////////////////////
-        // Eigen::VectorQd torque_sum = torque_wbd_ + (Kp_virtual.asDiagonal() * q_error_virtual - Kd_virtual.asDiagonal() * rd_.q_dot_virtual_).segment(6, MODEL_DOF);
+        /* FEEDFORWARD ONLY */
+        Eigen::VectorQd torque_sum = torque_wbd_;
         
         /* PUSH RECOVERY */
-        for (int i = 0; i < 15; i++)
-        {
-            Kp(i) = 1600.0;
-            Kd(i) =   80.0;
-        }
-        for (int i = 15; i < MODEL_DOF; i++)
-        {
-            Kp(i) = 50.0;
-            Kd(i) =  2.0;
-        }
-        Eigen::VectorQd torque_sum = torque_wbd_ + (Kp.asDiagonal() * q_error_virtual.segment(6, MODEL_DOF) - Kd.asDiagonal() * rd_.q_dot_virtual_.segment(6, MODEL_DOF));
+        // for (int i = 0; i < 15; i++)
+        // {
+        //     Kp(i) = 1600.0;
+        //     Kd(i) =   80.0;
+        // }
+        // for (int i = 15; i < MODEL_DOF; i++)
+        // {
+        //     Kp(i) = 50.0;
+        //     Kd(i) =  2.0;
+        // }
+        // Eigen::VectorQd torque_sum = torque_wbd_ + (Kp.asDiagonal() * q_error_virtual.segment(6, MODEL_DOF) - Kd.asDiagonal() * rd_.q_dot_virtual_.segment(6, MODEL_DOF));
 
         /* UNENVEN TERRAIN */
         // for (int i = 0; i < 12; i++)
@@ -1045,9 +1046,7 @@ void AvatarController::computeSlow()
         KW_journal_data_jointdot << qdot_desired_virtual.segment(0,12).transpose() << " "
                                  << rd_.q_dot_virtual_.segment(0,12).transpose() << std::endl;
 
-        KW_journal_data_torque << torque_wbd_.segment(0, 18).transpose() << " "
-                               << (Kp_virtual.asDiagonal() * q_error_virtual - Kd_virtual.asDiagonal() * rd_.q_dot_virtual_).segment(6, 18).transpose() << " "
-                               << rd_.torque_limit.segment(0, 18).transpose() << std::endl;
+        KW_journal_data_torque << torque_wbd_.transpose() << std::endl;
         ///////////////////////////////////////////////////////////////////////////////
     }
     else if (rd_.tc_.mode == 12)
@@ -20432,6 +20431,7 @@ void AvatarController::getParameterYAML()
     ros::param::get("/tocabi_controller/W_f_rfoot",  W_f_rfoot_wbid);
     ros::param::get("/tocabi_controller/W_c_lfoot",  W_c_lfoot_wbid);
     ros::param::get("/tocabi_controller/W_c_rfoot",  W_c_rfoot_wbid);
+    ros::param::get("/tocabi_controller/W_energy",  W_energy_wbid);
     std::cout << "W_qb_x_wbid: "         << W_qb_x_wbid << std::endl;
     std::cout << "W_qb_y_wbid: "         << W_qb_y_wbid << std::endl;
     std::cout << "W_qb_z_wbid: "         << W_qb_z_wbid << std::endl;
@@ -20447,6 +20447,7 @@ void AvatarController::getParameterYAML()
     std::cout << "W_f_rfoot_wbid: "   << W_f_rfoot_wbid << std::endl;
     std::cout << "W_c_lfoot_wbid: "   << W_c_lfoot_wbid << std::endl;
     std::cout << "W_c_rfoot_wbid: "   << W_c_rfoot_wbid << std::endl;
+    std::cout << "W_energy_wbid: "       << W_energy_wbid << std::endl;
 
 }
 
@@ -22283,6 +22284,8 @@ Eigen::VectorQd AvatarController::MitWholebodyInverseDynamicsController(const Ei
     double W_c_rfoot  = W_c_rfoot_wbid;
     double W_f_lfoot  = W_f_lfoot_wbid;
     double W_f_rfoot  = W_f_rfoot_wbid;
+    
+    double W_energy   = W_energy_wbid;
 
     if(is_dsp_fast)
     {
@@ -22324,7 +22327,7 @@ Eigen::VectorQd AvatarController::MitWholebodyInverseDynamicsController(const Ei
     for (int i = 6; i < control_size_qddot; ++i) {W_q(i, i) = W_qa;}
     H_wbid.block(H_idx, H_idx, control_size_qddot, control_size_qddot) = W_q;
     H_idx += control_size_qddot;
-    H_wbid.block(H_idx, H_idx, control_size_torque, control_size_torque) = (W_torque_1 + W_torque_2) * Eigen::MatrixXd::Identity(control_size_torque, control_size_torque);
+    H_wbid.block(H_idx, H_idx, control_size_torque, control_size_torque) = (W_torque_1 + W_torque_2) * Eigen::MatrixXd::Identity(control_size_torque, control_size_torque) + W_energy * rd_.q_dot_ * rd_.q_dot_.transpose();
     H_idx += control_size_torque;
     H_wbid.block(H_idx, H_idx, control_size_contact_accel / 2, control_size_contact_accel / 2) = W_c_lfoot * Eigen::MatrixXd::Identity(control_size_contact_accel / 2, control_size_contact_accel/ 2);
     H_idx += control_size_contact_accel / 2;

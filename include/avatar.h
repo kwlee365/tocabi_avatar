@@ -2671,6 +2671,7 @@ public:
     double W_f_rfoot_wbid = 0.0;
     double W_c_lfoot_wbid = 0.0;
     double W_c_rfoot_wbid = 0.0;
+    double W_energy_wbid = 0.0;
 
 private:    
     //////////////////////////////// Myeong-Ju

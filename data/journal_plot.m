@@ -288,23 +288,53 @@ end
 %     legend()
 % end
 
+%%
+clc
+clear all
+close all
 data = readmatrix('KW_journal_data_torque.txt');
 time = [1:1:length(data(:,1))];
 
 figure(5)
 sgtitle('feedforward')
 for i = 1:1:6
-    subplot(6,1,i)
+    % subplot(9,1,i)
     hold on
     plot(time, data(:,i));
-    plot(time, data(:,i+18));
-    plot(time, data(:,i)+data(:,i+18));
-
-    plot(time, data(:,i+36));
-    plot(time,-data(:,i+36));
-    legend('feedforward', 'PD torque', 'torque sum', 'ub', 'lb')
+    % plot(time, data(:,i+18));
+    % plot(time, data(:,i)+data(:,i+18));
+    % 
+    % plot(time, data(:,i+36));
+    % plot(time,-data(:,i+36));
+    % legend('feedforward', 'ub', 'lb')
+    legend()
 end
 
+figure()
+plot(time, data(:,13));
+hold on
+plot(time, data(:,14));
+plot(time, data(:,15));
+legend()
+
+%% FFT
+clc
+% clear all
+close all
+
+figure()
+for i = 1:1:6
+    hold on
+    plot(time, movstd(data(:,i),100));
+    legend()
+end
+figure()
+plot(time, movstd(data(:,13),100));
+hold on
+plot(time, movstd(data(:,14),100));
+plot(time, movstd(data(:,15),100));
+legend()
+% legend()
 %% KW_journal_wbid_qddot
 clc
 clear all
