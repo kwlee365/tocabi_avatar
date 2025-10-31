@@ -1,11 +1,11 @@
-# target_x : 0.0
-target_x : 2.0
+target_x : 0.0
+# target_x : 2.0
 target_y : 0.0
 target_z : 0.0
 com_height : 0.71
 target_theta : 0.0
-# step_length_x : 0.0
-step_length_x : 0.15
+step_length_x : 0.0
+# step_length_x : 0.15
 step_length_y : 0.0
 is_right_foot_swing : 1
 
@@ -28,19 +28,19 @@ t_dsp : 0.3
 
 foot_height_min : 0.055
 foot_height_max : 0.10
-zmp_modif_time_margin : 0.2
+zmp_modif_time_margin : 0.0
 
 # impact simulation
-impact_timing      : 0.3
+impact_timing      : 0.6
 impact_duration    : 0.2
 
-# impact_force       :  430    #  x
-# impact_theta       :  90 
+impact_force       : 450    #  x
+impact_theta       : 120 
 # impact_force : 270    #  -x 
 # impact_theta : -90
 # impact_force       :  370    #  y
 # impact_theta       :  180 
-# impact_force       :  160    #  -y
+# impact_force       :  180    #  -y
 # impact_theta       :  0 
 
 impact_step_number : 5

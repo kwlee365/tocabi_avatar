@@ -2448,8 +2448,8 @@ public:
         double Foot_length_back  = 0.13;
         double Foot_width  = 0.20;
 
-        double safety_factor_x = 0.7;
-        double safety_factor_y = 0.7;
+        double safety_factor_x = 1.0;
+        double safety_factor_y = 1.0;
         double p_c_x_max = safety_factor_x *( 1.0*Foot_length_front);
         double p_c_y_max = safety_factor_y *( 0.5*Foot_width);
         double p_c_x_min = safety_factor_x *(-1.0*Foot_length_back);
@@ -2708,8 +2708,8 @@ public:
         double V_x_max = 0.7; double V_x_min = -0.6;
         double V_y_max = 0.7; double V_y_min = -0.6;
 
-        double safety_factor_x = 0.7;
-        double safety_factor_y = 0.7;
+        double safety_factor_x = 1.0;
+        double safety_factor_y = 1.0;
         double p_c_x_max = safety_factor_x *( 1.0*Foot_length_front);
         double p_c_y_max = safety_factor_y *( 0.5*Foot_width);
         double p_c_x_min = safety_factor_x *(-1.0*Foot_length_back);
@@ -2793,6 +2793,7 @@ public:
 
     double lf_ft_z_max = 0.0;
     double rf_ft_z_max = 0.0;
+    bool reach_boundary_limit = true;
 
 private:    
     //////////////////////////////// Myeong-Ju

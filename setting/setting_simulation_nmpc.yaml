@@ -15,45 +15,34 @@ w_nmpc : [100,   # time
           0.0,    # w_dU_y_prev 
           0.0]    # w_dT_prev  
 
-# w_nmpc : [3000,     # time 
-
-#           1,        # w_xi_err_x
-#           10,        # w_p_c_x
-#           0.1,        # w_dU_x
-#           100000,   # w_db_x
-          
-#           1,        # w_xi_err_y
-#           1,        # w_p_c_y
-#           10,        # w_dU_y
-#           1000]        # w_db_y
-
 # DLR Stepping Controller
-w_xi_err_x_dlr  : 50.0
-w_xi_err_y_dlr  : 50.0
-w_gain_time_dlr : 50.0
-w_p_end_x_dlr   : 50.0
-w_p_end_y_dlr   : 50.0
-w_p_init_x_dlr  : 500.0
-w_p_init_y_dlr  : 500.0
+w_xi_err_x_dlr  : 500.0
+w_xi_err_y_dlr  : 500.0
+w_gain_time_dlr : 100.0
+w_p_end_x_dlr   : 1.0
+w_p_end_y_dlr   : 1.0
+w_p_init_x_dlr  : 1.0
+w_p_init_y_dlr  : 1.0
 
 safety_factor_x : 0.7
 safety_factor_y : 0.7
 
-dU_x_max :  0.15
-dU_y_max :  0.15
-dU_x_min : -0.15
+dU_x_max :  0.2
+dU_y_max :  0.2
+dU_x_min : -0.2
 dU_y_min : -0.03
 
 dT_max   : 0.0
 
-dT_SSP_min : -0.1    
-dT_DSP_min : -0.1
+dT_SSP_min : -0.2    
+dT_DSP_min : -0.2
 
-iter_num : 20
+iter_num : 3
 
 dv_norm_threshold : 0.000001
 
-is_simul : 2
+is_simul : 1
+
 # 0: DYROS  iter 20
 # 1: KAIST  iter 3
 # 2: DLR

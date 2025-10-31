@@ -1394,7 +1394,7 @@ void AvatarController::computeFast()
         {
             if (current_step_num_ < total_step_num_)
             {
-                GravityCalculate_MJ();
+                // GravityCalculate_MJ();
             }
         }
         else
@@ -16638,6 +16638,11 @@ void AvatarController::StateMachine()
         is_ssp = true;
         is_dsp = false;
 
+        if(is_left_foot_support == true)
+            WBC::SetContact(rd_, true, false);
+        else if(is_right_foot_support == true)
+            WBC::SetContact(rd_, false, true);
+
         num_contact_ = 1;
     }
     
@@ -16952,7 +16957,6 @@ void AvatarController::contactWrenchCalculator()
     ////// CONTACT WRENCH CALCULATION //////
     Eigen::Vector6d lfoot_contact_wrench; lfoot_contact_wrench.setZero(6);
     Eigen::Vector6d rfoot_contact_wrench; rfoot_contact_wrench.setZero(6);
-    // del_zmp = 1.4 * (cp_measured_ - cp_desired_); 
     del_zmp = del_zmp_nmpc;
 
     double alpha = 0;
@@ -17415,8 +17419,8 @@ void AvatarController::CentroidalMomentCalculator()
     double behind_foot_length_x = 0.13;
     double foot_width_y = 0.5 * 0.14;
 
-    del_cmp(0) = 1.4 * (cp_measured_(0) - cp_desired_(0));
-    del_cmp(1) = 1.3 * (cp_measured_(1) - cp_desired_(1));
+    del_cmp(0) = 1.0 * (cp_measured_(0) - cp_desired_(0));
+    del_cmp(1) = 1.0 * (cp_measured_(1) - cp_desired_(1));
     del_cmp(0) = DyrosMath::minmax_cut(del_cmp(0),
                                        -(behind_foot_length_x * support_margin + del_tau_limit(0) / M_G),
                                        (front_foot_length_x * support_margin + del_tau_limit(0) / M_G));
@@ -20644,28 +20648,28 @@ void AvatarController::dcmController_NMPC_DYROS(double del_zmp_x, double del_zmp
     }
     else
     {
-        del_zmp_nmpc = 1.4 * (cp_measured_ - cp_desired_);
+        del_zmp_nmpc = 1.0 * (cp_measured_ - cp_desired_);
     }
 
     ///////////////////////////////////////////////////////////////
     // Stepping -> getFootTrajectory_stepping() (in computeslow) //
     del_F_.setZero();
     
-    double del_F_compensation = 0.0;
-    if((abs(del_footstep_x) < 1e-2))
-    {
-        del_F_compensation = -foot_offset_x;
-    }
-    else
-    {
-        del_F_compensation = 0.0;
-    }
+    // double del_F_compensation = 0.0;
+    // if((abs(del_footstep_x) < 1e-2))
+    // {
+    //     del_F_compensation = -foot_offset_x;
+    // }
+    // else
+    // {
+    //     del_F_compensation = 0.0;
+    // }
 
     if(current_step_num_ > 2 && (current_step_num_ != total_step_num_-1))
     {
         if (is_ssp == true)
         {
-            del_F_(0) = foot_step_support_frame_(current_step_num_, 0) + del_footstep_x + del_F_compensation;
+            del_F_(0) = foot_step_support_frame_(current_step_num_, 0) + del_footstep_x;
             del_F_(1) = foot_step_support_frame_(current_step_num_, 1) + del_footstep_y;
         }
         else if(is_dsp == true)
@@ -20764,6 +20768,9 @@ void AvatarController::getGradHessDcm_NMPC_Real_Robot(Eigen::VectorXd &v, Eigen:
     double p_c_y_max = safety_factor_y_nmpc *( 0.5*nmpc.Foot_width);
     double p_c_x_min = safety_factor_x_nmpc *(-1.0*nmpc.Foot_length_back);  
     double p_c_y_min = safety_factor_y_nmpc *(-0.5*nmpc.Foot_width);
+
+    std::cout << "p_c_y_max: " << p_c_y_max << std::endl;
+    std::cout << "p_c_y_min: " << p_c_y_min << std::endl;
 
     // Footstep constraints
     double dU_x_min = 0.0; double dU_x_max = 0.0;
@@ -22779,15 +22786,13 @@ void AvatarController::dcmController_NMPC_KAIST(double del_zmp_x, double del_zmp
             del_zmp_nmpc(1) = del_zmp_y;    // From Nonlinear MPC
         }
         else{
-            del_zmp_nmpc = 1.4 * (cp_measured_ - cp_desired_); 
+            del_zmp_nmpc = 1.1 * (cp_measured_ - cp_desired_); 
         }
     }
     else
     {
-        del_zmp_nmpc = 1.4 * (cp_measured_ - cp_desired_); 
+        del_zmp_nmpc = 1.1 * (cp_measured_ - cp_desired_); 
     }
-
-    // del_zmp_nmpc = 1.4 * (cp_measured_ - cp_desired_);
 
     ///////////////////////////////////////////////////////////////
     // Stepping -> getFootTrajectory_stepping() (in computeslow) //
@@ -23101,8 +23106,8 @@ void AvatarController::getGradHessDcm_NMPC_KAIST(Eigen::VectorXd &v, Eigen::Matr
     std::vector<casadi::DM> ceq1_result   =   ceq1(std::vector<casadi::DM>{dm_xi_err, dm_X, dm_U, m, g, w, dt_MPC, stepping_current_time, J_x, J_y, dm_xi_ref_horizon, dm_T_step_ref_horizon});
     std::vector<casadi::DM> ceq1_v_result = ceq1_v(std::vector<casadi::DM>{dm_xi_err, dm_X, dm_U, m, g, w, dt_MPC, stepping_current_time, J_x, J_y, dm_xi_ref_horizon, dm_T_step_ref_horizon});
 
-    std::vector<casadi::DM> cineq1_max_result = cineq1_max(std::vector<casadi::DM>{dm_U, knmpc.p_c_x_max, knmpc.p_c_y_max});
-    std::vector<casadi::DM> cineq1_min_result = cineq1_min(std::vector<casadi::DM>{dm_U, knmpc.p_c_x_min, knmpc.p_c_y_min});
+    std::vector<casadi::DM> cineq1_max_result = cineq1_max(std::vector<casadi::DM>{dm_U, safety_factor_x_nmpc * knmpc.p_c_x_max, safety_factor_y_nmpc * knmpc.p_c_y_max});
+    std::vector<casadi::DM> cineq1_min_result = cineq1_min(std::vector<casadi::DM>{dm_U, safety_factor_x_nmpc * knmpc.p_c_x_min, safety_factor_y_nmpc * knmpc.p_c_y_min});
     std::vector<casadi::DM> cineq2_max_result = cineq2_max(std::vector<casadi::DM>{dm_U, dU_x_max, dU_y_max});
     std::vector<casadi::DM> cineq2_min_result = cineq2_min(std::vector<casadi::DM>{dm_U, dU_x_min, dU_y_min});
     std::vector<casadi::DM> cineq3_max_result = cineq3_max(std::vector<casadi::DM>{dm_U, knmpc.dT_max});
@@ -23112,8 +23117,8 @@ void AvatarController::getGradHessDcm_NMPC_KAIST(Eigen::VectorXd &v, Eigen::Matr
     std::vector<casadi::DM> cineq5_max_result = cineq5_max(std::vector<casadi::DM>{dm_U, knmpc.V_x_max, knmpc.V_y_max, dU_x_prev, dU_y_prev, dt_MPC});
     std::vector<casadi::DM> cineq5_min_result = cineq5_min(std::vector<casadi::DM>{dm_U, knmpc.V_x_min, knmpc.V_y_min, dU_x_prev, dU_y_prev, dt_MPC});
 
-    std::vector<casadi::DM> cineq1_max_v_result = cineq1_max_v(std::vector<casadi::DM>{dm_U, knmpc.p_c_x_max, knmpc.p_c_y_max});
-    std::vector<casadi::DM> cineq1_min_v_result = cineq1_min_v(std::vector<casadi::DM>{dm_U, knmpc.p_c_x_min, knmpc.p_c_y_min});
+    std::vector<casadi::DM> cineq1_max_v_result = cineq1_max_v(std::vector<casadi::DM>{dm_U, safety_factor_x_nmpc * knmpc.p_c_x_max, safety_factor_y_nmpc * knmpc.p_c_y_max});
+    std::vector<casadi::DM> cineq1_min_v_result = cineq1_min_v(std::vector<casadi::DM>{dm_U, safety_factor_x_nmpc * knmpc.p_c_x_min, safety_factor_y_nmpc * knmpc.p_c_y_min});
     std::vector<casadi::DM> cineq2_max_v_result = cineq2_max_v(std::vector<casadi::DM>{dm_U, dU_x_max, dU_y_max});
     std::vector<casadi::DM> cineq2_min_v_result = cineq2_min_v(std::vector<casadi::DM>{dm_U, dU_x_min, dU_y_min});
     std::vector<casadi::DM> cineq3_max_v_result = cineq3_max_v(std::vector<casadi::DM>{dm_U, knmpc.dT_max});
@@ -23672,28 +23677,32 @@ void AvatarController::dcmController_NMPC_DLR()
 void AvatarController::dcmController_NMPC_DLR(double del_zmp_x, double del_zmp_y, double del_footstep_x, double del_footstep_y, double dT, double ddtheta_x, double ddtheta_y)
 {
     DyrosContactScheduler nmpc_;
+
+    static int prev_step_num = -1;
+    if (prev_step_num != current_step_num_)
+    {
+        reach_boundary_limit = false;
+        prev_step_num = current_step_num_;
+    }
+
     /////////////////////////////////////////////
     // ZMP -> ZmpController() (in computeslow) //
     del_zmp_nmpc.setZero();
-    
-    if(current_step_num_ >= 2 && (current_step_num_ != total_step_num_-1))
+    del_zmp_nmpc = 1.1 * (cp_measured_ - cp_desired_);
+
+    del_zmp_nmpc(0) = DyrosMath::minmax_cut(del_zmp_nmpc(0), safety_factor_x_nmpc * nmpc_.p_c_x_min, safety_factor_x_nmpc * nmpc_.p_c_x_max); 
+    del_zmp_nmpc(1) = DyrosMath::minmax_cut(del_zmp_nmpc(1), safety_factor_y_nmpc * nmpc_.p_c_y_min, safety_factor_y_nmpc * nmpc_.p_c_y_max);
+
+    if (del_zmp_nmpc(0) == safety_factor_x_nmpc *nmpc_.p_c_x_min || del_zmp_nmpc(0) == safety_factor_x_nmpc *nmpc_.p_c_x_max)
     {
-        // del_zmp_nmpc = 1.4 * (cp_current_dlr - cp_desired_);
-        del_zmp_nmpc = 1.4 * (cp_current_dlr_interpol - cp_desired_);
+        reach_boundary_limit = true;
     }
-    else
+    else if (del_zmp_nmpc(1) == safety_factor_y_nmpc *nmpc_.p_c_y_min || del_zmp_nmpc(1) == safety_factor_y_nmpc *nmpc_.p_c_y_max)
     {
-        del_zmp_nmpc = 1.4 * (cp_measured_ - cp_desired_);
+        reach_boundary_limit = true;
     }
 
-    // std::cout << "walking_tick_mj: " << walking_tick_mj << std::endl;
-    // std::cout << "cp_measured_: " << cp_measured_.transpose() << std::endl;
-    // std::cout << "cp_current_dlr: " << cp_current_dlr.transpose() << std::endl;
-    // std::cout << "cp_current_dlr_interpol: " << cp_current_dlr_interpol.transpose() << std::endl;
-    // std::cout << std::endl;
 
-    del_zmp_nmpc(0) = DyrosMath::minmax_cut(del_zmp_nmpc(0), nmpc_.p_c_x_min, nmpc_.p_c_x_max); 
-    del_zmp_nmpc(1) = DyrosMath::minmax_cut(del_zmp_nmpc(1), nmpc_.p_c_y_min, nmpc_.p_c_y_max); 
     ///////////////////////////////////////////////////////////////
     // Stepping -> getFootTrajectory_stepping() (in computeslow) //
     del_F_.setZero();
@@ -23701,8 +23710,16 @@ void AvatarController::dcmController_NMPC_DLR(double del_zmp_x, double del_zmp_y
     {
         if (is_ssp == true)
         {
-            del_F_(0) = foot_step_support_frame_(current_step_num_, 0) + del_footstep_x;
-            del_F_(1) = foot_step_support_frame_(current_step_num_, 1) + del_footstep_y;
+            if(reach_boundary_limit == true)
+            {
+                del_F_(0) = foot_step_support_frame_(current_step_num_, 0) + del_footstep_x;
+                del_F_(1) = foot_step_support_frame_(current_step_num_, 1) + del_footstep_y;
+            }
+            else
+            {
+                del_F_(0) = foot_step_support_frame_(current_step_num_, 0);
+                del_F_(1) = foot_step_support_frame_(current_step_num_, 1);
+            }
         }
         else if(is_dsp == true)
         {
@@ -23723,20 +23740,38 @@ void AvatarController::dcmController_NMPC_DLR(double del_zmp_x, double del_zmp_y
 
     if(current_step_num_ > 2 && (current_step_num_ != total_step_num_-1))
     {
-        if(is_ssp == true)     // exp(wn*T) converges. 
+        if(is_ssp == true)     // exp(wn*T) converges.
         {
-            if ((is_stepping_ctrl == true))  
-            {           
-                t_ssp_ = t_ssp_const_ + dT_tick_nmpc;
+            if (reach_boundary_limit == true)
+            {
+                if ((is_stepping_ctrl == true))
+                {
+                    t_ssp_ = t_ssp_const_ + dT_tick_nmpc;
+                    t_total_ = t_dsp_ + t_ssp_;
+                    t_last_ = t_start_ + t_total_ - 1;
+                }
+            }
+            else
+            {
+                t_ssp_ = t_ssp_const_;
                 t_total_ = t_dsp_ + t_ssp_;
-                t_last_  = t_start_ + t_total_ - 1;
+                t_last_ = t_start_ + t_total_ - 1;
             }
         }
         else if(is_dsp == true)
         {   
-            t_dsp_   = t_dsp_const_ + dT_tick_nmpc;
-            t_total_ = t_dsp_ + t_ssp_;
-            t_last_  = t_start_ + t_total_ - 1;
+            if (reach_boundary_limit == true)
+            {
+                t_dsp_   = t_dsp_const_ + dT_tick_nmpc;
+                t_total_ = t_dsp_ + t_ssp_;
+                t_last_  = t_start_ + t_total_ - 1;
+            }
+            else
+            {
+                t_dsp_   = t_dsp_const_;
+                t_total_ = t_dsp_ + t_ssp_;
+                t_last_  = t_start_ + t_total_ - 1;
+            }  
         } 
     }
     else
